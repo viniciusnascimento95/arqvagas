@@ -1,0 +1,18 @@
+version: '3.8' # Define a versão do Docker Compose
+
+services:
+  db:
+    image: postgres:13 # Define a versão do PostgreSQL
+    container_name: arquivagas_db # Nome do contêiner
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER} # Nome do usuário do banco de dados
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD} # Senha do usuário do banco de dados
+      POSTGRES_DB: ${POSTGRES_DB} # Nome do banco de dados que será criado
+    ports:
+      - "${POSTGRES_PORT}:5432" # Porta de mapeamento (local:container)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Volume para persistência de dados
+
+volumes:
+  postgres_data:
+    driver: local # Driver do Docker para volumes persistentes
