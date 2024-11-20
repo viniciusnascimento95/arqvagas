@@ -14,3 +14,24 @@ model User {
   password  String
   createdAt DateTime @default(now())
 }
+
+model Oportunity {
+  id                 Int   @id @default(autoincrement())
+  jobTitle           String
+  contractType       String
+  requirements       String[]
+  jobDescription     String
+  experienceLevel    String
+  benefits           String[]
+  location           String
+  workSchedule       String
+  availablePositions Int
+  expectedStartDate  DateTime
+  companyInfo        Json
+  mainResponsibilities String[]
+  toolsAndSoftware   String[]
+  publicationDate    DateTime
+  applicationDeadline DateTime
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
