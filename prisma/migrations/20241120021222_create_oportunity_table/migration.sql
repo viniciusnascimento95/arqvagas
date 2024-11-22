@@ -16,6 +16,7 @@ CREATE TABLE "Oportunity" (
     "toolsAndSoftware" TEXT[],
     "publicationDate" TIMESTAMP(3) NOT NULL,
     "applicationDeadline" TIMESTAMP(3) NOT NULL,
+    "isAvailable" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

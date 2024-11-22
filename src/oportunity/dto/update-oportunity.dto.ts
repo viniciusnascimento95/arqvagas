@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsDate,
   IsNumber,
   IsObject,
@@ -79,4 +80,8 @@ export class UpdateOportunityDto {
   @Type(() => Date)
   @IsOptional()
   applicationDeadline?: Date;
+
+  @IsBoolean()
+  @IsOptional() // Torna a propriedade opcional no momento da criação
+  isAvailable?: boolean; // Indica se a vaga está disponível
 }

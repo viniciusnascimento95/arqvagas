@@ -1,10 +1,12 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
+  IsBoolean,
   IsDate,
   IsNotEmpty,
   IsNumber,
   IsObject,
+  IsOptional,
   IsString,
 } from 'class-validator';
 
@@ -71,4 +73,8 @@ export class CreateOportunityDto {
   @IsDate()
   @Type(() => Date) // Transforma a string ISO em uma instância de Date
   applicationDeadline: Date;
+
+  @IsBoolean()
+  @IsOptional() // Torna a propriedade opcional no momento da criação
+  isAvailable?: boolean; // Indica se a vaga está disponível
 }

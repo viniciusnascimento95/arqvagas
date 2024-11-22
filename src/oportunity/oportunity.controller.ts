@@ -8,7 +8,6 @@ import {
   Post,
 } from '@nestjs/common';
 import { CreateOportunityDto } from './dto/create-oportunity.dto';
-import { UpdateOportunityDto } from './dto/update-oportunity.dto';
 import { OportunityService } from './oportunity.service';
 
 @Controller('oportunity')
@@ -33,7 +32,7 @@ export class OportunityController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateOportunityDto: UpdateOportunityDto,
+    @Body() updateOportunityDto: Partial<CreateOportunityDto>,
   ) {
     return this.oportunityService.update(+id, updateOportunityDto);
   }
