@@ -8,44 +8,45 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String?
-  password  String
-  createdAt DateTime @default(now())
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  name        String?
+  password    String
+  createdAt   DateTime      @default(now())
+  Application Application[]
 }
 
 model Oportunity {
-  id                 Int   @id @default(autoincrement())
-  jobTitle           String
-  contractType       String
-  requirements       String[]
-  jobDescription     String
-  experienceLevel    String
-  benefits           String[]
-  location           String
-  workSchedule       String
-  availablePositions Int
-  expectedStartDate  DateTime
-  companyInfo        Json
+  id                   Int           @id @default(autoincrement())
+  jobTitle             String
+  contractType         String
+  requirements         String[]
+  jobDescription       String
+  experienceLevel      String
+  benefits             String[]
+  location             String
+  workSchedule         String
+  availablePositions   Int
+  expectedStartDate    DateTime
+  companyInfo          Json
   mainResponsibilities String[]
-  toolsAndSoftware   String[]
-  publicationDate    DateTime
-  applicationDeadline DateTime
-  isAvailable         Boolean  @default(true) 
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
+  toolsAndSoftware     String[]
+  publicationDate      DateTime
+  applicationDeadline  DateTime
+  isAvailable          Boolean       @default(true)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  Application          Application[]
 }
 
+model Application {
+  id           Int        @id @default(autoincrement())
+  user         User       @relation(fields: [userId], references: [id])
+  userId       Int
+  oportunity   Oportunity @relation(fields: [oportunityId], references: [id])
+  oportunityId Int
+  appliedAt    DateTime   @default(now())
+  comment      String?
 
-// model Application {
-//   id           Int      @id @default(autoincrement())
-//   user         User     @relation(fields: [userId], references: [id])
-//   userId       Int
-//   oportunity   Oportunity @relation(fields: [oportunityId], references: [id])
-//   oportunityId Int
-//   appliedAt    DateTime @default(now())
-//   comment      String?
-
-//   @@unique([userId, oportunityId]) // Restrições de unicidade
-// }
+  @@unique([userId, oportunityId]) 
+}
