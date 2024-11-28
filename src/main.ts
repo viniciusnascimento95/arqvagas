@@ -14,10 +14,10 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('arqvagas API')
-    .setDescription('The API description')
+    .setDescription('The API description created by Vinicius Fernandes')
     .setVersion('1.0')
-    .addBearerAuth() // Adiciona suporte a Bearer Token
-    .addTag('routes')
+    // .addBearerAuth() // Adiciona suporte a Bearer Token
+    // .addTag('routes')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory);
