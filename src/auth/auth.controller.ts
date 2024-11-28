@@ -1,7 +1,11 @@
 import { Body, Controller, Post } from '@nestjs/common';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
+import { CreateUserDto } from './dto/crate-user.dto';
+import { LoginDto } from './dto/login.dto';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -10,14 +14,14 @@ export class AuthController {
   ) {}
 
   @Post('register')
-  async register(
-    @Body() body: { email: string; password: string; name?: string },
-  ) {
+  @ApiResponse({ status: 201, description: 'User registered successfully.' })
+  async register(@Body() body: CreateUserDto) {
     return this.userService.createUser(body);
   }
 
   @Post('login')
-  async login(@Body() body: { email: string; password: string }) {
+  @ApiResponse({ status: 200, description: 'User logged in successfully.' })
+  async login(@Body() body: LoginDto) {
     const user = await this.authService.validateUser(body.email, body.password);
     return this.authService.login(user);
   }

@@ -16,6 +16,7 @@ async function bootstrap() {
     .setTitle('arqvagas API')
     .setDescription('The API description')
     .setVersion('1.0')
+    .addBearerAuth() // Adiciona suporte a Bearer Token
     .addTag('routes')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
