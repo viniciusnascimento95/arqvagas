@@ -1,9 +1,13 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { Image, Platform, StyleSheet } from 'react-native';
+
+
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { Box } from '@/components/ui/box';
+import { HStack } from '@/components/ui/hstack';
 
 export default function HomeScreen() {
   return (
@@ -19,6 +23,11 @@ export default function HomeScreen() {
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
       </ThemedView>
+      <HStack space="md" reversed={false}>
+        <Box className="h-20 w-20 bg-primary-300" />
+        <Box className="h-20 w-20 bg-primary-400" />
+        <Box className="h-20 w-20 bg-primary-500" />
+      </HStack>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
         <ThemedText>
