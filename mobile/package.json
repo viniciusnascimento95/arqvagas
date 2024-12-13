@@ -15,6 +15,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@expo/html-elements": "^0.4.2",
     "@expo/vector-icons": "^14.0.2",
     "@gluestack-ui/nativewind-utils": "^1.0.26",
     "@gluestack-ui/overlay": "^0.1.16",
@@ -23,6 +24,7 @@
     "@react-navigation/native": "^7.0.0",
     "@shopify/flash-list": "1.7.1",
     "babel-plugin-module-resolver": "^5.0.2",
+    "date-fns": "^4.1.0",
     "expo": "~52.0.18",
     "expo-blur": "~14.0.1",
     "expo-constants": "~17.0.3",
