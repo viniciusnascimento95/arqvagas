@@ -1,24 +1,28 @@
+import { Button, ButtonText } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Heading } from '@/components/ui/heading';
 import { HStack } from '@/components/ui/hstack';
+import { CloseIcon, Icon } from '@/components/ui/icon';
+import { Modal, ModalBackdrop, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader } from '@/components/ui/modal';
 import { Text } from '@/components/ui/text';
 import { VStack } from '@/components/ui/vstack';
 import { FlashList } from '@shopify/flash-list';
 
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { useState } from 'react';
 
 export default function HomeScreen() {
 
-  function formatDateToBrazilian(dateString: string) {
-    // Criar o objeto Date explicitamente no formato correto
+  const [showModal, setShowModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<{ id: string, title: string; description: string, datePosted: string } | null>(null);
 
+  function formatDateToBrazilian(dateString: string) {
     const [year, month, day] = dateString.split("-").map(Number);
-    const date = new Date(year, month - 1, day); // Ajuste para mês (0-11)
+    const date = new Date(year, month - 1, day);
     return format(date, "dd/MM/yyyy", { locale: ptBR });
   }
 
-  // Dados de exemplo
   const jobs = [
     {
       id: "1",
@@ -82,8 +86,12 @@ export default function HomeScreen() {
     }
   ];
 
+  function handleModal(item: { id: string, title: string; description: string, datePosted: string }) {
+    setSelectedItem(item);
+    setShowModal(true);
+  }
 
-  const CardItem = ({ item }: { item: { title: string; description: string, datePosted: string } }) => {
+  const CardItem = ({ item }: { item: { id: string, title: string; description: string, datePosted: string } }) => {
     return (
       <VStack className="bg-secondary-200 md:bg-secondary-0 md:items-center md:justify-center mt-6">
         <VStack
@@ -101,15 +109,14 @@ export default function HomeScreen() {
           </VStack>
           <Card size="sm" variant="outline" className="m-3">
             <HStack space='sm' className='justify-between'>
-              <Heading size="md" >
-                inscrever-se
-              </Heading>
-              <Text size="sm"> teste</Text>
-              <Text size="sm"> </Text>
+              <Button size="sm" variant="outline" onPress={() => handleModal(item)}>
+                <ButtonText>Candidatar-se</ButtonText>
+              </Button>
+              <Text size="sm">Disponível</Text>
             </HStack>
           </Card>
         </VStack>
-      </VStack>
+      </VStack >
     )
   }
 
@@ -121,6 +128,49 @@ export default function HomeScreen() {
         keyExtractor={(item) => item.id}
         estimatedItemSize={200}
       />
+      {selectedItem && (
+        <Modal isOpen={showModal} onClose={() => setShowModal(false)} size="md">
+          <ModalBackdrop />
+          <ModalContent>
+            <ModalHeader>
+              <Heading size="md" className="text-typography-950">
+                {selectedItem.title}
+              </Heading>
+            
+            <ModalCloseButton>
+              <Icon
+                as={CloseIcon}
+                size="md"
+                className="stroke-background-400 group-[:hover]/modal-close-button:stroke-background-700 group-[:active]/modal-close-button:stroke-background-900 group-[:focus-visible]/modal-close-button:stroke-background-900"
+              />
+            </ModalCloseButton>
+            </ModalHeader>
+            <ModalBody>
+              <Text size="sm" className="text-typography-500">
+                {selectedItem.description}
+              </Text>
+            </ModalBody>
+            <ModalFooter>
+              <Button
+                variant="outline"
+                action="secondary"
+                onPress={() => {
+                  setShowModal(false);
+                }}
+              >
+                <ButtonText>Sair</ButtonText>
+              </Button>
+              <Button
+                onPress={() => {
+                  setShowModal(false);
+                }}
+              >
+                <ButtonText>Aplica-se</ButtonText>
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      )}
     </HStack>
   );
 }
