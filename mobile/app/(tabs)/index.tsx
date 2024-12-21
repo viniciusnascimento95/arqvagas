@@ -68,7 +68,7 @@ export default function HomeScreen() {
       id: 1,
       jobTitle: "Software Engineer Tester",
       contractType: "CLT",
-      requirements: ["JavaScript", "React", "Node.js"],
+      requirements: ["JavaScript", "React", "Node.js", "SQL", "HTML", "CSS"],
       jobDescription: "Desenvolver e manter aplicações web.",
       experienceLevel: "Senior",
       benefits: ["Plano de saúde", "Vale alimentação"],
@@ -269,9 +269,14 @@ export default function HomeScreen() {
             <ModalBackdrop />
             <ModalContent>
               <ModalHeader>
-                <Heading size="md" className="text-typography-950">
-                  {selectedItem.jobTitle}
-                </Heading>
+                <VStack space='xs'>
+                  <Heading size="md" className="text-typography-950">
+                    {selectedItem.jobTitle}
+                  </Heading>
+                  <Text className='text-typography-600 text-xs' >
+                    {selectedItem.location} | {selectedItem.contractType} | {selectedItem.experienceLevel}
+                  </Text>
+                </VStack>
 
                 <ModalCloseButton>
                   <Icon
@@ -282,52 +287,98 @@ export default function HomeScreen() {
                 </ModalCloseButton>
               </ModalHeader>
               <ModalBody>
-                <Text size="sm" className="text-typography-500">
-                  {selectedItem.jobDescription}
+                <Divider className="my-0.5" />
+                <Text className='text-typography-700'>
+                  Descrição da Vaga:  <Text size="sm" className="text-slate-600 my-2">
+                    {selectedItem.jobDescription}
+                  </Text>
                 </Text>
 
-                <Divider className="my-0.5" />
-                <VStack space="md" className="my-4">
+                {/* Empresa */}
+                <VStack space="sm" className='my-2'>
+                  <Text className='text-typography-700'>
+                    Empresa: <Text className='text-typography-600'>{selectedItem.companyInfo.name}</Text>
+                  </Text>
+                  <Text className='text-typography-700'>
+                    Indústria: <Text className='text-typography-600'>{selectedItem.companyInfo.industry}</Text>
+                  </Text>
+                  <Text className='text-typography-700'>
+                    Tamanho do time: <Text className='text-typography-600'>{selectedItem.companyInfo.teamSize}</Text>
+                  </Text>
+                </VStack>
+
+                <Divider className="my-0.2" />
+
+                {/* Responsabilidades */}
+                <VStack space="sm" >
+                  <Text className='text-center' bold>
+                    Principais responsabilidades
+                  </Text>
+                  {selectedItem.mainResponsibilities.map((responsibility, index) => (
+                    <Text key={index}>
+                      - {responsibility}
+                    </Text>
+                  ))}
+                  <Text size="sm" className="text-typography-500" >
+                    <Text >Ferramentas e Software:</Text> {selectedItem.toolsAndSoftware.join(', ')}
+                  </Text>
+                </VStack>
+
+                <VStack space="md" className="my-2">
                   <Text size="sm" className="text-typography-500">
                     <Text >Requisitos:</Text>
                   </Text>
-                  {selectedItem.requirements.map((requirement, index) => (
-                    <HStack key={index} className='justify-start' space="sm">
-                      <Text size="sm" className="text-typography-500"><Icon as={CheckIcon} className="text-green-500 m-2 w-4 h-4" /> {requirement}</Text>
-                    </HStack>
-                  ))}
+                  <HStack space="md" className="mb-2 flex-wrap">
+                    {selectedItem.requirements.map((requirement, index) => (
+                      <VStack key={index} className='justify-start' space="sm">
+                        <Text size="sm" className="text-typography-700"><Icon as={CheckIcon} className="text-green-500 m-2 w-4 h-4" /> {requirement}</Text>
+                      </VStack>
+                    ))}
+                  </HStack>
+
                 </VStack>
+
                 <Divider className="my-0.5" />
 
+                {/* Benefícios */}
+                {selectedItem.benefits && <VStack space="sm">
+                  <Text size="sm" className="text-typography-700 my-2">
+                    <Text >Benefícios:</Text> {selectedItem.benefits.join(', ')}
+                  </Text>
+                </VStack>}
 
-                <Text size="sm" className="text-typography-500">
-                  <Text size="sm" className="text-typography-500">
-                    <Text >Localização:</Text> {selectedItem.location}
-                  </Text>                </Text>
-                <Text size="sm" className="text-typography-500">
-                  <Text >Nível de Experiência:</Text> {selectedItem.experienceLevel}
+                {/* Informações adicionais */}
+                <VStack space="sm" className='my-2'>
+                  <Text className='text-center' bold>
+                    Informações adicionais
+                  </Text>
+                  <Text>
+                    Nível de experiência: {selectedItem.experienceLevel}
+                  </Text>
+                  <Text>
+                    Horário de trabalho: {selectedItem.workSchedule}
+                  </Text>
+                  <Text className='text-right'>
+                    Vagas disponíveis: {selectedItem.availablePositions}
+                  </Text>
+                </VStack>
+
+                {/* Ações */}
+                <Divider />
+                <HStack className='justify-between mt-3'>
+                  <Text>
+                    Candidaturas até {new Date(selectedItem.applicationDeadline).toLocaleDateString()}
+                  </Text>
+                </HStack>
+
+                <Text size="md" className="text-typography-700">
+                  <Text>Início Esperada:</Text> {new Date(selectedItem.expectedStartDate).toLocaleDateString()}
                 </Text>
-                <Text size="sm" className="text-typography-500">
-                  <Text >Tipo de Contrato:</Text> {selectedItem.contractType}
+                <Text size="md" className="text-typography-700 text-right">
+                  <Text>Publicação:</Text> {new Date(selectedItem.publicationDate).toLocaleDateString()}
                 </Text>
-                <Text size="sm" className="text-typography-500">
-                  <Text >Benefícios:</Text> {selectedItem.benefits.join(', ')}
-                </Text>
-                <Text size="sm" className="text-typography-500">
-                  <Text >Data de Início Esperada:</Text> {new Date(selectedItem.expectedStartDate).toLocaleDateString()}
-                </Text>
-                <Text size="sm" className="text-typography-500">
-                  <Text >Data de Publicação:</Text> {new Date(selectedItem.publicationDate).toLocaleDateString()}
-                </Text>
-                <Text size="sm" className="text-typography-500">
-                  <Text >Prazo para Aplicação:</Text> {new Date(selectedItem.applicationDeadline).toLocaleDateString()}
-                </Text>
-                <Text size="sm" className="text-typography-500">
-                  <Text >Responsabilidades Principais:</Text> {selectedItem.mainResponsibilities.join(', ')}
-                </Text>
-                <Text size="sm" className="text-typography-500">
-                  <Text >Ferramentas e Software:</Text> {selectedItem.toolsAndSoftware.join(', ')}
-                </Text>
+                <Divider className="my-0.5" />
+
               </ModalBody>
               <ModalFooter>
                 <Button
