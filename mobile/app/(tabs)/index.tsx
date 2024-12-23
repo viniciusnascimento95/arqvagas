@@ -299,19 +299,20 @@ export default function HomeScreen() {
                   <Text className='text-typography-700'>
                     Empresa: <Text className='text-typography-600'>{selectedItem.companyInfo.name}</Text>
                   </Text>
-                  <Text className='text-typography-700'>
-                    Indústria: <Text className='text-typography-600'>{selectedItem.companyInfo.industry}</Text>
-                  </Text>
-                  <Text className='text-typography-700'>
-                    Tamanho do time: <Text className='text-typography-600'>{selectedItem.companyInfo.teamSize}</Text>
-                  </Text>
+                  <HStack space="xs" className='justify-between' >
+                    <Text className='text-typography-700'>
+                      Indústria: <Text className='text-typography-600'>{selectedItem.companyInfo.industry}</Text>
+                    </Text>
+                    <Text className='text-typography-600'><Icon as={GlobeIcon} size="sm" />  {selectedItem.companyInfo.teamSize}</Text>
+                  </HStack>
+
                 </VStack>
 
                 <Divider className="my-0.2" />
 
                 {/* Responsabilidades */}
                 <VStack space="sm" >
-                  <Text className='text-center' bold>
+                  <Text className='text-center mt-2' bold>
                     Principais responsabilidades
                   </Text>
                   {selectedItem.mainResponsibilities.map((responsibility, index) => (
@@ -319,8 +320,8 @@ export default function HomeScreen() {
                       - {responsibility}
                     </Text>
                   ))}
-                  <Text size="sm" className="text-typography-500" >
-                    <Text >Ferramentas e Software:</Text> {selectedItem.toolsAndSoftware.join(', ')}
+                  <Text size="sm" className="text-typography-600" >
+                    <Text>Ferramentas e Software:</Text> {selectedItem.toolsAndSoftware.join(', ')}
                   </Text>
                 </VStack>
 
