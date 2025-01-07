@@ -8,12 +8,18 @@ datasource db {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  email       String        @unique
-  name        String?
-  password    String
-  createdAt   DateTime      @default(now())
-  Application Application[]
+  id              Int           @id @default(autoincrement())
+  email           String        @unique
+  name            String?
+  school          String?
+  init_date_school DateTime?
+  end_date_school DateTime?
+  software_skills String[]      // Representa um array de strings
+  personal_skills String[]      // Representa um array de strings
+  portfolio_url   String?
+  password        String
+  createdAt       DateTime      @default(now())
+  Application     Application[]
 }
 
 model Oportunity {
