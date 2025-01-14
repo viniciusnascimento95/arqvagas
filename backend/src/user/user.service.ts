@@ -41,15 +41,15 @@ export class UserService {
       throw new Error('Usuário não encontrado.');
     }
 
-    if (user.password != newPassword) {
-      // Hasheia a senha com bcrypt
+    const isPasswordEqual = await bcrypt.compare(newPassword, user.password);
+    if (isPasswordEqual) {
+      throw new Error('A nova senha não pode ser igual à senha atual.');
+    } else {
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       return this.prisma.user.update({
         where: { id },
         data: { password: hashedPassword },
       });
-    } else {
-      throw new Error('A senha atual e a nova senha são iguais.');
     }
   }
 }
