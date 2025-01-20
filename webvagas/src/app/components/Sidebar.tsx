@@ -1,6 +1,7 @@
+'use client'
+
 import { BriefcaseIcon, ClipboardDocumentListIcon, HomeIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
-
 const Sidebar = () => {
   return (
     <div className="bg-white w-64 h-full shadow-lg">
