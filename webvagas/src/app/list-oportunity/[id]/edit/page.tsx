@@ -1,44 +1,103 @@
 'use client'
 import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
+import { cn } from '@/lib/utils';
 import { api } from '@/services/api';
+import { format } from 'date-fns';
+import { ptBR } from "date-fns/locale";
 import { FieldArray, Form, Formik } from "formik";
+import { CalendarIcon } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import JobSchema from './opotinity.schema';
 
-import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
-import JobSchema, { initialValuesOportunity } from './opotinity.schema';
+interface jobOportunity {
+  jobTitle: string,
+  contractType: string,
+  requirements: [],
+  jobDescription: string,
+  experienceLevel: string,
+  benefits: [],
+  location: string,
+  workSchedule: string,
+  availablePositions: string,
+  expectedStartDate: string,
+  companyInfo: {
+    name: string,
+    industry: string,
+  },
+  mainResponsibilities: [],
+  toolsAndSoftware: [],
+  publicationDate: Date,
+  applicationDeadline: '',
+  isAvailable: true,
+}
 
-export default function AdicionarOportunidade() {
+export default function Edit() {
+  const { id } = useParams();
+  const router = useRouter()
+  const [job, setJob] = useState<jobOportunity | null>(null)
 
-  const router = useRouter();
-  const { toast } = useToast()
+  const [date, setDate] = useState<Date | undefined>(undefined);
+
+  useEffect(() => {
+    if (id) {
+      api.get(`oportunity/${id}`).then((res) => {
+        console.log('=>res --->', res.data);
+        setJob(res.data)
+      })
+    }
+  }, [id])
+
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Adicionar Nova Oportunidade</h1>
-
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Edição Oportunidade - {job?.jobTitle} </h1>
       <Formik
-        initialValues={initialValuesOportunity}
+        enableReinitialize
+        initialValues={
+          {
+            jobTitle: job?.jobTitle || '',
+            contractType: job?.contractType || '',
+            requirements: job?.requirements || [],
+            jobDescription: job?.jobDescription || '',
+            experienceLevel: job?.experienceLevel || '',
+            benefits: job?.benefits || [],
+            location: job?.location || '',
+            workSchedule: job?.workSchedule || '',
+            availablePositions: job?.availablePositions || '',
+            expectedStartDate: job?.expectedStartDate || '',
+            companyInfo: {
+              name: job?.companyInfo.name || '',
+              industry: job?.companyInfo.industry || '',
+
+            },
+            mainResponsibilities: job?.mainResponsibilities || [],
+            toolsAndSoftware: job?.toolsAndSoftware || [],
+            publicationDate: job?.publicationDate || new Date().toISOString().split('T')[0],
+            applicationDeadline: job?.applicationDeadline || '',
+            isAvailable: job?.isAvailable || false,
+          }
+        }
         validationSchema={JobSchema}
         onSubmit={async (values, { resetForm }) => {
-
           const response = await api.post('/oportunity', {
             ...values,
             companyInfo: {
               name: values.companyInfo.name,
               industry: values.companyInfo.industry,
-              teamSize: parseInt(values.companyInfo.teamSize),
+
             }
           })
 
-          if (response.status === 201) {
 
-            toast({
-              dir: "top",
-              title: "Oportunidade criada com sucesso!",
-              description: "Você pode visualizar a oportunidade criada na lista de oportunidades.",
-            })
+          console.log('=>response --->', response);
+
+          if (response.status === 201) {
+            alert('Oportunidade criada com sucesso!')
             resetForm();
             router.push('/list-oportunity');
           }
@@ -48,10 +107,8 @@ export default function AdicionarOportunidade() {
       >
         {({ errors, touched, values, handleChange, handleBlur, isValid }) => (
           <Form>
-
             {/* Título do Formulário */}
-
-            <p className="text-gray-600">Preencha os campos abaixo para criar uma nova vaga.</p>
+            <p className="text-gray-600">Você está editando as informações.</p>
 
             <div className="grid grid-cols-4 gap-4 my-5">
               {/* Campo: Título da vaga */}
@@ -73,7 +130,6 @@ export default function AdicionarOportunidade() {
                   <p className="text-red-500 text-sm mt-1">{errors.jobTitle}</p>
                 )}
               </div>
-
               <div className="col-span-1">
                 <label htmlFor="availablePositions" className="block text-sm font-medium">
                   Vagas disponiveis
@@ -112,15 +168,41 @@ export default function AdicionarOportunidade() {
                   <p className="text-red-500 text-sm mt-1">{errors.contractType}</p>
                 )}
               </div>
-
             </div>
 
             <div className="grid grid-cols-4 gap-4 my-5">
               <div className="col-span-1">
                 <label htmlFor="expectedStartDate" className="block text-sm font-medium">
-                  Previsão de inicio
+                  Previsão de inicio {job?.expectedStartDate}  {JSON.stringify(date)}
                 </label>
-                <Input
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] justify-start text-left font-normal",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon />
+                      {date ? format(date, "dd/MM/yyyy").toLocaleLowerCase() : <span>Selecione uma data</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      locale={ptBR}
+                      lang='pt-BR'
+                      mode="single"
+                      selected={date}
+                      onSelect={setDate}
+                      disabled={(date) =>
+                        date < new Date() || date < new Date("1900-01-01")
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                {/* <Input
                   id="expectedStartDate"
                   name="expectedStartDate"
                   type="date"
@@ -129,7 +211,7 @@ export default function AdicionarOportunidade() {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   className="mt-2"
-                />
+                /> */}
                 {touched.expectedStartDate && errors.expectedStartDate && (
                   <p className="text-red-500 text-sm mt-1">{errors.expectedStartDate}</p>
                 )}
@@ -171,7 +253,7 @@ export default function AdicionarOportunidade() {
                 )}
               </div>
 
-              
+
             </div>
 
             {/* Campo: Nome da Empresa */}

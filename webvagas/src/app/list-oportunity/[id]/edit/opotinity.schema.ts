@@ -1,29 +1,4 @@
 import * as Yup from 'yup';
-
-
-export const initialValuesOportunity = {
-  jobTitle: '',
-  contractType: '',
-  requirements: [],
-  jobDescription: '',
-  experienceLevel: '',
-  benefits: [],
-  location: '',
-  workSchedule: '',
-  availablePositions: '',
-  expectedStartDate: '',
-  companyInfo: {
-    name: '',
-    industry: '',
-    teamSize: '',
-  },
-  mainResponsibilities: [],
-  toolsAndSoftware: [],
-  publicationDate: new Date().toISOString().split('T')[0],
-  applicationDeadline: '',
-  isAvailable: true,
-};
-
 const JobSchema = Yup.object().shape({
   jobTitle: Yup.string()
     .required('O título do trabalho é obrigatório.'),

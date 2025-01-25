@@ -2,6 +2,7 @@
 
 import { api } from '@/services/api'
 import { MagnifyingGlassIcon, PencilIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Modal from '../components/Modal'
 
@@ -39,6 +40,8 @@ export default function AdministrarOportunidades() {
   const [selectedOportunidade, setSelectedOportunidade] = useState<Oportunity | null>(null)
   const [oportunidades, setOportunidades] = useState<Oportunity[]>([])
 
+  const router = useRouter();
+
   useEffect(() => {
     api.get('/oportunity').then((res) => {
       console.log(res.data)
@@ -58,20 +61,20 @@ export default function AdministrarOportunidades() {
     currentPage * itemsPerPage
   )
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
     setCurrentPage(1)
   }
 
-  const handlePageChange = (page) => {
+  const handlePageChange = (page: number) => {
     setCurrentPage(page)
   }
 
-  const openModal = (oportunidade) => {
+  const openModal = (oportunidade: Oportunity) => {
     setSelectedOportunidade(oportunidade)
     setIsModalOpen(true)
   }
-
+  
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-semibold text-gray-800">Administrar Oportunidades</h1>
@@ -106,10 +109,10 @@ export default function AdministrarOportunidades() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{oportunidade.jobTitle}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{oportunidade.companyInfo.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{oportunidade.location}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{oportunidade.createdAt}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(oportunidade.createdAt).toLocaleDateString('pt-BR')}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button
-                    onClick={() => {/* Implementar lógica de edição */ }}
+                    onClick={() => { router.push(`/list-oportunity/${oportunidade.id}/edit`) }}
                     className="text-blue-600 hover:text-blue-900 mr-4"
                   >
                     <PencilIcon className="h-5 w-5" />

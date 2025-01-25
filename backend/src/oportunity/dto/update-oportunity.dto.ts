@@ -101,7 +101,6 @@ export class UpdateOportunityDto {
     example: {
       name: 'Tech Company',
       industry: 'Technology',
-      teamSize: '50-100',
     },
   })
   @IsObject()

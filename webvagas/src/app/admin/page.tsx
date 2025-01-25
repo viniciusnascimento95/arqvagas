@@ -1,8 +1,18 @@
 'use client'
 
+import { api } from '@/services/api'
 import { BriefcaseIcon, ChartBarIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { useEffect, useState } from 'react'
 
-const DashboardCard = ({ title, value, icon: Icon }) => (
+const DashboardCard = ({
+  title,
+  value,
+  icon: Icon
+}: {
+  title: string
+  value: number
+  icon: React.ElementType
+}) => (
   <div className="bg-white rounded-lg shadow-md p-6 flex items-center">
     <div className="rounded-full bg-blue-100 p-3 mr-4">
       <Icon className="h-8 w-8 text-blue-600" />
@@ -14,14 +24,38 @@ const DashboardCard = ({ title, value, icon: Icon }) => (
   </div>
 )
 
+interface Oportunity {
+  id: string
+  jobTitle: string
+  companyInfo: {
+    name: string
+    industry: string
+  }
+  location: string
+  publicationDate: Date
+  applicationDeadline: Date
+  isAvailable: boolean
+}
+
 export default function Home() {
+
+  const [data, setData] = useState<Oportunity[]>([]);
+  const [totJob, setTotJob] = useState(0);
+
+  useEffect(() => {
+    api.get('/oportunity').then((res) => {
+      setData(res.data.slice(-5))
+      setTotJob(res.data.length)
+    })
+  }, [])
+
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-semibold text-gray-800">Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <DashboardCard title="Total de Vagas" value="42" icon={BriefcaseIcon} />
-        <DashboardCard title="Candidaturas" value="128" icon={UserGroupIcon} />
-        <DashboardCard title="Vagas Preenchidas" value="18" icon={ChartBarIcon} />
+        <DashboardCard title="Total de Vagas" value={totJob} icon={BriefcaseIcon} />
+        <DashboardCard title="Candidaturas" value={10} icon={UserGroupIcon} />
+        <DashboardCard title="Vagas Preenchidas" value={1} icon={ChartBarIcon} />
       </div>
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Últimas Oportunidades</h2>
@@ -36,12 +70,14 @@ export default function Home() {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {/* Exemplo de linha, você pode adicionar mais conforme necessário */}
-            <tr>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Arquiteto Sênior</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Construtora XYZ</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">São Paulo, SP</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2023-05-15</td>
-            </tr>
+            {data && data.map((item) => (
+              <tr key={item.id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.jobTitle}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.companyInfo.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{item.location}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(item.publicationDate).toLocaleDateString('pt-BR')}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

@@ -15,11 +15,11 @@ const Sidebar = () => {
         </Link>
         <Link href="/add-oportunity" className="flex items-center py-2 px-4 text-gray-700 hover:bg-blue-100">
           <BriefcaseIcon className="h-5 w-5 mr-2" />
-          Adicionar Oportunidade
+          Adicionar
         </Link>
         <Link href="/list-oportunity" className="flex items-center py-2 px-4 text-gray-700 hover:bg-blue-100">
           <ClipboardDocumentListIcon className="h-5 w-5 mr-2" />
-          Administrar Oportunidades
+          Oportunidades
         </Link>
       </nav>
     </div>
