@@ -44,7 +44,7 @@ export default function Home() {
 
   useEffect(() => {
     api.get('/oportunity').then((res) => {
-      setData(res.data.slice(-5))
+      setData(res.data.slice(-7))
       setTotJob(res.data.length)
     })
   }, [])
@@ -58,7 +58,7 @@ export default function Home() {
         <DashboardCard title="Vagas Preenchidas" value={1} icon={ChartBarIcon} />
       </div>
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Últimas Oportunidades</h2>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Últimas Oportunidades Cadastradas</h2>
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>

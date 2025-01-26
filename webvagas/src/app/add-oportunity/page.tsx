@@ -21,15 +21,13 @@ export default function AdicionarOportunidade() {
   const { toast } = useToast()
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Adicionar Nova Oportunidade</h1>
-
+    <div className="max-w-screen-2xl mx-auto">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">Adicionar Nova Oportunidade</h1>
       <Formik
         initialValues={initialValuesOportunity}
         validationSchema={JobSchema}
         enableReinitialize
         onSubmit={async (values, { resetForm }) => {
-
           const response = await api.post('/oportunity', {
             ...values,
             companyInfo: {
@@ -37,9 +35,7 @@ export default function AdicionarOportunidade() {
               industry: values.companyInfo.industry,
             }
           })
-
           if (response.status === 201) {
-
             toast({
               className: cn(
                 'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
@@ -50,9 +46,16 @@ export default function AdicionarOportunidade() {
             })
             resetForm();
             router.push('/list-oportunity');
+          } else {
+            toast({
+              className: cn(
+                'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+              ),
+              variant: 'destructive',
+              title: "Erro ao criar oportunidade!",
+              description: "Tente novamente mais tarde.",
+            })
           }
-
-          console.log(values);
         }}
       >
         {({ errors, touched, values, handleChange, handleBlur, isValid, setFieldValue }) => (
@@ -101,8 +104,6 @@ export default function AdicionarOportunidade() {
                   <p className="text-red-500 text-sm mt-1">{errors.availablePositions}</p>
                 )}
               </div>
-              
-
               {/* Campo: Título da vaga */}
               <div className="col-span-1">
                 <label htmlFor="contractType" className="block text-sm font-medium">
@@ -123,9 +124,10 @@ export default function AdicionarOportunidade() {
                 )}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 my-5">
+            <hr />
+            <div className="grid grid-cols-3 gap-1 my-5">
               <div className="col-span-1">
-                <label htmlFor="expectedStartDate" className="block text-sm font-medium">
+                <label htmlFor="expectedStartDate" className="block text-sm font-medium mb-2">
                   Previsão de inicio
                 </label>
                 <Popover>
@@ -162,7 +164,7 @@ export default function AdicionarOportunidade() {
               </div>
 
               <div className="col-span-1">
-                <label htmlFor="applicationDeadline" className="block text-sm font-medium">
+                <label htmlFor="applicationDeadline" className="block text-sm font-medium mb-2">
                   Prazo para aplicação
                 </label>
                 <Popover>
@@ -171,8 +173,8 @@ export default function AdicionarOportunidade() {
                       variant={"outline"}
                       className={cn(
                         "w-[240px] justify-start text-left font-normal",
-                         errors.applicationDeadline && "border-red-500"
-                    
+                        errors.applicationDeadline && "border-red-500"
+
                       )}
                     >
                       <CalendarIcon />
@@ -322,146 +324,149 @@ export default function AdicionarOportunidade() {
             </div>
 
             {/* Campo: Requisitos */}
-            <div>
-              {values.requirements.length > 0 && (
-                <label htmlFor="requirements" className="block text-sm font-medium">
-                  Requisitos
-                </label>
-              )}
-
-              <FieldArray
-                name="requirements"
-                render={arrayHelpers => (
-                  <div>
-                    {/* Renderiza cada campo do array */}
-                    {values.requirements.map((requirement, index) => (
-                      <div key={index} className="flex items-center gap-4 mb-2">
-                        <Input
-                          type="text"
-                          name={`requirements[${index}]`}
-                          value={requirement}
-                          placeholder={`Requisito ${index + 1}`}
-                          onChange={handleChange}
-                          className="flex-1"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => arrayHelpers.remove(index)} // Remove o campo
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          Remover
-                        </button>
-                      </div>
-                    ))}
-                    {/* Botão para adicionar novo requisito */}
-                    <button
-                      type="button"
-                      onClick={() => arrayHelpers.push('')} // Adiciona um campo vazio
-                      className="w-full text-blue-500 hover:text-blue-700 mt-2"
-
-                    // className=" bg-blue-600 hover:bg-blue-700"
-                    >
-                      Adicionar Requisito
-                    </button>
-                  </div>
+            <div className="grid grid-cols-3 gap-7 my-5">
+              <div>
+                {values.requirements.length > 0 && (
+                  <label htmlFor="requirements" className="block text-sm font-medium">
+                    Requisitos
+                  </label>
                 )}
-              />
-              {touched.requirements && errors.requirements && (
-                <p className="text-red-500 text-sm mt-1">{errors.requirements}</p>
-              )}
-            </div>
 
-            {/* Campo: Beneficios */}
-            <div>
-              {values.benefits.length > 0 && (<label htmlFor="benefits" className="block text-sm font-medium">
-                Beneficios
-              </label>)}
+                <FieldArray
+                  name="requirements"
+                  render={arrayHelpers => (
+                    <div>
+                      {/* Renderiza cada campo do array */}
+                      {values.requirements.map((requirement, index) => (
+                        <div key={index} className="flex items-center gap-4 mb-2">
+                          <Input
+                            type="text"
+                            name={`requirements[${index}]`}
+                            value={requirement}
+                            placeholder={`Requisito ${index + 1}`}
+                            onChange={handleChange}
+                            className="flex-1"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => arrayHelpers.remove(index)} // Remove o campo
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            Remover
+                          </button>
+                        </div>
+                      ))}
+                      {/* Botão para adicionar novo requisito */}
+                      <button
+                        type="button"
+                        onClick={() => arrayHelpers.push('')} // Adiciona um campo vazio
+                        className="w-full text-blue-500 hover:text-blue-700 mt-2"
 
-              <FieldArray
-                name="benefits"
-                render={arrayHelpers => (
-                  <div>
-                    {/* Renderiza cada campo do array */}
-                    {values.benefits.map((benefit, index) => (
-                      <div key={index} className="flex items-center gap-4 mb-2">
-                        <Input
-                          type="text"
-                          name={`benefits[${index}]`}
-                          value={benefit}
-                          placeholder={`Requisito ${index + 1}`}
-                          onChange={handleChange}
-                          className="flex-1"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => arrayHelpers.remove(index)} // Remove o campo
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          Remover
-                        </button>
-                      </div>
-                    ))}
-                    {/* Botão para adicionar novo requisito */}
-                    <button
-                      type="button"
-                      onClick={() => arrayHelpers.push('')} // Adiciona um campo vazio
-                      className="w-full text-blue-500 hover:text-blue-700 mt-2"
-                    >
-                      Adicionar Beneficio
-                    </button>
-                  </div>
+                      // className=" bg-blue-600 hover:bg-blue-700"
+                      >
+                        Adicionar Requisito
+                      </button>
+                    </div>
+                  )}
+                />
+                {touched.requirements && errors.requirements && (
+                  <p className="text-red-500 text-sm mt-1">{errors.requirements}</p>
                 )}
-              />
-              {touched.benefits && errors.benefits && (
-                <p className="text-red-500 text-sm mt-1">{errors.benefits}</p>
-              )}
-            </div>
+              </div>
 
-            {/* Campo: toolsAndSoftware */}
-            <div className='my-5'>
-              {values.toolsAndSoftware.length > 0 && (<label htmlFor="toolsAndSoftware" className="block text-sm font-medium">
-                Ferramentas de trabalho
-              </label>)}
+              {/* Campo: Beneficios */}
+              <div>
+                {values.benefits.length > 0 && (<label htmlFor="benefits" className="block text-sm font-medium">
+                  Beneficios
+                </label>)}
 
-              <FieldArray
-                name="toolsAndSoftware"
-                render={arrayHelpers => (
-                  <div>
-                    {/* Renderiza cada campo do array */}
-                    {values.toolsAndSoftware.map((tool, index) => (
-                      <div key={index} className="flex items-center gap-4 mb-2">
-                        <Input
-                          type="text"
-                          name={`toolsAndSoftware[${index}]`}
-                          value={tool}
-                          placeholder={`Ferramentas de trabalho ${index + 1}`}
-                          onChange={handleChange}
-                          className="flex-1"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => arrayHelpers.remove(index)} // Remove o campo
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          Remover
-                        </button>
-                      </div>
-                    ))}
-                    {/* Botão para adicionar novo requisito */}
-                    <button
-                      type="button"
-                      onClick={() => arrayHelpers.push('')} // Adiciona um campo vazio
-                      className="w-full text-blue-500 hover:text-blue-700 mt-2"
-                    >
-                      Adicionar Ferramenta
-                    </button>
-                  </div>
+                <FieldArray
+                  name="benefits"
+                  render={arrayHelpers => (
+                    <div>
+                      {/* Renderiza cada campo do array */}
+                      {values.benefits.map((benefit, index) => (
+                        <div key={index} className="flex items-center gap-4 mb-2">
+                          <Input
+                            type="text"
+                            name={`benefits[${index}]`}
+                            value={benefit}
+                            placeholder={`Requisito ${index + 1}`}
+                            onChange={handleChange}
+                            className="flex-1"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => arrayHelpers.remove(index)} // Remove o campo
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            Remover
+                          </button>
+                        </div>
+                      ))}
+                      {/* Botão para adicionar novo requisito */}
+                      <button
+                        type="button"
+                        onClick={() => arrayHelpers.push('')} // Adiciona um campo vazio
+                        className="w-full text-blue-500 hover:text-blue-700 mt-2"
+                      >
+                        Adicionar Beneficio
+                      </button>
+                    </div>
+                  )}
+                />
+                {touched.benefits && errors.benefits && (
+                  <p className="text-red-500 text-sm mt-1">{errors.benefits}</p>
                 )}
-              />
-              {touched.toolsAndSoftware && errors.toolsAndSoftware && (
-                <p className="text-red-500 text-sm mt-1">{errors.toolsAndSoftware}</p>
-              )}
+              </div>
+
+              {/* Campo: toolsAndSoftware */}
+              <div>
+                {values.toolsAndSoftware.length > 0 && (<label htmlFor="toolsAndSoftware" className="block text-sm font-medium">
+                  Ferramentas de trabalho
+                </label>)}
+
+                <FieldArray
+                  name="toolsAndSoftware"
+                  render={arrayHelpers => (
+                    <div>
+                      {/* Renderiza cada campo do array */}
+                      {values.toolsAndSoftware.map((tool, index) => (
+                        <div key={index} className="flex items-center gap-4 mb-2">
+                          <Input
+                            type="text"
+                            name={`toolsAndSoftware[${index}]`}
+                            value={tool}
+                            placeholder={`Ferramentas de trabalho ${index + 1}`}
+                            onChange={handleChange}
+                            className="flex-1"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => arrayHelpers.remove(index)} // Remove o campo
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            Remover
+                          </button>
+                        </div>
+                      ))}
+                      {/* Botão para adicionar novo requisito */}
+                      <button
+                        type="button"
+                        onClick={() => arrayHelpers.push('')} // Adiciona um campo vazio
+                        className="w-full text-blue-500 hover:text-blue-700 mt-2"
+                      >
+                        Adicionar Ferramenta
+                      </button>
+                    </div>
+                  )}
+                />
+                {touched.toolsAndSoftware && errors.toolsAndSoftware && (
+                  <p className="text-red-500 text-sm mt-1">{errors.toolsAndSoftware}</p>
+                )}
+              </div>
             </div>
+            <hr />
 
             {/* Campo: mainResponsibilities */}
             <div className='my-5'>
