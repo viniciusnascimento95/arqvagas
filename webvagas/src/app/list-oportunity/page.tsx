@@ -49,7 +49,7 @@ export default function AdministrarOportunidades() {
     })
   }, [])
 
-  const itemsPerPage = 10
+  const itemsPerPage = 12
   const filteredOportunidades = oportunidades.filter(oportunidade =>
     oportunidade.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
     oportunidade.companyInfo.name.toLowerCase().includes(searchTerm.toLowerCase())

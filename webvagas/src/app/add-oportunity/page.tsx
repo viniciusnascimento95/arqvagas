@@ -5,7 +5,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { api } from '@/services/api';
 import { FieldArray, Form, Formik } from "formik";
 
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { CalendarIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import JobSchema, { initialValuesOportunity } from './opotinity.schema';
 
@@ -28,14 +34,16 @@ export default function AdicionarOportunidade() {
             companyInfo: {
               name: values.companyInfo.name,
               industry: values.companyInfo.industry,
-              teamSize: parseInt(values.companyInfo.teamSize),
             }
           })
 
           if (response.status === 201) {
 
             toast({
-              dir: "top",
+              className: cn(
+                'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+              ),
+              variant: 'default',
               title: "Oportunidade criada com sucesso!",
               description: "Você pode visualizar a oportunidade criada na lista de oportunidades.",
             })
@@ -46,7 +54,7 @@ export default function AdicionarOportunidade() {
           console.log(values);
         }}
       >
-        {({ errors, touched, values, handleChange, handleBlur, isValid }) => (
+        {({ errors, touched, values, handleChange, handleBlur, isValid, setFieldValue }) => (
           <Form>
 
             {/* Título do Formulário */}
@@ -92,6 +100,7 @@ export default function AdicionarOportunidade() {
                   <p className="text-red-500 text-sm mt-1">{errors.availablePositions}</p>
                 )}
               </div>
+              
 
               {/* Campo: Título da vaga */}
               <div className="col-span-1">
@@ -112,26 +121,78 @@ export default function AdicionarOportunidade() {
                   <p className="text-red-500 text-sm mt-1">{errors.contractType}</p>
                 )}
               </div>
-
             </div>
-
-            <div className="grid grid-cols-4 gap-4 my-5">
+            <div className="grid grid-cols-2 gap-4 my-5">
               <div className="col-span-1">
                 <label htmlFor="expectedStartDate" className="block text-sm font-medium">
                   Previsão de inicio
                 </label>
-                <Input
-                  id="expectedStartDate"
-                  name="expectedStartDate"
-                  type="date"
-                  placeholder="Ex.: 1"
-                  value={values.expectedStartDate}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className="mt-2"
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] justify-start text-left font-normal",
+                        !values.expectedStartDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon />
+                      {values.expectedStartDate ? format(values.expectedStartDate, "dd/MM/yyyy").toLocaleLowerCase() : <span>Selecione uma data</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      locale={ptBR}
+                      lang='pt-BR'
+                      mode="single"
+                      selected={new Date(values.expectedStartDate)}
+                      onSelect={(itemData) => setFieldValue("expectedStartDate", itemData)}
+                      disabled={(date) =>
+                        date < new Date() || date < new Date("1900-01-01")
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+
                 {touched.expectedStartDate && errors.expectedStartDate && (
                   <p className="text-red-500 text-sm mt-1">{errors.expectedStartDate}</p>
+                )}
+              </div>
+
+              <div className="col-span-1">
+                <label htmlFor="applicationDeadline" className="block text-sm font-medium">
+                  Prazo para aplicação
+                </label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] justify-start text-left font-normal",
+                        !values.applicationDeadline && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon />
+                      {values.applicationDeadline ? format(values.applicationDeadline, "dd/MM/yyyy").toLocaleLowerCase() : <span>Selecione uma data</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      locale={ptBR}
+                      lang='pt-BR'
+                      mode="single"
+                      selected={new Date(values.applicationDeadline)}
+                      onSelect={(itemData) => setFieldValue("applicationDeadline", itemData)}
+                      disabled={(date) =>
+                        date < new Date() || date < new Date("1900-01-01")
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                {touched.applicationDeadline && errors.applicationDeadline && (
+                  <p className="text-red-500 text-sm mt-1">{errors.applicationDeadline}</p>
                 )}
               </div>
               <div className="col-span-1">
@@ -152,26 +213,9 @@ export default function AdicionarOportunidade() {
                   <p className="text-red-500 text-sm mt-1">{errors.workSchedule}</p>
                 )}
               </div>
-              <div className="col-span-1">
-                <label htmlFor="applicationDeadline" className="block text-sm font-medium">
-                  Prazo para aplicação
-                </label>
-                <Input
-                  id="applicationDeadline"
-                  name="applicationDeadline"
-                  type="date"
-                  placeholder="Ex.: 1"
-                  value={values.applicationDeadline}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className="mt-2"
-                />
-                {touched.applicationDeadline && errors.applicationDeadline && (
-                  <p className="text-red-500 text-sm mt-1">{errors.applicationDeadline}</p>
-                )}
-              </div>
 
-              
+
+
             </div>
 
             {/* Campo: Nome da Empresa */}

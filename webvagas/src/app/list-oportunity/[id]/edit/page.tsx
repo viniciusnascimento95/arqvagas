@@ -4,6 +4,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { api } from '@/services/api';
 import { format } from 'date-fns';
@@ -15,6 +16,7 @@ import { useEffect, useState } from 'react';
 import JobSchema from './opotinity.schema';
 
 interface jobOportunity {
+  id: string,
   jobTitle: string,
   contractType: string,
   requirements: [],
@@ -24,7 +26,7 @@ interface jobOportunity {
   location: string,
   workSchedule: string,
   availablePositions: string,
-  expectedStartDate: string,
+  expectedStartDate: Date,
   companyInfo: {
     name: string,
     industry: string,
@@ -40,8 +42,7 @@ export default function Edit() {
   const { id } = useParams();
   const router = useRouter()
   const [job, setJob] = useState<jobOportunity | null>(null)
-
-  const [date, setDate] = useState<Date | undefined>(undefined);
+  const { toast } = useToast()
 
   useEffect(() => {
     if (id) {
@@ -60,6 +61,7 @@ export default function Edit() {
         enableReinitialize
         initialValues={
           {
+            id: job?.id || '',
             jobTitle: job?.jobTitle || '',
             contractType: job?.contractType || '',
             requirements: job?.requirements || [],
@@ -84,28 +86,29 @@ export default function Edit() {
         }
         validationSchema={JobSchema}
         onSubmit={async (values, { resetForm }) => {
-          const response = await api.post('/oportunity', {
+          const response = await api.patch('/oportunity/' + values.id, {
             ...values,
             companyInfo: {
               name: values.companyInfo.name,
               industry: values.companyInfo.industry,
-
             }
           })
 
-
-          console.log('=>response --->', response);
-
-          if (response.status === 201) {
-            alert('Oportunidade criada com sucesso!')
+          if (response.status === 200) {
+            toast({
+              className: cn(
+                'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+              ),
+              variant: 'default',
+              title: "Oportunidade atualizada com sucesso!",
+              description: "Você pode visualizar a oportunidade atualizada na lista de oportunidades.",
+            })  
             resetForm();
             router.push('/list-oportunity');
           }
-
-          console.log(values);
         }}
       >
-        {({ errors, touched, values, handleChange, handleBlur, isValid }) => (
+        {({ errors, touched, values, handleChange, handleBlur, isValid, setFieldValue }) => (
           <Form>
             {/* Título do Formulário */}
             <p className="text-gray-600">Você está editando as informações.</p>
@@ -170,10 +173,10 @@ export default function Edit() {
               </div>
             </div>
 
-            <div className="grid grid-cols-4 gap-4 my-5">
+            <div className="grid grid-cols-2 gap-3 my-5">
               <div className="col-span-1">
                 <label htmlFor="expectedStartDate" className="block text-sm font-medium">
-                  Previsão de inicio {job?.expectedStartDate}  {JSON.stringify(date)}
+                  Previsão de inicio
                 </label>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -181,11 +184,11 @@ export default function Edit() {
                       variant={"outline"}
                       className={cn(
                         "w-[240px] justify-start text-left font-normal",
-                        !date && "text-muted-foreground"
+                        !values.expectedStartDate && "text-muted-foreground"
                       )}
                     >
                       <CalendarIcon />
-                      {date ? format(date, "dd/MM/yyyy").toLocaleLowerCase() : <span>Selecione uma data</span>}
+                      {values.expectedStartDate ? format(values.expectedStartDate, "dd/MM/yyyy").toLocaleLowerCase() : <span>Selecione uma data</span>}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
@@ -193,8 +196,12 @@ export default function Edit() {
                       locale={ptBR}
                       lang='pt-BR'
                       mode="single"
-                      selected={date}
-                      onSelect={setDate}
+                      selected={new Date(values.expectedStartDate)}
+                      onSelect={(item) => {
+                        setFieldValue("expectedStartDate", item)
+                        console.log('=>iteasdfasdfasdfm --->', item);
+                        console.log('=>item --->', typeof item);
+                      }}
                       disabled={(date) =>
                         date < new Date() || date < new Date("1900-01-01")
                       }
@@ -202,20 +209,50 @@ export default function Edit() {
                     />
                   </PopoverContent>
                 </Popover>
-                {/* <Input
-                  id="expectedStartDate"
-                  name="expectedStartDate"
-                  type="date"
-                  placeholder="Ex.: 1"
-                  value={values.expectedStartDate}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className="mt-2"
-                /> */}
                 {touched.expectedStartDate && errors.expectedStartDate && (
                   <p className="text-red-500 text-sm mt-1">{errors.expectedStartDate}</p>
                 )}
               </div>
+              <div className="col-span-1">
+                <label htmlFor="applicationDeadline" className="block text-sm font-medium">
+                  Prazo para aplicação
+                </label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-[240px] justify-start text-left font-normal",
+                        !values.applicationDeadline && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon />
+                      {values.applicationDeadline ? format(values.applicationDeadline, "dd/MM/yyyy").toLocaleLowerCase() : <span>Selecione uma data</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      locale={ptBR}
+                      lang='pt-BR'
+                      mode="single"
+                      selected={new Date(values.applicationDeadline)}
+                      onSelect={(item) => {
+                        setFieldValue("applicationDeadline", item)
+                        console.log('=>applicationDeadline --->', item);
+
+                      }}
+                      disabled={(date) =>
+                        date < new Date() || date < values.expectedStartDate
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                {touched.applicationDeadline && errors.applicationDeadline && (
+                  <p className="text-red-500 text-sm mt-1">{errors.applicationDeadline}</p>
+                )}
+              </div>
+
               <div className="col-span-1">
                 <label htmlFor="workSchedule" className="block text-sm font-medium">
                   Horário de trabalho
@@ -234,26 +271,6 @@ export default function Edit() {
                   <p className="text-red-500 text-sm mt-1">{errors.workSchedule}</p>
                 )}
               </div>
-              <div className="col-span-1">
-                <label htmlFor="applicationDeadline" className="block text-sm font-medium">
-                  Prazo para aplicação
-                </label>
-                <Input
-                  id="applicationDeadline"
-                  name="applicationDeadline"
-                  type="date"
-                  placeholder="Ex.: 1"
-                  value={values.applicationDeadline}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  className="mt-2"
-                />
-                {touched.applicationDeadline && errors.applicationDeadline && (
-                  <p className="text-red-500 text-sm mt-1">{errors.applicationDeadline}</p>
-                )}
-              </div>
-
-
             </div>
 
             {/* Campo: Nome da Empresa */}

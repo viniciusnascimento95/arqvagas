@@ -14,8 +14,7 @@ export const initialValuesOportunity = {
   expectedStartDate: '',
   companyInfo: {
     name: '',
-    industry: '',
-    teamSize: '',
+    industry: ''
   },
   mainResponsibilities: [],
   toolsAndSoftware: [],
