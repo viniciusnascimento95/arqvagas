@@ -39,7 +39,7 @@ const JobSchema = Yup.object().shape({
     .required('A data de publicação é obrigatória.'),
   applicationDeadline: Yup.date()
     .required('O prazo para candidaturas é obrigatório.')
-    .min(Yup.ref('publicationDate'), 'O prazo para candidaturas deve ser após a data de publicação.'),
+    .min(Yup.ref('expectedStartDate'), 'O prazo para candidaturas deve ser após a data de publicação.'),
   isAvailable: Yup.boolean(),
 });
 

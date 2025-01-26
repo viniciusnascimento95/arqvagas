@@ -27,6 +27,7 @@ export default function AdicionarOportunidade() {
       <Formik
         initialValues={initialValuesOportunity}
         validationSchema={JobSchema}
+        enableReinitialize
         onSubmit={async (values, { resetForm }) => {
 
           const response = await api.post('/oportunity', {
@@ -133,7 +134,7 @@ export default function AdicionarOportunidade() {
                       variant={"outline"}
                       className={cn(
                         "w-[240px] justify-start text-left font-normal",
-                        !values.expectedStartDate && "text-muted-foreground"
+                        errors.expectedStartDate && "border-red-500"
                       )}
                     >
                       <CalendarIcon />
@@ -155,7 +156,7 @@ export default function AdicionarOportunidade() {
                   </PopoverContent>
                 </Popover>
 
-                {touched.expectedStartDate && errors.expectedStartDate && (
+                {errors.expectedStartDate && (
                   <p className="text-red-500 text-sm mt-1">{errors.expectedStartDate}</p>
                 )}
               </div>
@@ -170,7 +171,8 @@ export default function AdicionarOportunidade() {
                       variant={"outline"}
                       className={cn(
                         "w-[240px] justify-start text-left font-normal",
-                        !values.applicationDeadline && "text-muted-foreground"
+                         errors.applicationDeadline && "border-red-500"
+                    
                       )}
                     >
                       <CalendarIcon />
@@ -191,7 +193,7 @@ export default function AdicionarOportunidade() {
                     />
                   </PopoverContent>
                 </Popover>
-                {touched.applicationDeadline && errors.applicationDeadline && (
+                {errors.applicationDeadline && (
                   <p className="text-red-500 text-sm mt-1">{errors.applicationDeadline}</p>
                 )}
               </div>

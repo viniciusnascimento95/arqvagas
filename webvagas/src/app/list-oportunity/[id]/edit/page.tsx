@@ -102,7 +102,7 @@ export default function Edit() {
               variant: 'default',
               title: "Oportunidade atualizada com sucesso!",
               description: "Você pode visualizar a oportunidade atualizada na lista de oportunidades.",
-            })  
+            })
             resetForm();
             router.push('/list-oportunity');
           }
@@ -223,7 +223,7 @@ export default function Edit() {
                       variant={"outline"}
                       className={cn(
                         "w-[240px] justify-start text-left font-normal",
-                        !values.applicationDeadline && "text-muted-foreground"
+                        errors.applicationDeadline && "border-red-500"
                       )}
                     >
                       <CalendarIcon />
@@ -248,7 +248,7 @@ export default function Edit() {
                     />
                   </PopoverContent>
                 </Popover>
-                {touched.applicationDeadline && errors.applicationDeadline && (
+                {errors.applicationDeadline && (
                   <p className="text-red-500 text-sm mt-1">{errors.applicationDeadline}</p>
                 )}
               </div>
