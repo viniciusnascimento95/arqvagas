@@ -1,7 +1,9 @@
 'use client'
 
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { api } from '@/services/api'
-import { MagnifyingGlassIcon, PencilIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { MagnifyingGlassIcon, PencilIcon, TrashIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Modal from '../components/Modal'
@@ -40,6 +42,8 @@ export default function AdministrarOportunidades() {
   const [selectedOportunidade, setSelectedOportunidade] = useState<Oportunity | null>(null)
   const [oportunidades, setOportunidades] = useState<Oportunity[]>([])
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -74,10 +78,17 @@ export default function AdministrarOportunidades() {
     setSelectedOportunidade(oportunidade)
     setIsModalOpen(true)
   }
-  
+
+  const handleOpenModalDelete = (id: number) => {
+    console.log('=>id --->', id);
+    // to-do: prerapar exclusão de dados
+    console.log("Dado excluído com sucesso!");
+    setIsOpen(true);
+  };
+
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-semibold text-gray-800">Administrar Oportunidades</h1>
+      <h1 className="text-3xl font-semibold text-gray-800">Administrar Oportunidades {JSON.stringify(isOpen)}</h1>
 
       {/* Barra de pesquisa */}
       <div className="relative">
@@ -119,9 +130,15 @@ export default function AdministrarOportunidades() {
                   </button>
                   <button
                     onClick={() => openModal(oportunidade)}
-                    className="text-green-600 hover:text-green-900"
+                    className="text-green-600 hover:text-green-900 mr-3"
                   >
                     <UserGroupIcon className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => handleOpenModalDelete(oportunidade.id)}
+                    className="text-gray-600 hover:text-green-900"
+                  >
+                    <TrashIcon className="h-5 w-5" />
                   </button>
                 </td>
               </tr>
@@ -145,6 +162,30 @@ export default function AdministrarOportunidades() {
           </button>
         ))}
       </div>
+
+      {/* Dialog */}
+      <Dialog
+        open={isOpen} onOpenChange={setIsOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar Exclusão</DialogTitle>
+          </DialogHeader>
+          <p>Tem certeza de que deseja excluir este dado? Essa ação não pode ser desfeita.</p>
+          <DialogFooter>
+            <Button variant="secondary"
+              onClick={() => setIsOpen(false)}
+            >
+              Cancelar
+            </Button>
+            <Button variant="destructive"
+            // onClick={handleDelete()}
+            >
+              Confirmar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Modal para visualizar candidatos */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
