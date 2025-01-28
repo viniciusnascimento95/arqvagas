@@ -88,7 +88,7 @@ export default function AdministrarOportunidades() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-semibold text-gray-800">Administrar Oportunidades {JSON.stringify(isOpen)}</h1>
+      <h1 className="text-3xl font-semibold text-gray-800">Administrar Oportunidades </h1>
 
       {/* Barra de pesquisa */}
       <div className="relative">
