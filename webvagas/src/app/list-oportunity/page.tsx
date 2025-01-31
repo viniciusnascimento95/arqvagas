@@ -1,7 +1,10 @@
 'use client'
 
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { toast } from '@/hooks/use-toast'
+import { cn } from '@/lib/utils'
 import { api } from '@/services/api'
 import { MagnifyingGlassIcon, PencilIcon, TrashIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
@@ -79,12 +82,25 @@ export default function AdministrarOportunidades() {
     setIsModalOpen(true)
   }
 
-  const handleOpenModalDelete = (id: number) => {
-    console.log('=>id --->', id);
-    // to-do: prerapar exclusão de dados
-    console.log("Dado excluído com sucesso!");
+  const handleOpenModalDelete = (oportunidade: Oportunity) => {
+    setSelectedOportunidade(oportunidade);
     setIsOpen(true);
   };
+
+  function handleDelete() {
+    api.delete(`/oportunity/${selectedOportunidade?.id}`).then(() => {
+      toast({
+        className: cn(
+          'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+        ),
+        variant: 'destructive',
+        title: "Oportunidade excluída com sucesso!",
+        description: "A oportunidade foi removida com sucesso.",
+      })
+      setOportunidades([])
+    }).finally(() => api.get('/oportunity').then((res) => setOportunidades(res.data)));
+    setIsOpen(false);
+  }
 
   return (
     <div className="space-y-6">
@@ -111,6 +127,7 @@ export default function AdministrarOportunidades() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Empresa</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Localização</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Data de Publicação</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
             </tr>
           </thead>
@@ -121,6 +138,7 @@ export default function AdministrarOportunidades() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{oportunidade.companyInfo.name}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{oportunidade.location}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(oportunidade.createdAt).toLocaleDateString('pt-BR')}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{oportunidade.isAvailable ? <Badge variant="outline">Aberto</Badge> : <Badge variant="destructive">Finalizada</Badge>}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button
                     onClick={() => { router.push(`/list-oportunity/${oportunidade.id}/edit`) }}
@@ -135,7 +153,7 @@ export default function AdministrarOportunidades() {
                     <UserGroupIcon className="h-5 w-5" />
                   </button>
                   <button
-                    onClick={() => handleOpenModalDelete(oportunidade.id)}
+                    onClick={() => handleOpenModalDelete(oportunidade)}
                     className="text-gray-600 hover:text-green-900"
                   >
                     <TrashIcon className="h-5 w-5" />
@@ -179,7 +197,7 @@ export default function AdministrarOportunidades() {
               Cancelar
             </Button>
             <Button variant="destructive"
-            // onClick={handleDelete()}
+              onClick={handleDelete}
             >
               Confirmar
             </Button>
