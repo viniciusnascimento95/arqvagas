@@ -1,7 +1,15 @@
 'use client'
-import { BellIcon } from '@heroicons/react/24/outline'
+import { BellIcon } from '@heroicons/react/24/outline';
+import { usePathname } from 'next/navigation';
 
 const Header = () => {
+
+  const pathname = usePathname();
+
+  if (pathname === '/login') {
+    return null; 
+  }
+
   return (
     <header className="bg-white shadow-sm">
       <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">

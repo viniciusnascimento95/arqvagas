@@ -1,3 +1,8 @@
+[ ] next steps: create login with service account firebbase
+[ ] create form edit status oportunity
+[ ] view oportunity details user applied in the oportunity
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
