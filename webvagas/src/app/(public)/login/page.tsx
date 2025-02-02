@@ -2,7 +2,9 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { toast } from "@/hooks/use-toast";
 import { app, auth } from "@/lib/firabase";
+import { cn } from "@/lib/utils";
 import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
@@ -34,10 +36,7 @@ async function loginWithGoogle() {
 
 export default function LoginPage() {
   const [error, setError] = useState("");
-
   const route = useRouter();
-
-
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -47,15 +46,23 @@ export default function LoginPage() {
       email: Yup.string().email("Email inválido").required("Email obrigatório"),
       password: Yup.string().min(6, "A senha deve ter no mínimo 6 caracteres").required("Senha obrigatória"),
     }),
-    onSubmit: async (values) => {
-      try {
-        await loginWithEmail(values.email, values.password);
-        route.push('/admin')
-
-      } catch (err) {
-        console.log('=>err --->', err);
-        setError("Credenciais inválidas.");
-      }
+    onSubmit: async (values,) => {
+      await loginWithEmail(values.email, values.password).then((user) => {
+        if (user) {
+          route.push('/admin')
+        } else {
+          toast({
+            className: cn(
+              'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+            ),
+            title: "Usuário não encontrado",
+            description: "Verifique suas credenciais e tente novamente.",
+            variant: "destructive",
+          });
+          formik.setFieldValue("password", "");
+          setError("Credenciais inválidas.");
+        }
+      });
     },
   });
 

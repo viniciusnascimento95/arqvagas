@@ -1,9 +1,7 @@
 'use client'
 
-import { checkUserStatus } from '@/lib/auth'
 import { api } from '@/services/api'
 import { BriefcaseIcon, ChartBarIcon, UserGroupIcon } from '@heroicons/react/24/outline'
-import { User } from 'firebase/auth'
 import { useEffect, useState } from 'react'
 
 const DashboardCard = ({
@@ -51,16 +49,6 @@ export default function Home() {
     })
   }, [])
 
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const unsubscribe = checkUserStatus((loggedUser) => {
-      setUser(loggedUser); // Atualiza o estado com o usuário logado
-    });
-
-    return () => unsubscribe(); // Remove o listener ao desmontar o componente
-  }, []);
-
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-semibold text-gray-800">Dashboard</h1>
@@ -70,14 +58,6 @@ export default function Home() {
         <DashboardCard title="Vagas Preenchidas" value={1} icon={ChartBarIcon} />
       </div>
 
-      <div>
-        <h1>Bem-vindo ao meu app</h1>
-        {user ? (
-          <p>Usuário logado: {user.email}</p>
-        ) : (
-          <p>Você não está logado.</p>
-        )}
-      </div>
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Últimas Oportunidades Cadastradas</h2>
         <table className="min-w-full divide-y divide-gray-200">
