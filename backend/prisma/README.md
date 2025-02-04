@@ -20,6 +20,11 @@ Inicialize o Prisma no projeto:
 npx prisma init
 ```
 
+Comando para resetar o banco de dados (cuidado)
+```bash
+npx prisma migrate reset 
+```
+
 Isso criará os arquivos:
 - **`prisma/schema.prisma`** (onde você define os modelos do banco).
 - **`.env`** (onde configuramos o acesso ao banco de dados).

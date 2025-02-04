@@ -47,12 +47,12 @@ model Oportunity {
 
 model Application {
   id           Int        @id @default(autoincrement())
-  user         User       @relation(fields: [userId], references: [id])
   userId       Int
-  oportunity   Oportunity @relation(fields: [oportunityId], references: [id])
   oportunityId Int
   appliedAt    DateTime   @default(now())
   comment      String?
+  oportunity   Oportunity @relation(fields: [oportunityId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
 
-  @@unique([userId, oportunityId]) 
+  @@unique([userId, oportunityId])
 }

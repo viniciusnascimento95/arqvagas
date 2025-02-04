@@ -29,6 +29,10 @@ export class OportunityController {
   findOne(@Param('id') id: string) {
     return this.oportunityService.findOne(+id);
   }
+  @Get(':id/applications')
+  findApplications(@Param('id') id: string) {
+    return this.oportunityService.findApplications(+id);
+  }
 
   @Patch(':id')
   update(

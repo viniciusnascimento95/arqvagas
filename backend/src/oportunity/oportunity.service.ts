@@ -22,6 +22,27 @@ export class OportunityService {
     });
   }
 
+
+  async findApplications(id: number) {
+    return this.prisma.application.findMany({
+      where: { oportunityId: id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            school: true,
+            init_date_school: true,
+            end_date_school: true,
+            personal_skills: true,
+            software_skills: true,
+            portfolio_url: true,
+          }
+        }
+      }
+    });
+  }
   async update(id: number, updateOportunityDto: Partial<CreateOportunityDto>) {
     return this.prisma.oportunity.update({
       where: { id },
