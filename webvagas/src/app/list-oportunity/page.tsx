@@ -46,6 +46,7 @@ export default function AdministrarOportunidades() {
   const [oportunidades, setOportunidades] = useState<Oportunity[]>([])
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenEdit, setIsOpenEdit] = useState(false);
 
   const router = useRouter();
 
@@ -57,17 +58,18 @@ export default function AdministrarOportunidades() {
   }, [])
 
   const itemsPerPage = 10
-  const filteredOportunidades = oportunidades.filter(oportunidade =>
-    oportunidade.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    oportunidade.companyInfo.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const filteredOportunidades = oportunidades
+    .sort((a, b) => Number(b.isAvailable) - Number(a.isAvailable))
+    .filter(oportunidade =>
+      oportunidade.jobTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      oportunidade.companyInfo.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
 
   const pageCount = Math.ceil(filteredOportunidades.length / itemsPerPage)
   const paginatedOportunidades = filteredOportunidades.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   )
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value)
     setCurrentPage(1)
@@ -80,6 +82,11 @@ export default function AdministrarOportunidades() {
   const openModal = (oportunidade: Oportunity) => {
     setSelectedOportunidade(oportunidade)
     setIsModalOpen(true)
+  }
+
+  const openModalEdit = (oportunidade: Oportunity) => {
+    setSelectedOportunidade(oportunidade)
+    setIsOpenEdit(true)
   }
 
   const handleOpenModalDelete = (oportunidade: Oportunity) => {
@@ -100,6 +107,23 @@ export default function AdministrarOportunidades() {
       setOportunidades([])
     }).finally(() => api.get('/oportunity').then((res) => setOportunidades(res.data)));
     setIsOpen(false);
+  }
+
+  function handleEdit() {
+    api.put(`/oportunity/${selectedOportunidade?.id}/status`, {
+      status: !selectedOportunidade?.isAvailable
+    }).then(() => {
+      toast({
+        className: cn(
+          'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+        ),
+        variant: 'default',
+        title: "Oportunidade foi atualizada o status com sucesso!",
+        description: `${selectedOportunidade?.jobTitle} foi ${selectedOportunidade?.isAvailable ? 'finalizada' : 'aberto'}.`,
+      })
+      setOportunidades([])
+    }).finally(() => api.get('/oportunity').then((res) => setOportunidades(res.data)));
+    setIsOpenEdit(false);
   }
 
   return (
@@ -136,28 +160,36 @@ export default function AdministrarOportunidades() {
               <tr key={oportunidade.id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{oportunidade.jobTitle}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{oportunidade.companyInfo.name}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{oportunidade.location}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{oportunidade.location.length > 10 ? `${oportunidade.location.substring(0, 20)}...` : oportunidade.location}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(oportunidade.createdAt).toLocaleDateString('pt-BR')}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{oportunidade.isAvailable ? <Badge variant="outline">Aberto</Badge> : <Badge variant="destructive">Finalizada</Badge>}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <Button variant="ghost"
+                    onClick={() => openModalEdit(oportunidade)}
+                  >
+                    {oportunidade.isAvailable ? <Badge variant="outline">Aberto</Badge> : <Badge variant="destructive">Finalizada</Badge>}
+                  </Button>
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button
+                  {oportunidade.isAvailable && <button
                     onClick={() => { router.push(`/list-oportunity/${oportunidade.id}/edit`) }}
                     className="text-blue-600 hover:text-blue-900 mr-4"
                   >
                     <PencilIcon className="h-5 w-5" />
-                  </button>
+                  </button>}
+
                   <button
                     onClick={() => openModal(oportunidade)}
                     className="text-green-600 hover:text-green-900 mr-3"
                   >
                     <UserGroupIcon className="h-5 w-5" />
                   </button>
-                  <button
+
+                  {oportunidade.isAvailable && <button
                     onClick={() => handleOpenModalDelete(oportunidade)}
                     className="text-gray-600 hover:text-green-900"
                   >
                     <TrashIcon className="h-5 w-5" />
-                  </button>
+                  </button>}
                 </td>
               </tr>
             ))}
@@ -205,6 +237,32 @@ export default function AdministrarOportunidades() {
         </DialogContent>
       </Dialog>
 
+      {/* Dialog edit status*/}
+      <Dialog
+        open={isOpenEdit}
+        onOpenChange={setIsOpenEdit}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edição de status {selectedOportunidade?.isAvailable ? <Badge variant="outline">Aberto</Badge> : <Badge variant="destructive">Finalizada</Badge>}</DialogTitle>
+          </DialogHeader>
+          <p>Tem certeza de que deseja alterar o status da oportunidade?</p>
+          <DialogFooter>
+            <Button variant="outline"
+              onClick={() => setIsOpenEdit(false)}
+            >
+              Cancelar
+            </Button>
+            <Button variant="default"
+              onClick={handleEdit}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              Atualizar status
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Modal para visualizar candidatos */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         {selectedOportunidade && (
@@ -213,7 +271,12 @@ export default function AdministrarOportunidades() {
             <p className="mb-2">Total de candidatos: {selectedOportunidade.availablePositions}</p>
             <p className="mb-2">Previsão de contrato: {selectedOportunidade.workSchedule}</p>
             {/* Aqui você pode adicionar uma lista de candidatos quando tiver esses dados */}
+
+
+
             <p>Lista de candidatos será exibida aqui.</p>
+
+
           </div>
         )}
       </Modal>

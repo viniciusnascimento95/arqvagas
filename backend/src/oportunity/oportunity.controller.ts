@@ -6,13 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  Put,
 } from '@nestjs/common';
 import { CreateOportunityDto } from './dto/create-oportunity.dto';
 import { OportunityService } from './oportunity.service';
 
 @Controller('oportunity')
 export class OportunityController {
-  constructor(private readonly oportunityService: OportunityService) {}
+  constructor(private readonly oportunityService: OportunityService) { }
 
   @Post()
   create(@Body() createOportunityDto: CreateOportunityDto) {
@@ -35,6 +36,13 @@ export class OportunityController {
     @Body() updateOportunityDto: Partial<CreateOportunityDto>,
   ) {
     return this.oportunityService.update(+id, updateOportunityDto);
+  }
+  @Put(':id/status')
+  updateStatus(
+    @Param('id') id: string,
+    @Body('status') status: boolean,
+  ) {
+    return this.oportunityService.updateStatus(+id, status);
   }
 
   @Delete(':id')

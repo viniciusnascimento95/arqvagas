@@ -4,7 +4,7 @@ import { CreateOportunityDto } from './dto/create-oportunity.dto';
 
 @Injectable()
 export class OportunityService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(createOportunityDto: CreateOportunityDto) {
     return this.prisma.oportunity.create({
@@ -26,6 +26,13 @@ export class OportunityService {
     return this.prisma.oportunity.update({
       where: { id },
       data: updateOportunityDto,
+    });
+  }
+
+  async updateStatus(id: number, status: boolean) {
+    return this.prisma.oportunity.update({
+      where: { id },
+      data: { isAvailable: status },
     });
   }
 
