@@ -25,6 +25,12 @@ Comando para resetar o banco de dados (cuidado)
 npx prisma migrate reset 
 ```
 
+Aplicar as migrations no banco de dados 
+
+```bash
+npx prisma migrate deploy
+```
+ 
 Isso criará os arquivos:
 - **`prisma/schema.prisma`** (onde você define os modelos do banco).
 - **`.env`** (onde configuramos o acesso ao banco de dados).
