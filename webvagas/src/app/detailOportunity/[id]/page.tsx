@@ -1,0 +1,213 @@
+'use client'
+
+import { Button } from '@/components/ui/button'
+import { api } from '@/services/api'
+import { EnvelopeIcon } from '@heroicons/react/24/outline'
+import { PhoneIcon, UserCircleIcon } from 'lucide-react'
+import Link from 'next/link'
+import { useParams, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+
+
+interface OportunityProps {
+  id: string,
+  jobTitle: string,
+  contractType: string,
+  requirements: [],
+  jobDescription: string,
+  experienceLevel: string,
+  benefits: [],
+  location: string,
+  workSchedule: string,
+  availablePositions: string,
+  expectedStartDate: Date,
+  companyInfo: {
+    name: string,
+    industry: string,
+  },
+  mainResponsibilities: [],
+  toolsAndSoftware: [],
+  publicationDate: Date | null | undefined,
+  applicationDeadline: '',
+  isAvailable: true,
+}
+
+interface User {
+  id: number
+  userId: number
+  oportunityId: number
+  appliedAt: string
+  comment: string
+  user: {
+    id: number
+    name: string
+    email: string
+    school: string
+    init_date_school: string
+    end_date_school: string
+    personal_skills: string[]
+    software_skills: string[]
+    portfolio_url: string
+  }
+}
+export default function DetailOportunity() {
+  const [users, setUsers] = useState<User[]>([])
+  const [job, setJob] = useState<OportunityProps | null>(null)
+  const router = useRouter();
+  const { id } = useParams();
+
+  const [showFull, setShowFull] = useState(false);
+
+  useEffect(() => {
+    if (id) {
+      api.get(`oportunity/${id}`).then((res) => {
+        setJob(res.data)
+      })
+    }
+  }, [id])
+
+  useEffect(() => {
+    api.get(`/oportunity/${1}/applications`).then((res) => {
+      setUsers(res.data)
+    })
+  }, [])
+
+  return (
+    <div className="space-y-6">
+      <Button variant="outline" onClick={() => router.back()}>Voltar</Button>
+
+      <div className="max-w-full mx-auto p-6">
+        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+          <div className="px-4 py-5 sm:px-6 flex justify-between">
+
+            <h2 className="text-lg leading-6 font-medium text-gray-900">Detalhes da Oportunidade:  {job?.jobTitle}</h2>
+            <Button variant="default" onClick={() => setShowFull(!showFull)}>{showFull ? "Ver Menos" : "Ver detalhes"}</Button>
+          </div>
+          {showFull && <div className="border-t border-gray-200 px-4 py-5 sm:p-0">
+            <dl className="sm:divide-y sm:divide-gray-200">
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Empresa</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{job?.companyInfo.name}</dd>
+              </div>
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Setor</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{job?.companyInfo.industry}</dd>
+              </div>
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Localização</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{job?.location}</dd>
+              </div>
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Data de Publicação</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  {job?.publicationDate ? new Date(job.publicationDate).toLocaleDateString('pt-BR') : ''}
+                </dd>
+              </div>
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Carga horária</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{job?.workSchedule}</dd>
+              </div>
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Descrição</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">{job?.jobDescription}</dd>
+              </div>
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Requisitos</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  <ul className="list-disc pl-5 space-y-1">
+                    {job?.requirements.map((req, index) => (
+                      <li key={index}>{req}</li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Beneficios</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  <ul className="list-disc pl-5 space-y-1">
+                    {job?.benefits.map((req, index) => (
+                      <li key={index}>{req}</li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Ferramentas</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  <ul className="list-disc pl-5 space-y-1">
+                    {job?.toolsAndSoftware.map((req, index) => (
+                      <li key={index}>{req}</li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+
+              <div className="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Responsabilidades</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  <ul className="list-disc pl-5 space-y-1">
+                    {job?.mainResponsibilities.map((req, index) => (
+                      <li key={index}>{req}</li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+            </dl>
+          </div>}
+
+        </div>
+
+        <div className="bg-white shadow overflow-hidden sm:rounded-lg mt-6">
+          <div className="px-4 py-5 sm:px-6">
+            <h2 className="text-lg leading-6 font-medium text-gray-900">Candidatos </h2>
+            <div className='flex justify-between items-center'>
+              <p className="mt-1 max-w-2xl text-sm text-gray-500">
+                Lista de pessoas que se candidataram para esta oportunidade
+              </p>
+              <p className='text-sm text-gray-500'>Total: {users.length}</p>
+            </div>
+          </div>
+          <div className="border-t border-gray-200">
+            <ul className="divide-y divide-gray-200">
+
+              {users?.map((candidato) => (
+                <li key={candidato?.user.id} className="px-4 py-4 sm:px-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0">
+                        <UserCircleIcon className="h-12 w-12 text-gray-400" />
+                      </div>
+                      <div className="ml-4">
+                        <div className="text-sm font-medium text-gray-900">{candidato.user.name}</div>
+                        <div className="text-sm text-gray-500 flex items-center">
+                          <EnvelopeIcon className="h-4 w-4 mr-1" />
+                          {candidato.user.email}
+                        </div>
+                        <div className="text-sm text-gray-500 flex items-center">
+                          <PhoneIcon className="h-4 w-4 mr-1" />
+                          {/* {candidato?.telefone} */}
+                          falta inserir telefone no banco de dados
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <Link
+                        href={`/candidato/${candidato.id}`}
+                        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      >
+                        Ver Perfil
+                      </Link>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  )
+}
