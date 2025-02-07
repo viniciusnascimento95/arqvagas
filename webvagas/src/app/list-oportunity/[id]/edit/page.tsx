@@ -447,7 +447,7 @@ export default function Edit() {
                               type="text"
                               name={`benefits[${index}]`}
                               value={benefit}
-                              placeholder={`Requisito ${index + 1}`}
+                              placeholder={`Beneficios ${index + 1}`}
                               onChange={handleChange}
                               className="flex-1"
                             />

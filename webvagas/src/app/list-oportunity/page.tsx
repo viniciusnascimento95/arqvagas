@@ -9,7 +9,6 @@ import { api } from '@/services/api'
 import { MagnifyingGlassIcon, PencilIcon, TrashIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import Modal from '../components/Modal'
 
 type CompanyProps = {
   name: string
@@ -41,7 +40,6 @@ interface Oportunity {
 export default function AdministrarOportunidades() {
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedOportunidade, setSelectedOportunidade] = useState<Oportunity | null>(null)
   const [oportunidades, setOportunidades] = useState<Oportunity[]>([])
 
@@ -79,10 +77,6 @@ export default function AdministrarOportunidades() {
     setCurrentPage(page)
   }
 
-  const openModal = (oportunidade: Oportunity) => {
-    setSelectedOportunidade(oportunidade)
-    setIsModalOpen(true)
-  }
 
   const openModalEdit = (oportunidade: Oportunity) => {
     setSelectedOportunidade(oportunidade)
@@ -178,7 +172,8 @@ export default function AdministrarOportunidades() {
                   </button>}
 
                   <button
-                    onClick={() => openModal(oportunidade)}
+                    title='Detalhe da oprtunidade'
+                    onClick={() => { router.push(`/detailOportunity/${oportunidade.id}`) }}
                     className="text-green-600 hover:text-green-900 mr-3"
                   >
                     <UserGroupIcon className="h-5 w-5" />
@@ -246,7 +241,7 @@ export default function AdministrarOportunidades() {
           <DialogHeader>
             <DialogTitle>Edição de status {selectedOportunidade?.isAvailable ? <Badge variant="outline">Aberto</Badge> : <Badge variant="destructive">Finalizada</Badge>}</DialogTitle>
           </DialogHeader>
-          <p>Tem certeza de que deseja alterar o status da oportunidade?</p>
+          <p>Tem certeza de que deseja alterar o status da oportunidade ?</p>
           <DialogFooter>
             <Button variant="outline"
               onClick={() => setIsOpenEdit(false)}
@@ -257,29 +252,11 @@ export default function AdministrarOportunidades() {
               onClick={handleEdit}
               className="bg-blue-600 hover:bg-blue-700"
             >
-              Atualizar status
+              Atualizar status para {selectedOportunidade?.isAvailable ? "Finalizada" : "Aberta"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Modal para visualizar candidatos */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        {selectedOportunidade && (
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">Candidatos para {selectedOportunidade.jobTitle}</h2>
-            <p className="mb-2">Total de candidatos: {selectedOportunidade.availablePositions}</p>
-            <p className="mb-2">Previsão de contrato: {selectedOportunidade.workSchedule}</p>
-            {/* Aqui você pode adicionar uma lista de candidatos quando tiver esses dados */}
-
-
-
-            <p>Lista de candidatos será exibida aqui.</p>
-
-
-          </div>
-        )}
-      </Modal>
     </div>
   )
 }
