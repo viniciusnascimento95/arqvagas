@@ -2,7 +2,7 @@
 [x] create form edit status oportunity
 [x] update status oportunity
 [ ] view oportunity details user applied in the oportunity
-[ ] insert phone number in user
+[x] insert phone number in user
 
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
