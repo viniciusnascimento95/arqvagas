@@ -11,6 +11,7 @@ model User {
   id              Int           @id @default(autoincrement())
   email           String        @unique
   name            String?
+  phone           String?
   school          String?
   init_date_school DateTime?
   end_date_school DateTime?

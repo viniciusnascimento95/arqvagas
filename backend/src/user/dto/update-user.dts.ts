@@ -28,6 +28,14 @@ export class UpdateUserDto {
   email: string;
 
   @ApiProperty({
+    description: 'numero de telefone do usuário',
+    example: '(55) 99999-9999',
+  })
+  @IsString()
+  @IsNotEmpty()
+  phone: string;
+
+  @ApiProperty({
     description: 'Nome da escola do usuário',
     example: 'Escola Técnica Teste',
   })

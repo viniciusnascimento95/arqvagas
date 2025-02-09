@@ -41,6 +41,7 @@ interface User {
   user: {
     id: number
     name: string
+    phone: string
     email: string
     school: string
     init_date_school: string
@@ -187,8 +188,7 @@ export default function DetailOportunity() {
                         </div>
                         <div className="text-sm text-gray-500 flex items-center">
                           <PhoneIcon className="h-4 w-4 mr-1" />
-                          {/* {candidato?.telefone} */}
-                          falta inserir telefone no banco de dados
+                          {candidato?.user.phone}
                         </div>
                       </div>
                     </div>

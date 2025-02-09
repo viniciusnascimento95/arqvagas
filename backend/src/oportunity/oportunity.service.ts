@@ -32,6 +32,7 @@ export class OportunityService {
             id: true,
             name: true,
             email: true,
+            phone: true,
             school: true,
             init_date_school: true,
             end_date_school: true,

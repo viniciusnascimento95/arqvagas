@@ -3,6 +3,7 @@ CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "phone" TEXT,
     "school" TEXT,
     "init_date_school" TIMESTAMP(3),
     "end_date_school" TIMESTAMP(3),
