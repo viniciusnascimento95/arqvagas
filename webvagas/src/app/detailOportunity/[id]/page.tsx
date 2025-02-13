@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { api } from '@/services/api'
-import { EnvelopeIcon } from '@heroicons/react/24/outline'
+import { DocumentArrowDownIcon, EnvelopeIcon, TableCellsIcon } from '@heroicons/react/24/outline'
 import { PhoneIcon, UserCircleIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
@@ -68,10 +68,10 @@ export default function DetailOportunity() {
   }, [id])
 
   useEffect(() => {
-    api.get(`/oportunity/${1}/applications`).then((res) => {
+    api.get(`/oportunity/${id}/applications`).then((res) => {
       setUsers(res.data)
     })
-  }, [])
+  }, [id])
 
   return (
     <div className="space-y-6">
@@ -162,7 +162,21 @@ export default function DetailOportunity() {
 
         <div className="bg-white shadow overflow-hidden sm:rounded-lg mt-6">
           <div className="px-4 py-5 sm:px-6">
-            <h2 className="text-lg leading-6 font-medium text-gray-900">Candidatos </h2>
+            <div className='flex justify-between items-center'>
+              <h2 className="text-lg leading-6 font-medium text-gray-900">Candidatos </h2>
+
+              {users.length > 0 && <div className="mt-1 max-w-2xl flex space-x-2">
+                <Button
+                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-red-400 hover:bg-gray-200">
+                  <DocumentArrowDownIcon className="h-5 w-5 mr-1" />
+                  PDF
+                </Button>
+                <Button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-green-300 hover:bg-gray-200">
+                  <TableCellsIcon className="h-5 w-5 mr-1" />
+                  Excel
+                </Button>
+              </div>}
+            </div>
             <div className='flex justify-between items-center'>
               <p className="mt-1 max-w-2xl text-sm text-gray-500">
                 Lista de pessoas que se candidataram para esta oportunidade
@@ -203,6 +217,12 @@ export default function DetailOportunity() {
                   </div>
                 </li>
               ))}
+
+              {users.length === 0 && (
+                <div className="px-4 py-4 sm:px-6">
+                  <p className="text-lg text-gray-800 text-center">Nenhum candidato encontrado :(</p>
+                </div>
+              )}
             </ul>
           </div>
         </div>
