@@ -1,7 +1,7 @@
 [x] next steps: create login with service account firebbase
 [x] create form edit status oportunity
 [x] update status oportunity
-[ ] view oportunity details user applied in the oportunity
+[x] view oportunity details user applied in the oportunity
 [x] insert phone number in user
 
 

@@ -1,8 +1,10 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/hooks/use-toast'
+import { cn } from '@/lib/utils'
 import { api } from '@/services/api'
-import { DocumentArrowDownIcon, EnvelopeIcon, TableCellsIcon } from '@heroicons/react/24/outline'
+import { AcademicCapIcon, CalendarDaysIcon, DocumentArrowDownIcon, EnvelopeIcon, TableCellsIcon } from '@heroicons/react/24/outline'
 import { PhoneIcon, UserCircleIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
@@ -56,6 +58,7 @@ export default function DetailOportunity() {
   const [job, setJob] = useState<OportunityProps | null>(null)
   const router = useRouter();
   const { id } = useParams();
+  const { toast } = useToast()
 
   const [showFull, setShowFull] = useState(false);
 
@@ -69,9 +72,22 @@ export default function DetailOportunity() {
 
   useEffect(() => {
     api.get(`/oportunity/${id}/applications`).then((res) => {
+      console.log('=>res --->', res);
       setUsers(res.data)
     })
   }, [id])
+
+
+  function featureDevelop() {
+    toast({
+      className: cn(
+        'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+      ),
+      variant: 'default',
+      title: "Função em desenvolvimento!",
+      description: "Por favor aguarde até que a função seja desenvolvida.",
+    })
+  }
 
   return (
     <div className="space-y-6">
@@ -167,11 +183,14 @@ export default function DetailOportunity() {
 
               {users.length > 0 && <div className="mt-1 max-w-2xl flex space-x-2">
                 <Button
+                  onClick={featureDevelop}
                   className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-red-400 hover:bg-gray-200">
                   <DocumentArrowDownIcon className="h-5 w-5 mr-1" />
                   PDF
                 </Button>
-                <Button className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-green-300 hover:bg-gray-200">
+                <Button
+                  onClick={featureDevelop}
+                  className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-green-300 hover:bg-gray-200">
                   <TableCellsIcon className="h-5 w-5 mr-1" />
                   Excel
                 </Button>
@@ -206,9 +225,25 @@ export default function DetailOportunity() {
                         </div>
                       </div>
                     </div>
+                    <div className="flex items-center">
+                      <div className="ml-4">
+                        {candidato.user.school &&
+                          <div className="text-sm text-gray-500 flex items-center">
+                            <AcademicCapIcon className="h-4 w-4 mr-1" />
+                            {candidato.user.school}
+                          </div>
+                        }
+
+                        {candidato.user.end_date_school && <div className="text-sm text-gray-500 flex items-center">
+                          <CalendarDaysIcon className="h-4 w-4 mr-1" />
+                          Conclusão: {new Date(candidato.user.end_date_school).toLocaleDateString('pt-BR')}
+                        </div>
+                        }
+                      </div>
+                    </div>
                     <div>
                       <Link
-                        href={`/candidato/${candidato.id}`}
+                        href={`/candidato/${candidato.user.id}`}
                         className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       >
                         Ver Perfil

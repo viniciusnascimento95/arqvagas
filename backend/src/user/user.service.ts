@@ -6,7 +6,17 @@ import { UpdateUserDto } from './dto/update-user.dts';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
+
+  async findAll(): Promise<User[]> {
+    return this.prisma.user.findMany();
+  }
+
+  async findOne(id: number): Promise<User> {
+    return this.prisma.user.findUniqueOrThrow({
+      where: { id },
+    });
+  }
 
   async createUser(data: Prisma.UserCreateInput): Promise<User> {
     // Hasheia a senha com bcrypt

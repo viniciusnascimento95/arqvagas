@@ -40,12 +40,18 @@ interface Oportunity {
 export default function Home() {
 
   const [data, setData] = useState<Oportunity[]>([]);
+
   const [totJob, setTotJob] = useState(0);
+  const [totUser, setTotUser] = useState(0);
 
   useEffect(() => {
     api.get('/oportunity').then((res) => {
       setData(res.data.slice(-7))
       setTotJob(res.data.length)
+    })
+
+    api.get('/user').then((res) => {
+      setTotUser(res.data.length)
     })
   }, [])
 
@@ -54,8 +60,8 @@ export default function Home() {
       <h1 className="text-3xl font-semibold text-gray-800">Dashboard</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <DashboardCard title="Total de Vagas" value={totJob} icon={BriefcaseIcon} />
-        <DashboardCard title="Candidaturas" value={10} icon={UserGroupIcon} />
-        <DashboardCard title="Vagas Preenchidas" value={1} icon={ChartBarIcon} />
+        <DashboardCard title="Usuários" value={totUser} icon={UserGroupIcon} />
+        <DashboardCard title="Vagas Preenchidas" value={10} icon={ChartBarIcon} />
       </div>
 
       <div className="bg-white rounded-lg shadow-md p-6">

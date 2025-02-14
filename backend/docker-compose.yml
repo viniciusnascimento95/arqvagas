@@ -12,8 +12,8 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432" # Porta de mapeamento (local:container)
     volumes:
-      - postgres_data:/var/lib/postgresql/data # Volume para persistência de dados
+      - postgres_arqvagas_data:/var/lib/postgresql/data # Volume para persistência de dados
 
 volumes:
-  postgres_data:
+  postgres_arqvagas_data:
     driver: local # Driver do Docker para volumes persistentes
