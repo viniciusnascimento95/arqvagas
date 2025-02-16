@@ -3,16 +3,16 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
-import { app, auth } from "@/lib/firabase";
+import { app } from "@/lib/firabase";
 import { cn } from "@/lib/utils";
-import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import * as Yup from "yup";
 
 const authGoogle = getAuth(app);
-const googleProvider = new GoogleAuthProvider();
+// const googleProvider = new GoogleAuthProvider();
 
 async function loginWithEmail(email: string, password: string) {
   try {
@@ -24,14 +24,25 @@ async function loginWithEmail(email: string, password: string) {
   }
 }
 
-async function loginWithGoogle() {
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    return result.user;
-  } catch (error) {
-    console.log('=>error --->', error);
-    // throw new Error(error.message);
-  }
+// async function loginWithGoogle() {
+//   try {
+//     const result = await signInWithPopup(auth, googleProvider);
+//     return result.user;
+//   } catch (error) {
+//     console.log('=>error --->', error);
+//     // throw new Error(error.message);
+//   }
+// }
+
+function featureDevelop() {
+  toast({
+    className: cn(
+      'top-0 right-0 flex fixed md:max-w-[420px] md:top-4 md:right-4'
+    ),
+    variant: 'default',
+    title: "Função em desenvolvimento em breve você vai fazer o login com o google!",
+    description: "Por favor aguarde até que a função seja desenvolvida.",
+  })
 }
 
 export default function LoginPage() {
@@ -102,7 +113,7 @@ export default function LoginPage() {
           </form>
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">ou</p>
-            <Button onClick={loginWithGoogle} disabled className="mt-2 w-full bg-blue-500 hover:bg-blue-600">
+            <Button onClick={featureDevelop} className="mt-2 w-full bg-blue-500 hover:bg-blue-600">
               Entrar com Google
             </Button>
           </div>
