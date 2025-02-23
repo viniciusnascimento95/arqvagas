@@ -6,6 +6,7 @@ import { UserService } from 'src/user/user.service';
 type UserLoginProps = {
   id: string;
   email: string;
+  name: string;
   password: string;
 };
 @Injectable()
@@ -25,9 +26,12 @@ export class AuthService {
     throw new UnauthorizedException('Invalid credentials');
   }
 
-  async login(user: UserLoginProps): Promise<{ access_token: string }> {
-    const payload = { username: user.email, sub: user.id };
+  async login(user: UserLoginProps): Promise<{ name: string ,access_token: string, email: string}> {
+    const payload = { username: user.name, sub: user.id, email: user.email };
+
     return {
+      name: user.name,
+      email: user.email,
       access_token: this.jwtService.sign(payload),
     };
   }
