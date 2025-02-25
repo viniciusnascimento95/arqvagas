@@ -1,4 +1,4 @@
-import { useAuth } from "@/constants/AuthContext";
+import { api } from "@/services/api";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState } from "react";
@@ -7,25 +7,44 @@ import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 // Define o tipo de navegação baseado no RootParamList
 type NavigationProps = NativeStackNavigationProp<ReactNavigation.RootParamList>;
 
-const LoginScreen: React.FC = () => {
-  const { signIn } = useAuth();
+const RegisterScreen: React.FC = () => {
+
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigation = useNavigation<NavigationProps>();
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     setLoading(true);
-    await signIn(email, password).then(() => {
-      navigation.navigate("Home");
+    // Implementar lógica de registro
+
+    api.post("/auth/register", { name, email, phone, password }).then((response) => {
+      console.log(response.status);
+
+      if(response.status === 201) {
+        navigation.navigate('Login');
+
+        alert('Usuário criado com sucesso!');
+      }
+    }).catch((error) => {
+      console.log(error);
     });
     setLoading(false);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>Criar Conta</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Nome"
+        value={name}
+        onChangeText={setName}
+        autoCapitalize="words"
+      />
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -36,20 +55,26 @@ const LoginScreen: React.FC = () => {
       />
       <TextInput
         style={styles.input}
+        placeholder="Celular"
+        value={phone}
+        onChangeText={setPhone}
+        keyboardType="phone-pad"
+      />
+      <TextInput
+        style={styles.input}
         placeholder="Senha"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title={loading ? "Entrando..." : "Entrar"} onPress={handleLogin} disabled={loading} />
+      <Button title={loading ? "Criando..." : "Criar Conta"} onPress={handleRegister} disabled={loading} />
 
       <Text style={{ marginTop: 20, textAlign: 'center' }}>
-        Ainda não tem conta?{' '}
-        <Text style={{ color: '#007AFF' }} onPress={() => navigation.navigate('Register')}>
-          Criar conta
+        Já tem uma conta?{' '}
+        <Text style={{ color: '#007AFF' }} onPress={() => navigation.navigate('Login')}>
+          Fazer login
         </Text>
       </Text>
-
     </View>
   );
 };
@@ -73,4 +98,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;
