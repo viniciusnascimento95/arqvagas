@@ -1,4 +1,4 @@
-import HomeScreen from "@/app/screens/home";
+import { Dashboard } from "@/app/screens/home";
 import LoginScreen from "@/app/screens/login";
 import RegisterScreen from "@/app/screens/register";
 import { useAuth } from "@/constants/AuthContext";
@@ -16,11 +16,11 @@ const Routes: React.FC = () => {
   return (
     <Stack.Navigator initialRouteName={RoutesNames.LOGIN} screenOptions={{ headerShown: false }}>
       {token ? (
-        <Stack.Screen name={RoutesNames.HOME} component={HomeScreen} />
+        <Stack.Screen name={RoutesNames.HOME} component={Dashboard} />
       ) : (
         <Stack.Screen name={RoutesNames.LOGIN} component={LoginScreen} />
       )}
-      <Stack.Screen name="init" component={HomeScreen} />
+      {/* <Stack.Screen name="init" component={HomeScreen} /> */}
       <Stack.Screen name={RoutesNames.REGISTER} component={RegisterScreen} />
 
       {/* RegisterScreen */}
