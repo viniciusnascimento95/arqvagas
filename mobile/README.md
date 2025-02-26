@@ -1,3 +1,14 @@
+- [ ] Create screen dashboard with info base of user and resume
+- [ ] Create screen filter oportunity on mobile
+- [ ] Application to oportunity
+- [ ] Create screen detail opportunity
+- [ ] Create screen detail user
+- [ ] Create screen detail company
+- [ ] Create screen detail job
+- [ ] Create screen change password
+- [ ] Create screen update profile
+
+
 # Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
