@@ -1,3 +1,4 @@
+import { RoutesNames } from "@/constants/RoutesNames";
 import { api } from "@/services/api";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -71,7 +72,7 @@ const RegisterScreen: React.FC = () => {
 
       <Text style={{ marginTop: 20, textAlign: 'center' }}>
         Já tem uma conta?{' '}
-        <Text style={{ color: '#007AFF' }} onPress={() => navigation.navigate('Login')}>
+        <Text style={{ color: '#007AFF' }} onPress={() => navigation.navigate(RoutesNames.LOGIN)}>
           Fazer login
         </Text>
       </Text>

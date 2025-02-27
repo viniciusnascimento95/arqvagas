@@ -1,11 +1,10 @@
 import { useAuth } from "@/constants/AuthContext";
+import { NavigationProps, RoutesNames } from "@/constants/RoutesNames";
 import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 
-// Define o tipo de navegação baseado no RootParamList
-type NavigationProps = NativeStackNavigationProp<ReactNavigation.RootParamList>;
+
 
 const LoginScreen: React.FC = () => {
   const { signIn } = useAuth();
@@ -18,7 +17,7 @@ const LoginScreen: React.FC = () => {
   const handleLogin = async () => {
     setLoading(true);
     await signIn(email, password).then(() => {
-      navigation.navigate("Home");
+      navigation.navigate(RoutesNames.HOME);
     });
     setLoading(false);
   };
