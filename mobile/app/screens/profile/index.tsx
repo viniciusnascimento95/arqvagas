@@ -12,7 +12,7 @@ import { useNavigation } from "expo-router";
 import { ChevronRight, Settings, User } from "lucide-react-native";
 import { Pressable, SafeAreaView } from "react-native";
 
-const MobileProfileScreen = () => {
+export default function MobileProfileScreen() {
   const { signOut } = useAuth()
   const navigation = useNavigation<NavigationProps>();
   return (
@@ -66,11 +66,12 @@ const PersonalInfoSection = () => {
 };
 
 const ProfileCard = () => {
+  const { user } = useAuth()
   return (
     <HStack className="justify-between items-center">
       <HStack space="md">
         <Avatar className="bg-primary-500">
-          <AvatarFallbackText>Henry Stan</AvatarFallbackText>
+          <AvatarFallbackText>{user?.name} outro nome</AvatarFallbackText>
           <AvatarImage
             source={{
               uri: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=800&q=60",
@@ -78,7 +79,8 @@ const ProfileCard = () => {
           />
         </Avatar>
         <VStack>
-          <Text>Henry Stan</Text>
+          <Text>{user?.name}</Text>
+          <Text className="text-gray-500">{user?.email}</Text>
         </VStack>
       </HStack>
       <Pressable>
@@ -87,6 +89,3 @@ const ProfileCard = () => {
     </HStack>
   );
 };
-
-
-export default MobileProfileScreen;
