@@ -5,7 +5,7 @@ import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -22,9 +22,13 @@ export class UserController {
     return this.userService.findAll();
   }
 
-
   @Get(':id/showUser')
   findUniqueUser(@Param('id') id: string) {
     return this.userService.findOne(+id);
+  }
+
+  @Get('/showUserByEmail/:email')
+  findUniqueUserByEmail(@Param('email') email: string) {
+    return this.userService.findUserByEmail(email);
   }
 }

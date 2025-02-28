@@ -4,7 +4,7 @@ import { CreateOportunityDto } from './dto/create-oportunity.dto';
 
 @Injectable()
 export class OportunityService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createOportunityDto: CreateOportunityDto) {
     return this.prisma.oportunity.create({
@@ -22,7 +22,6 @@ export class OportunityService {
     });
   }
 
-
   async findApplications(id: number) {
     return this.prisma.application.findMany({
       where: { oportunityId: id },
@@ -36,12 +35,12 @@ export class OportunityService {
             school: true,
             init_date_school: true,
             end_date_school: true,
-            personal_skills: true,
-            software_skills: true,
+            // personal_skills: true, descontinuado pois o usuário vai subir um arquivo com as skills
+            // software_skills: true, descontinuado pois o usuário vai subir um arquivo com as skills
             portfolio_url: true,
-          }
-        }
-      }
+          },
+        },
+      },
     });
   }
   async update(id: number, updateOportunityDto: Partial<CreateOportunityDto>) {

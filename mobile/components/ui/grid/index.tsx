@@ -1,19 +1,19 @@
-import React, {
-  useEffect,
-  useState,
-  createContext,
-  useContext,
-  useMemo,
-  forwardRef,
-} from 'react';
 import type { VariantProps } from '@gluestack-ui/nativewind-utils';
-import { View, Dimensions, Platform, ViewProps } from 'react-native';
-import { gridStyle, gridItemStyle } from './styles';
 import { cssInterop } from 'nativewind';
+import React, {
+  createContext,
+  forwardRef,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { Dimensions, Platform, View, ViewProps } from 'react-native';
 import {
-  useBreakpointValue,
   getBreakPointValue,
-} from '@/components/ui/utils/use-break-point-value';
+  useBreakpointValue,
+} from '../utils/use-break-point-value';
+import { gridItemStyle, gridStyle } from './styles';
 
 const { width: DEVICE_WIDTH } = Dimensions.get('window');
 

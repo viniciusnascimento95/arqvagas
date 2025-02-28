@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
-  IsArray,
   IsDate,
   IsEmail,
   IsNotEmpty,
@@ -61,23 +60,24 @@ export class UpdateUserDto {
   @IsOptional()
   end_date_school?: Date;
 
-  @ApiProperty({
-    description: 'Habilidades técnicas do usuário',
-    example: ['JavaScript', 'NestJS', 'React'],
-  })
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  software_skills?: string[];
+  // Descontinuado pois o usuário vai anexar o curriculo pelo link
+  // @ApiProperty({
+  //   description: 'Habilidades técnicas do usuário',
+  //   example: ['JavaScript', 'NestJS', 'React'],
+  // })
+  // @IsArray()
+  // @IsString({ each: true })
+  // @IsOptional()
+  // software_skills?: string[];
 
-  @ApiProperty({
-    description: 'Habilidades pessoais do usuário',
-    example: ['Comunicação', 'Trabalho em equipe'],
-  })
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  personal_skills?: string[];
+  // @ApiProperty({
+  //   description: 'Habilidades pessoais do usuário',
+  //   example: ['Comunicação', 'Trabalho em equipe'],
+  // })
+  // @IsArray()
+  // @IsString({ each: true })
+  // @IsOptional()
+  // personal_skills?: string[];
 
   @ApiProperty({
     description: 'URL do portfólio do usuário',

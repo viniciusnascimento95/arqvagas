@@ -15,8 +15,8 @@ model User {
   school          String?
   init_date_school DateTime?
   end_date_school DateTime?
-  software_skills String[]      // Representa um array de strings
-  personal_skills String[]      // Representa um array de strings
+  // software_skills String[]      // Representa um array de strings
+  // personal_skills String[]      // Representa um array de strings
   portfolio_url   String?
   password        String
   createdAt       DateTime      @default(now())

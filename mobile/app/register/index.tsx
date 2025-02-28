@@ -1,22 +1,16 @@
-import { RoutesNames } from "@/constants/RoutesNames";
+
+
 import { api } from "@/services/api";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 
-// Define o tipo de navegação baseado no RootParamList
-type NavigationProps = NativeStackNavigationProp<ReactNavigation.RootParamList>;
-
 const RegisterScreen: React.FC = () => {
-
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const navigation = useNavigation<NavigationProps>();
 
   const handleRegister = async () => {
     setLoading(true);
@@ -25,8 +19,9 @@ const RegisterScreen: React.FC = () => {
     api.post("/auth/register", { name, email, phone, password }).then((response) => {
       console.log(response.status);
 
-      if(response.status === 201) {
-        navigation.navigate('Login');
+      if (response.status === 201) {
+
+        router.navigate('/')
 
         alert('Usuário criado com sucesso!');
       }
@@ -72,7 +67,7 @@ const RegisterScreen: React.FC = () => {
 
       <Text style={{ marginTop: 20, textAlign: 'center' }}>
         Já tem uma conta?{' '}
-        <Text style={{ color: '#007AFF' }} onPress={() => navigation.navigate(RoutesNames.LOGIN)}>
+        <Text style={{ color: '#007AFF' }} onPress={() => router.navigate('/')}>
           Fazer login
         </Text>
       </Text>

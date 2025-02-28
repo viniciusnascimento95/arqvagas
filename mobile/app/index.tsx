@@ -1,23 +1,22 @@
-import { useAuth } from "@/constants/AuthContext";
-import { NavigationProps, RoutesNames } from "@/constants/RoutesNames";
-import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { useAuth } from "../constants/AuthContext";
+import '../global.css';
 
 
-
-const LoginScreen: React.FC = () => {
+export default function LoginScreen() {
   const { signIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const navigation = useNavigation<NavigationProps>();
-
   const handleLogin = async () => {
     setLoading(true);
     await signIn(email, password).then(() => {
-      navigation.navigate(RoutesNames.HOME);
+      router.navigate('/home')
+    }).catch((error) => {
+      console.log(error);
     });
     setLoading(false);
   };
@@ -44,7 +43,7 @@ const LoginScreen: React.FC = () => {
 
       <Text style={{ marginTop: 20, textAlign: 'center' }}>
         Ainda não tem conta?{' '}
-        <Text style={{ color: '#007AFF' }} onPress={() => navigation.navigate('Register')}>
+        <Text style={{ color: '#007AFF' }} onPress={() => router.navigate('/register')}>
           Criar conta
         </Text>
       </Text>
@@ -72,4 +71,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+
