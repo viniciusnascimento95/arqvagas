@@ -1,3 +1,4 @@
+import { Toast } from '@/components/ui/toast';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { SplashScreen, Stack } from "expo-router";
@@ -25,7 +26,7 @@ export default function RootLayout() {
       <ThemeProvider value={DefaultTheme}>
         <StatusBar style="auto" />
         <Stack screenOptions={{ animation: 'fade', headerShown: false }} />
-      </ThemeProvider >
+      </ThemeProvider>
     </AuthProvider>
   </>
 }

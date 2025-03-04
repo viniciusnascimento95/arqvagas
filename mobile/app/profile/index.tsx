@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { ChevronRight, Settings, User } from "lucide-react-native";
+import { ChevronRight, KeyIcon, Settings, User } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { Pressable, SafeAreaView } from "react-native";
 import { Avatar, AvatarFallbackText, AvatarImage } from "../../components/ui/avatar";
@@ -22,8 +22,6 @@ type UserProfile = {
   school: string | null
   init_date_school: string | null
   end_date_school: string | null
-  // software_skills: string[]
-  // personal_skills: string[]
   portfolio_url: string | null
   password: string
   createdAt: string
@@ -41,18 +39,12 @@ export default function MobileProfileScreen() {
     })
   }, [])
 
+
+
   return (
     <SafeAreaView className="h-full w-full">
       <VStack className="px-5 py-4 flex-1" space="lg">
-        <Button
-          action="secondary"
-          variant="outline"
-          onPress={() => {
-            router.navigate('/home')
-          }}
-        >
-          <ButtonText>Voltar</ButtonText>
-        </Button>
+
         <Heading className="mb-1">Perfil</Heading>
         <HStack className="justify-between items-center">
           <HStack space="md">
@@ -69,9 +61,6 @@ export default function MobileProfileScreen() {
               <Text className="text-gray-500">{user?.email}</Text>
             </VStack>
           </HStack>
-          <Pressable>
-            <Icon as={ChevronRight} />
-          </Pressable>
         </HStack>
         <Divider className="my-2" />
         <VStack space="lg">
@@ -84,22 +73,20 @@ export default function MobileProfileScreen() {
               <Icon as={ChevronRight} />
             </Pressable>
           </HStack>
-
           <HStack className="justify-between">
             <HStack space="md">
-              <Icon as={Settings} />
-              {/* <Text>Soft skill cadastradas {profile?.software_skills.concat()}</Text> */}
+              <Icon as={KeyIcon} />
+              <Text>Alterar senha</Text>
             </HStack>
-            <HStack space="md">
-              <Icon as={Settings} />
-              {/* <Text>Hard skill cadastradas {profile?.personal_skills.concat()}</Text> */}
-            </HStack>
-
+            <Pressable onPress={() => { router.navigate('/profile/editPassword') }}>
+              <Icon as={ChevronRight} />
+            </Pressable>
           </HStack>
+
           <HStack className="justify-between">
             <HStack space="md">
               <Icon as={Settings} />
-              <Text>Conta</Text>
+              <Text>Conta (desenvolvimento...)</Text>
             </HStack>
             <Pressable>
               <Icon as={ChevronRight} />
@@ -107,26 +94,31 @@ export default function MobileProfileScreen() {
           </HStack>
         </VStack>
         <Divider className="my-2" />
-        <HStack>
-          <VStack>
-            <Text>{JSON.stringify(user)}</Text>
-            <Text className="text-gray-500">{user?.email}</Text>
-          </VStack>
-        </HStack>
 
-        <Text>{JSON.stringify(profile)}</Text>
+        <VStack className="flex-1 justify-end" space="md">
+          <Button
+            action="secondary"
+            variant="outline"
+            onPress={() => {
+              router.navigate('/home')
+            }}
+          >
+            <ButtonText>Voltar</ButtonText>
+          </Button>
 
-        <Button
-          action="secondary"
-          variant="outline"
-          onPress={() => {
-            signOut().then(() => {
-              router.navigate('/')
-            })
-          }}
-        >
-          <ButtonText>Sair</ButtonText>
-        </Button>
+          <Button
+            action="negative"
+            variant="outline"
+            style={{ backgroundColor: '#f41717', }}
+            onPress={() => {
+              signOut().then(() => {
+                router.navigate('/')
+              })
+            }}
+          >
+            <ButtonText style={{ color: 'white' }}>Sair</ButtonText>
+          </Button>
+        </VStack>
       </VStack>
 
     </SafeAreaView>

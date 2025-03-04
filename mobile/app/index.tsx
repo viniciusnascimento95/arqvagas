@@ -1,3 +1,5 @@
+import { api } from "@/services/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
@@ -6,18 +8,38 @@ import '../global.css';
 
 
 export default function LoginScreen() {
-  const { signIn } = useAuth();
+  const { setToken, setUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = async (email: string, password: string) => {
     setLoading(true);
-    await signIn(email, password).then(() => {
-      router.navigate('/home')
+
+    api.post("/auth/login", { email, password }).then((response) => {
+      if (response.status === 201) {
+        const { access_token, name, email } = response.data;
+        setToken(access_token);
+        const userData = { name, email };
+        setUser(userData);
+        AsyncStorage.setItem("@token", access_token);
+        AsyncStorage.setItem("@user", JSON.stringify(userData));
+        router.navigate('/home')
+      }
+
     }).catch((error) => {
-      console.log(error);
-    });
+      if (error.response.status === 401) {
+        alert("Credenciais inválidas");
+      } else {
+        console.error("Erro ao fazer login:", error);
+      }
+    })
+
+    // await signIn(email, password).then(() => {
+    //   router.navigate('/home')
+    // }).catch((error) => {
+    //   console.log(error);
+    // });
     setLoading(false);
   };
 
@@ -39,7 +61,8 @@ export default function LoginScreen() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title={loading ? "Entrando..." : "Entrar"} onPress={handleLogin} disabled={loading} />
+      <Button title={loading ? "Entrando..." : "Entrar"} onPress={() => handleLogin(email, password)
+      } disabled={loading} />
 
       <Text style={{ marginTop: 20, textAlign: 'center' }}>
         Ainda não tem conta?{' '}

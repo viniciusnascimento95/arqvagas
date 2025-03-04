@@ -3,7 +3,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { api } from "../services/api";
 
 interface User {
   name: string;
@@ -13,8 +12,10 @@ interface User {
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  signIn: (email: string, password: string) => Promise<void>;
+  // signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setToken: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -38,23 +39,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     loadStorageData();
   }, []);
 
-  const signIn = async (email: string, password: string) => {
-    api.post("/auth/login", { email, password }).then((response) => {
-      const { access_token, name, email } = response.data;
-      setToken(access_token);
-      const userData = { name, email };
-      setUser(userData);
-      AsyncStorage.setItem("@token", access_token);
-      AsyncStorage.setItem("@user", JSON.stringify(userData));
-    }).catch((error) => {
-      if (error.response.status === 401) {
-        alert("Credenciais inválidas");
-      } else {
-        console.error("Erro ao fazer login:", error);
-      }
-    })
-  };
-
   const signOut = async () => {
     await AsyncStorage.removeItem("@token");
     await AsyncStorage.removeItem("@user");
@@ -64,7 +48,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, token, signOut, setUser, setToken }}>
       {children}
     </AuthContext.Provider>
   );
