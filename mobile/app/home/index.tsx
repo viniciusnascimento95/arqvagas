@@ -141,10 +141,16 @@ export default function DashboardScreen() {
                         <Text className="text-center text-indigo-400 font-medium">Sair da conta</Text>
                       </Button>
 
-                      <Button onPress={() => router.navigate('/profile')}>
+                      <Button onPress={() => router.push('/profile')}>
                         <Text className="text-center text-indigo-400 font-medium">Perfil da conta</Text>
                       </Button>
                     </Box>
+
+                    <Button
+                      variant="outline"
+                      onPress={() => router.push('/profile/editProfile')}>
+                      <Text className="text-center text-indigo-400 font-medium">Editar conta</Text>
+                    </Button>
                   </VStack>
                 </ScrollView>
                 {/* Button footer */}
@@ -198,8 +204,6 @@ export default function DashboardScreen() {
           </HStack>
         </VStack>
       </VStack>
-
-
     </SafeAreaView >
   );
 };

@@ -11,13 +11,16 @@ import { Text } from "../../../components/ui/text";
 import { VStack } from "../../../components/ui/vstack";
 import { useAuth } from "../../../constants/AuthContext";
 
-import { ErrorMessage, Formik } from 'formik';
+import { Formik } from 'formik';
 
-import { InputField } from "@/components/ui/input";
+import { Input, InputField } from "@/components/ui/input";
 import { router } from "expo-router";
 import { ChevronLeftIcon } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { Pressable, SafeAreaView, TextInput, View } from "react-native";
+import * as Yup from "yup";
+
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 type UserProfile = {
   id: number
@@ -32,14 +35,40 @@ type UserProfile = {
 
 export default function EditProfileScreen() {
   const { user } = useAuth()
-
   const [profile, setProfile] = useState<UserProfile | null>(null)
+  const [isDatePickerVisibleInit, setDatePickerVisibilityInit] = useState(false)
+  const [isDatePickerVisibleEnd, setDatePickerVisibilityEnd] = useState(false)
+
+  const userProfileSchema = Yup.object().shape({
+
+    email: Yup.string()
+      .email("E-mail inválido")
+      .required("E-mail é obrigatório"),
+    name: Yup.string()
+      .min(3, "O nome deve ter pelo menos 3 caracteres")
+      .required("Nome é obrigatório"),
+    phone: Yup.string()
+      .nullable()
+      .matches(/^\d{10,11}$/, "Número de telefone inválido"), // Aceita 10 ou 11 dígitos
+    school: Yup.string().nullable(),
+    init_date_school: Yup.date()
+      .nullable()
+      .typeError("Data inválida"),
+    end_date_school: Yup.date()
+      .nullable()
+      .typeError("Data inválida")
+      .min(
+        Yup.ref("init_date_school"),
+        "Data de término deve ser depois da data de início"
+      ),
+    portfolio_url: Yup.string()
+      .nullable()
+      .url("URL inválida"), // Garante que seja uma URL válida
+  });
 
   useEffect(() => {
     api.get(`/user/showUserByEmail/${user?.email}`).then(response => {
       setProfile(response.data)
-
-
     }).catch(error => {
       console.log(JSON.stringify(error, null, 3))
     })
@@ -48,7 +77,6 @@ export default function EditProfileScreen() {
 
   return (
     <SafeAreaView className="h-full w-full bg-background-0">
-
       <VStack className="px-5 py-4 flex-1" space="lg">
         <HStack
           className="py-6 px-4 border-b border-border-50 bg-background-0 items-center"
@@ -59,31 +87,36 @@ export default function EditProfileScreen() {
           </Pressable>
           <Text className="text-xl">Voltar</Text>
         </HStack>
-
         <Heading className="mb-1">Editar Perfil </Heading>
 
         <Formik
           initialValues={{
-            name: profile?.name,
-            email: profile?.email,
-            phone: profile?.phone,
-            school: profile?.school,
-            init_date_school: profile?.init_date_school,
-            end_date_school: profile?.end_date_school,
-            portfolio_url: profile?.portfolio_url,
+            name: profile?.name || '',
+            email: profile?.email || '',
+            phone: profile?.phone || '',
+            school: profile?.school || '',
+            init_date_school: profile?.init_date_school || '',
+            end_date_school: profile?.end_date_school || '',
+            portfolio_url: profile?.portfolio_url || '',
           }}
+          validationSchema={userProfileSchema}
           enableReinitialize
-          onSubmit={values => {
-            // same shape as initial values
-            console.log(values);
+          onSubmit={(values, { setSubmitting, resetForm }) => {
+            api.patch(`/user/${profile?.id}`, values).then(response => {
+              if (response.status === 200) {
+                alert('Perfil atualizado com sucesso!')
+                router.push('/home')
+              }
+            }).finally(() => {
+              setSubmitting(false);
+              resetForm({});
+            })
           }}
         >
-          {({ errors, touched, values, handleChange, handleBlur }) => (
+          {({ values, isValid, handleChange, handleBlur, handleSubmit, isSubmitting, setFieldValue, errors }) => (
             <View>
-
               <HStack className="justify-between items-center mb-4">
                 <HStack space="md">
-
                   <Avatar className="bg-primary-500">
                     <AvatarFallbackText>{profile?.name}</AvatarFallbackText>
                     <AvatarImage
@@ -101,53 +134,58 @@ export default function EditProfileScreen() {
 
               <Divider />
 
-              <VStack space="md">
-                <Text className="font-bold">Nome</Text>
-
-                <Text className="text-typography-500">Nome</Text>
-                <InputField
-                  type="text"
-                  placeholder="Nome"
-                  onChangeText={handleChange("name")}
-                  onBlur={handleBlur('name')}
-
-                // value={values.name}
-                // onChangeText={(text) => setInputValue(text)}
-                />
-                <ErrorMessage name="name" component="div" className="text-red-500" />
+              <VStack space="md">                
+                <Text className="font-bold">Nome </Text>
+                <Input>
+                  <InputField
+                    type="text"
+                    placeholder="Nome"
+                    value={values.name}
+                    onChangeText={handleChange("name")}
+                    onBlur={handleBlur('name')}
+                  />
+                </Input>
+                {errors.name && <Text className="text-red-500">{errors.name}</Text>}
 
                 <Text className="font-bold">Email</Text>
+                <Input>
+                  <InputField
+                    type="text"
+                    variant="rounded"
+                    value={values.email}
+                    placeholder="Email"
+                    onChangeText={handleChange("email")}
+                    onBlur={handleBlur('email')}
+                  />
+                </Input>
+                {errors.email && <Text className="text-red-500">{errors.email}</Text>}
 
-                <InputField
-                  className="border p-2 rounded-md border-border-50"
-                  type="text"
-                  placeholder="Email"
-                  onChangeText={handleChange("email")}
-                  onBlur={handleBlur('email')}
-                />
-                <ErrorMessage name="email" component="div" className="text-red-500" />
+                <Text className="font-bold">Telefone/Celular </Text>
+                <Input>
+                  <InputField
+                    type="text"
+                    variant="rounded"
+                    value={values.phone}
+                    placeholder="Telefone/Celular"
+                    onChangeText={handleChange("phone")}
+                    onBlur={handleBlur('phone')}
+                  />
+                </Input>
 
-                <InputField
-                  className="border p-2 rounded-md border-border-50"
-                  type="text"
-                  placeholder="Telefone/Celular"
-                  onChangeText={handleChange("phone")}
-                  onBlur={handleBlur('phone')}
-                />
+                {errors.phone && <Text className="text-red-500">{errors.phone}</Text>}
 
-                <ErrorMessage name="phone" component="div" className="text-red-500" />
-
-
-                <Text className="font-bold">Escola</Text>
-                <InputField
-                  className="border p-2 rounded-md border-border-50"
-                  type="text"
-                  placeholder="Graduação"
-                  onChangeText={handleChange("school")}
-                  onBlur={handleBlur('school')}
-                />
-
-                <ErrorMessage name="school" component="div" className="text-red-500" />
+                <Text className="font-bold">Graduação</Text>
+                <Input>
+                  <InputField
+                    type="text"
+                    variant="rounded"
+                    placeholder="Graduação"
+                    value={values.school}
+                    onChangeText={handleChange("school")}
+                    onBlur={handleBlur('school')}
+                  />
+                </Input>
+                {errors.school && <Text className="text-red-500">{errors.school}</Text>}
 
 
                 <HStack className="justify-between gap-4">
@@ -157,18 +195,50 @@ export default function EditProfileScreen() {
                       className="border p-2 rounded-md border-border-50"
                       onChangeText={handleChange("init_date_school")}
                       onBlur={handleBlur('init_date_school')}
-
+                      value={values.init_date_school ? new Date(values.init_date_school).toLocaleDateString('pt-BR') : ''}
+                      onPress={() => setDatePickerVisibilityInit(true)}
+                      editable={false}
                     />
-                    <ErrorMessage name="init_date_school" component="div" className="text-red-500" />
+
+                    <DateTimePickerModal
+                      isVisible={isDatePickerVisibleInit}
+                      mode="date"
+                      locale="pt-BR"
+                      confirmTextIOS="Confirmar"
+                      cancelTextIOS="Cancelar"
+                      onConfirm={(value) => {
+                        setFieldValue('init_date_school', value)
+                        setDatePickerVisibilityInit(false)
+                      }}
+                      onCancel={() => setDatePickerVisibilityInit(false)}
+                    />
+                    {errors.init_date_school && <Text className="text-red-500">{errors.init_date_school}</Text>}
+
                   </VStack>
                   <VStack className="flex-1">
                     <Text className="font-bold">Data de Término na Escola</Text>
+                    <DateTimePickerModal
+                      isVisible={isDatePickerVisibleEnd}
+                      mode="date"
+                      locale="pt-BR"
+                      confirmTextIOS="Confirmar"
+                      cancelTextIOS="Cancelar"
+                      onConfirm={(value) => {
+                        setFieldValue('end_date_school', value)
+                        setDatePickerVisibilityEnd(false)
+                      }}
+                      onCancel={() => setDatePickerVisibilityEnd(false)}
+                    />
                     <TextInput
                       className="border p-2 rounded-md border-border-50"
                       onChangeText={handleChange("end_date_school")}
                       onBlur={handleBlur('end_date_school')}
+                      onPress={() => setDatePickerVisibilityEnd(true)}
+                      editable={false}
+                      value={values.end_date_school ? new Date(values.end_date_school).toLocaleDateString('pt-BR') : ''}
                     />
-                    <ErrorMessage name="end_date_school" component="div" className="text-red-500" />
+
+                    {errors.end_date_school && <Text className="text-red-500">{errors.end_date_school}</Text>}
                   </VStack>
                 </HStack>
 
@@ -177,22 +247,27 @@ export default function EditProfileScreen() {
                   className="border p-2 rounded-md border-border-50"
                   onChangeText={handleChange("portfolio_url")}
                   onBlur={handleBlur('portfolio_url')}
+                  value={values.portfolio_url}
                 />
-                <ErrorMessage name="portfolio_url" component="div" className="text-red-500" />
+                {errors.portfolio_url && <Text className="text-red-500">{errors.portfolio_url}</Text>}
+
               </VStack>
+
+              {isValid && <VStack className="py-4 flex-1" space="lg">
+
+                <Button
+                  variant="outline"
+                  className="mt-5"
+                  onPress={() => handleSubmit()}
+                  disabled={isSubmitting}
+                >
+                  <ButtonText>Salvar Alterações</ButtonText>
+                </Button>
+              </VStack>}
+
             </View>
           )}
         </Formik>
-      </VStack>
-
-      <VStack className="px-5 py-4 flex-1" space="lg">
-        <Button
-          // variant="outline"
-          className="mt-4"
-        // onPress={handleUpdate}
-        >
-          <ButtonText>Salvar Alterações</ButtonText>
-        </Button>
       </VStack>
     </SafeAreaView>
   );
