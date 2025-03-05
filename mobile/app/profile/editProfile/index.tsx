@@ -11,8 +11,9 @@ import { Text } from "../../../components/ui/text";
 import { VStack } from "../../../components/ui/vstack";
 import { useAuth } from "../../../constants/AuthContext";
 
-import { Formik } from 'formik';
+import { ErrorMessage, Formik } from 'formik';
 
+import { InputField } from "@/components/ui/input";
 import { router } from "expo-router";
 import { ChevronLeftIcon } from "lucide-react-native";
 import { useEffect, useState } from "react";
@@ -77,11 +78,12 @@ export default function EditProfileScreen() {
             console.log(values);
           }}
         >
-          {({ errors, touched, values, handleChange }) => (
+          {({ errors, touched, values, handleChange, handleBlur }) => (
             <View>
 
               <HStack className="justify-between items-center mb-4">
                 <HStack space="md">
+
                   <Avatar className="bg-primary-500">
                     <AvatarFallbackText>{profile?.name}</AvatarFallbackText>
                     <AvatarImage
@@ -91,8 +93,8 @@ export default function EditProfileScreen() {
                     />
                   </Avatar>
                   <VStack>
-                    <Text>{user?.name}</Text>
-                    <Text className="text-gray-500">{values.name}</Text>
+                    <Text>{values?.name}</Text>
+                    <Text className="text-gray-500">{values.email}</Text>
                   </VStack>
                 </HStack>
               </HStack>
@@ -101,61 +103,82 @@ export default function EditProfileScreen() {
 
               <VStack space="md">
                 <Text className="font-bold">Nome</Text>
-                {/* <InputField
 
-                  className="border p-2 rounded-md border-border-50"
-                  onChange={handleChange}
-                // value={formData.name}
-                // onChangeText={(text) => setFormData({ ...formData, name: text })}
-                /> */}
+                <Text className="text-typography-500">Nome</Text>
+                <InputField
+                  type="text"
+                  placeholder="Nome"
+                  onChangeText={handleChange("name")}
+                  onBlur={handleBlur('name')}
+
+                // value={values.name}
+                // onChangeText={(text) => setInputValue(text)}
+                />
+                <ErrorMessage name="name" component="div" className="text-red-500" />
 
                 <Text className="font-bold">Email</Text>
-                <TextInput
-                  disableFullscreenUI
+
+                <InputField
                   className="border p-2 rounded-md border-border-50"
-                // value={formData.email}
-                // onChangeText={(text) => setFormData({ ...formData, email: text })}
+                  type="text"
+                  placeholder="Email"
+                  onChangeText={handleChange("email")}
+                  onBlur={handleBlur('email')}
+                />
+                <ErrorMessage name="email" component="div" className="text-red-500" />
+
+                <InputField
+                  className="border p-2 rounded-md border-border-50"
+                  type="text"
+                  placeholder="Telefone/Celular"
+                  onChangeText={handleChange("phone")}
+                  onBlur={handleBlur('phone')}
                 />
 
-                <Text className="font-bold">Telefone</Text>
-                <TextInput
-                  className="border p-2 rounded-md border-border-50"
-                // value={formData.phone}
-                // onChangeText={(text) => setFormData({ ...formData, phone: text })}
-                />
+                <ErrorMessage name="phone" component="div" className="text-red-500" />
+
 
                 <Text className="font-bold">Escola</Text>
-                <TextInput
+                <InputField
                   className="border p-2 rounded-md border-border-50"
-                // value={formData.school}
-                // onChangeText={(text) => setFormData({ ...formData, school: text })}
+                  type="text"
+                  placeholder="Graduação"
+                  onChangeText={handleChange("school")}
+                  onBlur={handleBlur('school')}
                 />
+
+                <ErrorMessage name="school" component="div" className="text-red-500" />
+
 
                 <HStack className="justify-between gap-4">
                   <VStack className="flex-1">
                     <Text className="font-bold">Data de Início na Escola</Text>
                     <TextInput
                       className="border p-2 rounded-md border-border-50"
-                    // value={formData.init_date_school}
-                    // onChangeText={(text) => setFormData({ ...formData, init_date_school: text })}
+                      onChangeText={handleChange("init_date_school")}
+                      onBlur={handleBlur('init_date_school')}
+
                     />
+                    <ErrorMessage name="init_date_school" component="div" className="text-red-500" />
                   </VStack>
                   <VStack className="flex-1">
                     <Text className="font-bold">Data de Término na Escola</Text>
                     <TextInput
                       className="border p-2 rounded-md border-border-50"
-                    // value={formData.end_date_school}
-                    // onChangeText={(text) => setFormData({ ...formData, end_date_school: text })}
+                      onChangeText={handleChange("end_date_school")}
+                      onBlur={handleBlur('end_date_school')}
                     />
+                    <ErrorMessage name="end_date_school" component="div" className="text-red-500" />
                   </VStack>
                 </HStack>
 
                 <Text className="font-bold">URL do Portfólio</Text>
                 <TextInput
                   className="border p-2 rounded-md border-border-50"
-                // value={formData.portfolio_url}
-                // onChangeText={(text) => setFormData({ ...formData, portfolio_url: text })}
+                  onChangeText={handleChange("portfolio_url")}
+                  onBlur={handleBlur('portfolio_url')}
                 />
+                <ErrorMessage name="portfolio_url" component="div" className="text-red-500" />
               </VStack>
             </View>
           )}
@@ -164,7 +187,7 @@ export default function EditProfileScreen() {
 
       <VStack className="px-5 py-4 flex-1" space="lg">
         <Button
-          variant="outline"
+          // variant="outline"
           className="mt-4"
         // onPress={handleUpdate}
         >
