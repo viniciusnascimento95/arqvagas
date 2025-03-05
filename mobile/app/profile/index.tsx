@@ -63,8 +63,8 @@ export default function MobileProfileScreen() {
           </HStack>
         </HStack>
         <Divider className="my-2" />
-        <VStack space="lg">
-          <HStack className="justify-between">
+        <VStack space="lg" className="gap-y-10">
+          <HStack className="justify-between" >
             <HStack space="md">
               <Icon as={User} />
               <Text>Informações pessoais</Text>

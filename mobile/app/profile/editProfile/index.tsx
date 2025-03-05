@@ -20,6 +20,7 @@ import { useEffect, useState } from "react";
 import { Pressable, SafeAreaView, TextInput, View } from "react-native";
 import * as Yup from "yup";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 type UserProfile = {
@@ -34,7 +35,7 @@ type UserProfile = {
 }
 
 export default function EditProfileScreen() {
-  const { user } = useAuth()
+  const { user, setUser } = useAuth()
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [isDatePickerVisibleInit, setDatePickerVisibilityInit] = useState(false)
   const [isDatePickerVisibleEnd, setDatePickerVisibilityEnd] = useState(false)
@@ -104,17 +105,19 @@ export default function EditProfileScreen() {
           onSubmit={(values, { setSubmitting, resetForm }) => {
             api.patch(`/user/${profile?.id}`, values).then(response => {
               if (response.status === 200) {
+                AsyncStorage.removeItem("@user");
                 alert('Perfil atualizado com sucesso!')
                 router.push('/home')
+                setUser(values)
+                AsyncStorage.setItem("@user", JSON.stringify(values));
               }
-            }).finally(() => {
               setSubmitting(false);
               resetForm({});
             })
           }}
         >
           {({ values, isValid, handleChange, handleBlur, handleSubmit, isSubmitting, setFieldValue, errors }) => (
-            <View>
+            <View className="flex-1">
               <HStack className="justify-between items-center mb-4">
                 <HStack space="md">
                   <Avatar className="bg-primary-500">
@@ -134,7 +137,7 @@ export default function EditProfileScreen() {
 
               <Divider />
 
-              <VStack space="md">                
+              <VStack space="md">
                 <Text className="font-bold">Nome </Text>
                 <Input>
                   <InputField
@@ -252,19 +255,18 @@ export default function EditProfileScreen() {
                 {errors.portfolio_url && <Text className="text-red-500">{errors.portfolio_url}</Text>}
 
               </VStack>
-
-              {isValid && <VStack className="py-4 flex-1" space="lg">
-
-                <Button
-                  variant="outline"
-                  className="mt-5"
-                  onPress={() => handleSubmit()}
-                  disabled={isSubmitting}
-                >
-                  <ButtonText>Salvar Alterações</ButtonText>
-                </Button>
-              </VStack>}
-
+              <VStack className="flex-1">
+                {isValid && <VStack className="flex-1 justify-end" space="lg">
+                  <Button
+                    variant="outline"
+                    className="mt-5"
+                    onPress={() => handleSubmit()}
+                    disabled={isSubmitting}
+                  >
+                    <ButtonText>Salvar Alterações</ButtonText>
+                  </Button>
+                </VStack>}
+              </VStack>
             </View>
           )}
         </Formik>

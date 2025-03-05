@@ -3,10 +3,10 @@
 - [ ] Create screen filter oportunity on mobile
 - [ ] Application to oportunity
 - [ ] Create screen detail opportunity
-- [ ] Create screen detail user
 - [ ] Create screen detail company
 - [ ] Create screen detail job
-- [ ] Create screen change password
+- [x] Create screen detail user
+- [x] Create screen change password
 - [x] Create screen update profile
 
 

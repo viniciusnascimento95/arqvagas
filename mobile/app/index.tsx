@@ -30,6 +30,7 @@ export default function LoginScreen() {
     }).catch((error) => {
       if (error.response.status === 401) {
         alert("Credenciais inválidas");
+        setPassword("");
       } else {
         console.error("Erro ao fazer login:", error);
       }

@@ -5,8 +5,13 @@ import { router } from "expo-router";
 import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 interface User {
-  name: string;
-  email: string;
+  name: string | null;
+  email: string | null;
+  phone?: string | null
+  school?: string | null
+  init_date_school?: string | null
+  end_date_school?: string | null
+  portfolio_url?: string | null
 }
 
 interface AuthContextType {
