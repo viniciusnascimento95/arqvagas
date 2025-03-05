@@ -7,7 +7,7 @@
 - [ ] Create screen detail company
 - [ ] Create screen detail job
 - [ ] Create screen change password
-- [ ] Create screen update profile
+- [x] Create screen update profile
 
 
 # Welcome to your Expo app 👋
