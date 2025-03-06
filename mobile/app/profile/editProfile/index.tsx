@@ -1,5 +1,3 @@
-
-
 import { api } from "@/services/api";
 import { Avatar, AvatarFallbackText, AvatarImage } from "../../../components/ui/avatar";
 import { Button, ButtonText } from "../../../components/ui/button";
@@ -193,7 +191,7 @@ export default function EditProfileScreen() {
 
                 <HStack className="justify-between gap-4">
                   <VStack className="flex-1">
-                    <Text className="font-bold">Data de Início na Escola</Text>
+                    <Text className="font-bold">Data de Início</Text>
                     <TextInput
                       className="border p-2 rounded-md border-border-50"
                       onChangeText={handleChange("init_date_school")}
@@ -219,7 +217,7 @@ export default function EditProfileScreen() {
 
                   </VStack>
                   <VStack className="flex-1">
-                    <Text className="font-bold">Data de Término na Escola</Text>
+                    <Text className="font-bold">Data de Término</Text>
                     <DateTimePickerModal
                       isVisible={isDatePickerVisibleEnd}
                       mode="date"
