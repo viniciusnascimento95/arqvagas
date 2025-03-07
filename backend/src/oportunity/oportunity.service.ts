@@ -62,4 +62,18 @@ export class OportunityService {
       where: { id },
     });
   }
+
+  async applyOportunity(
+    userId: number,
+    oportunityId: number,
+    comments?: string,
+  ) {
+    return this.prisma.application.create({
+      data: {
+        oportunityId: oportunityId,
+        userId: userId,
+        comment: comments,
+      },
+    });
+  }
 }

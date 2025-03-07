@@ -3,13 +3,16 @@ import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Icon } from "@/components/ui/icon";
 import { Text } from "@/components/ui/text";
+import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { VStack } from "@/components/ui/vstack";
+import { useAuth } from "@/constants/AuthContext";
 import { api } from "@/services/api";
 import { router } from "expo-router";
-import { useLocalSearchParams, usePathname } from "expo-router/build/hooks";
-import { BriefcaseIcon, CalendarIcon, CheckCircleIcon, ChevronLeftIcon, ClockIcon, InfoIcon, MapPinIcon, PenToolIcon, StarIcon } from "lucide-react-native";
+import { useLocalSearchParams } from "expo-router/build/hooks";
+import { Formik } from "formik";
+import { BriefcaseIcon, CalendarIcon, CheckCircleIcon, ChevronLeftIcon, ClockIcon, InfoIcon, MapPinIcon, PenToolIcon, StarIcon, XIcon } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Modal, Pressable, ScrollView } from "react-native";
+import { Modal, Platform, Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export interface CompanyInfo {
@@ -39,12 +42,17 @@ export interface JobListing {
   toolsAndSoftware: string[];
 }
 
+import { Buffer } from 'buffer';
+
 export default function OportunityDetailPage() {
   const { id } = useLocalSearchParams()
-  const pathName = usePathname();
-console.log('=>pathName --->', pathName);
+  const { token } = useAuth()
+
+  //@ts-ignore
+  const decodeToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())  
   const [oportunity, setOportunity] = useState<JobListing>({} as JobListing);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);   
+  // const [isApplied, setIsApplied] = useState(false); 
 
   useEffect(() => {
     api.get(`oportunity/${id}`).then(response => {
@@ -169,7 +177,6 @@ console.log('=>pathName --->', pathName);
         <Button
           variant="outline"
           className="mt-4 bg-green-500 text-white"
-     
           onPress={() => setModalVisible(true)} >
           <ButtonText className="text-gray-900">Se inscrever</ButtonText>
         </Button>
@@ -180,23 +187,88 @@ console.log('=>pathName --->', pathName);
           visible={modalVisible}
           onRequestClose={() => setModalVisible(false)}
         >
-          <VStack className="flex-1 justify-end">
-            <VStack className="bg-white p-6 rounded-t-3xl">
-              <Heading className="mb-4">Inscrição para a vaga</Heading>
-              <Text className="mb-4">Tem certeza que deseja se inscrever para esta vaga?</Text>
-              <HStack space="md">
-                <Button variant="outline" onPress={() => setModalVisible(false)} className="flex-1">
-                  Cancelar
-                </Button>
-                <Button onPress={() => {
-                  // Adicione aqui a lógica para se inscrever
-                  setModalVisible(false)
-                }} className="flex-1">
-                  Confirmar
-                </Button>
-              </HStack>
+          <Pressable
+            onPress={() => setModalVisible(false)}
+            className="flex-1 bg-black/50"
+          >
+            <VStack className="flex-1 justify-end">
+              <Pressable onPress={(e) => e.stopPropagation()}>
+                <VStack className="bg-white p-6 rounded-t-3xl shadow-lg" style={{ paddingBottom: Platform.OS === 'android' ? 70 : 36 }}>
+                  <HStack className="justify-between items-center mb-4">
+                    <Heading size="lg">Inscrição para a vaga</Heading>
+                    <Pressable onPress={() => setModalVisible(false)}>
+                      <Icon as={XIcon} size="md" className="text-gray-500" />
+                    </Pressable>
+                  </HStack>
+                  <Text className="mb-6 text-gray-600">Tem certeza que deseja se inscrever para esta vaga? Após confirmar, sua candidatura será enviada para análise.</Text>
+
+                  <Formik
+                    initialValues={{
+                      userId: decodeToken.sub,
+                      oportunityId: oportunity.id,
+                      comments: '',
+                    }}
+                    enableReinitialize
+                    onSubmit={async (values) => {
+                      await api.post('/oportunity/apply', {
+                        userId: String(values.userId),
+                        oportunityId: String(values.oportunityId),
+                        comment: values.comments
+                      }).then((response) => {
+                        if (response.status === 201) {
+                          setModalVisible(false);
+
+                          alert('Inscrição realizada com sucesso!');
+                          router.push('/home');
+                        }
+                      }).catch((error) => {
+                        console.log('error', JSON.stringify(error));
+                      });
+                    }}
+                  >
+                    {({ values, handleChange, handleBlur, handleSubmit, }) => (
+                      <View>
+                        <HStack space="md" className="justify-center my-6">
+                          <Textarea
+                            size="md"
+                            isReadOnly={false}
+                            isInvalid={false}
+                            isDisabled={false}
+                            className="w-full"
+                          >
+                            <TextareaInput
+                              value={values.comments}
+                              type="text"
+                              onChangeText={handleChange("comments")}
+                              onBlur={handleBlur("comments")}
+                              placeholder="Informações complementares (opcional)" />
+                          </Textarea>
+                        </HStack>
+
+                        <HStack space="md" className="mb-4">
+                          <Button
+                            variant="outline"
+                            className="flex-1 border border-gray-300"
+                            onPress={() => setModalVisible(false)}>
+                            <ButtonText className="text-gray-700">Cancelar</ButtonText>
+                          </Button>
+                          <Button
+                            className="flex-1 bg-green-500"
+                            onPress={() => {
+                              setModalVisible(false)
+                              handleSubmit()
+                            }}>
+                            <ButtonText className="text-white">Confirmar Inscrição</ButtonText>
+                          </Button>
+                        </HStack>
+                      </View>
+                    )}
+
+                  </Formik>
+                </VStack>
+              </Pressable>
             </VStack>
-          </VStack>
+          </Pressable>
         </Modal>
       </VStack>
     </SafeAreaView>

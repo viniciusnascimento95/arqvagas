@@ -6,7 +6,7 @@ import { VStack } from "@/components/ui/vstack";
 
 import { api } from "@/services/api";
 import { router, usePathname } from "expo-router";
-import { BriefcaseIcon, BuildingIcon, ChevronLeftIcon, ClockIcon, HomeIcon, MapPinIcon, UserIcon } from "lucide-react-native";
+import { BriefcaseIcon, BuildingIcon, ChevronLeftIcon, ClockIcon, HomeIcon, MapPinIcon, SearchXIcon, UserIcon } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { FlatList, Pressable } from "react-native";
 
@@ -61,7 +61,7 @@ export default function OportunityScreen() {
           </Pressable>
           <Text className="text-xl">Voltar</Text>
         </HStack>
-        <HStack className="ms-4 justify-center">
+        <HStack className="justify-center">
           <Heading className="mb-1">Oportunidades</Heading>
         </HStack>
 
@@ -73,7 +73,7 @@ export default function OportunityScreen() {
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item }) => (
             <Pressable onPress={() => router.push(`/oportunity/detail/${item.id}`)}>
-              <VStack className="bg-background-50 p-4 rounded-md mb-4 shadow-sm">
+              <VStack className="bg-background-light p-4 rounded-md mb-4 shadow-sm">
                 <HStack className="items-center justify-between mb-2">
                   <Text className="text-lg font-bold text-primary-500">{item.jobTitle}</Text>
                   {item.isAvailable && (
@@ -126,7 +126,12 @@ export default function OportunityScreen() {
               </VStack>
             </Pressable>
           )}
-
+          ListEmptyComponent={
+            <VStack className="flex-1 justify-center items-center" space="md">
+              <Icon as={SearchXIcon} size="lg" className="text-gray-400" />
+              <Text className="text-gray-500">Nenhuma oportunidade encontrada.</Text>
+            </VStack>
+          }
         />
         <VStack className="flex-2 justify-end">
           <HStack className="bg-white p-4 border-t border-gray-200 justify-around w-full">

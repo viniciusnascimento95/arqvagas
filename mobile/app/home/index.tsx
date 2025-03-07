@@ -79,7 +79,7 @@ export default function DashboardScreen() {
                     >
                       <VStack space="md" className="items-center">
                         <Icon as={BookOpenIcon} size="xl" className="text-primary-500" />
-                        <Text className="text-center font-medium">Curso de Currículo</Text>
+                        <Text className="text-center font-medium">Dicas para Currículo</Text>
                       </VStack>
                     </Pressable>
 
@@ -89,7 +89,7 @@ export default function DashboardScreen() {
                     >
                       <VStack space="md" className="items-center">
                         <Icon as={GraduationCapIcon} size="xl" className="text-primary-500" />
-                        <Text className="text-center font-medium">Mentoria</Text>
+                        <Text className="text-center font-medium">Mentorias</Text>
                       </VStack>
                     </Pressable>
                   </HStack>
