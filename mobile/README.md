@@ -8,6 +8,8 @@
 - [x] Create screen detail user
 - [x] Create screen change password
 - [x] Create screen update profile
+- [x] layout screen login
+- [x] layout screen register
 
 
 # Welcome to your Expo app 👋

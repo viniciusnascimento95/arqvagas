@@ -10,7 +10,8 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { CreateUserDto } from './dto/crate-user.dto';
+
+import { CreateUserAuthDto } from './dto/crate-user.dto';
 import { LoginDto } from './dto/login.dto';
 
 @ApiTags('auth')
@@ -23,7 +24,7 @@ export class AuthController {
 
   @Post('register')
   @ApiResponse({ status: 201, description: 'User registered successfully.' })
-  async register(@Body() body: CreateUserDto) {
+  async register(@Body() body: CreateUserAuthDto) {
     return this.userService.createUser(body);
   }
 

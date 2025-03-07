@@ -48,7 +48,7 @@ export default function EditProfileScreen() {
       .required("Nome é obrigatório"),
     phone: Yup.string()
       .nullable()
-      .matches(/^\d{10,11}$/, "Número de telefone inválido"), // Aceita 10 ou 11 dígitos
+      .matches(/^\(\d{2}\)\d{5}-\d{4}$/, "Número de telefone inválido"), // Formato: (XX)XXXXX-XXXX
     school: Yup.string().nullable(),
     init_date_school: Yup.date()
       .nullable()
@@ -161,14 +161,23 @@ export default function EditProfileScreen() {
                 </Input>
                 {errors.email && <Text className="text-red-500">{errors.email}</Text>}
 
-                <Text className="font-bold">Telefone/Celular </Text>
+                <Text className="font-bold">Celular </Text>
                 <Input>
                   <InputField
                     type="text"
                     variant="rounded"
                     value={values.phone}
                     placeholder="Telefone/Celular"
-                    onChangeText={handleChange("phone")}
+                    onChangeText={(value) => {
+                      const cleaned = value.replace(/\D/g, '')
+                      let formatted = cleaned
+                      if (cleaned.length <= 11) {
+                        if (cleaned.length > 2) formatted = `(${cleaned.slice(0, 2)})${cleaned.slice(2)}`
+                        if (cleaned.length > 7) formatted = `(${cleaned.slice(0, 2)})${cleaned.slice(2, 7)}-${cleaned.slice(7)}`
+                        setFieldValue('phone', formatted)
+                      }
+                    }}
+                    // onChangeText={handleChange("phone")}
                     onBlur={handleBlur('phone')}
                   />
                 </Input>
