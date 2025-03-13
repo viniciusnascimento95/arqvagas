@@ -68,79 +68,90 @@ export default function OportunityScreen() {
         <FlatList
           data={oportunities}
           keyExtractor={(item) => item.id.toString()}
-          className="px-2"
-          ItemSeparatorComponent={() => <VStack className="h-px bg-border-50 my-1" />}
+          className="px-4"
+          showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={() => <VStack className="h-2" />}
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item }) => (
-            <Pressable onPress={() => router.push(`/oportunity/detail/${item.id}`)}>
-              <VStack className="bg-background-light p-4 rounded-md mb-4 shadow-sm">
-                <HStack className="items-center justify-between mb-2">
-                  <Text className="text-lg font-bold text-primary-500">{item.jobTitle}</Text>
+            <Pressable 
+              onPress={() => router.push(`/oportunity/detail/${item.id}`)}
+              className="active:opacity-80"
+            >
+              <VStack className="bg-white p-5 rounded-xl shadow-md border border-gray-100">
+                <HStack className="items-center justify-between mb-3">
+                  <Text className="text-xl font-bold text-primary-500">{item.jobTitle}</Text>
                   {item.isAvailable && (
-                    <Text className="text-sm bg-green-100 text-green-700 px-2 py-1 rounded">
+                    <Text className="text-sm bg-green-50 text-green-700 px-3 py-1 rounded-full font-medium">
                       {item.availablePositions} vagas
                     </Text>
                   )}
                 </HStack>
 
-                <HStack className="items-center mb-2" space="sm">
-                  <Icon as={BuildingIcon} size="md" className="text-gray-500" />
-                  <Text className="text-sm text-gray-700 font-medium">{item.companyInfo.name}</Text>
+                <HStack className="items-center mb-3" space="sm">
+                  <Icon as={BuildingIcon} size="md" className="text-primary-500" />
+                  <Text className="text-base text-gray-800 font-semibold">{item.companyInfo.name}</Text>
                 </HStack>
 
-                <Text className="text-sm text-gray-600 mb-3" numberOfLines={2}>
+                <Text className="text-base text-gray-600 mb-4 leading-relaxed" numberOfLines={3}>
                   {item.jobDescription}
                 </Text>
 
-                <HStack className="flex-wrap" space="md">
-                  <HStack className="items-center" space="xs">
-                    <Icon as={MapPinIcon} size="md" className="text-gray-500" />
-                    <Text className="text-xs text-gray-600">{item.location}</Text>
+                <VStack space="sm" className="mb-4">
+                  <HStack className="items-center" space="sm">
+                    <Icon as={MapPinIcon} size="sm" className="text-gray-500" />
+                    <Text className="text-sm text-gray-700">{item.location}</Text>
                   </HStack>
 
-                  <HStack className="items-center" space="xs">
-                    <Icon as={BriefcaseIcon} size="md" className="text-gray-500" />
-                    <Text className="text-xs text-gray-600">{item.contractType}</Text>
+                  <HStack className="items-center" space="sm">
+                    <Icon as={BriefcaseIcon} size="sm" className="text-gray-500" />
+                    <Text className="text-sm text-gray-700">{item.contractType}</Text>
                   </HStack>
 
-                  <HStack className="items-center" space="xs">
-                    <Icon as={ClockIcon} size="md" className="text-gray-500" />
-                    <Text className="text-xs text-gray-600">{item.workSchedule}</Text>
+                  <HStack className="items-center" space="sm">
+                    <Icon as={ClockIcon} size="sm" className="text-gray-500" />
+                    <Text className="text-sm text-gray-700">{item.workSchedule}</Text>
                   </HStack>
-                </HStack>
+                </VStack>
 
-                <HStack className="mt-3 flex-wrap" space="sm">
-                  {item.toolsAndSoftware.slice(0, 3).map((tool, index) => (
-                    <Text key={index} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
-                      {tool}
-                    </Text>
-                  ))}
-                </HStack>
-                <HStack className="mt-3 flex-wrap" space="sm">
-                  {item.benefits.slice(0, 3).map((tool, index) => (
-                    <Text key={index} className="text-xs bg-gray-100 text-gray-700 px-2 py-1 rounded">
-                      {tool}
-                    </Text>
-                  ))}
-                </HStack>
+                <VStack space="sm">
+                  <Text className="text-sm font-semibold text-gray-700 mb-1">Ferramentas:</Text>
+                  <HStack className="flex-wrap" space="sm">
+                    {item.toolsAndSoftware.slice(0, 3).map((tool, index) => (
+                      <Text key={index} className="text-sm bg-primary-50 text-primary-700 px-3 py-1 rounded-full">
+                        {tool}
+                      </Text>
+                    ))}
+                  </HStack>
+                </VStack>
+
+                <VStack className="mt-3" space="sm">
+                  <Text className="text-sm font-semibold text-gray-700 mb-1">Benefícios:</Text>
+                  <HStack className="flex-wrap" space="sm">
+                    {item.benefits.slice(0, 3).map((benefit, index) => (
+                      <Text key={index} className="text-sm bg-blue-50 text-blue-700 px-3 py-1 rounded-full">
+                        {benefit}
+                      </Text>
+                    ))}
+                  </HStack>
+                </VStack>
               </VStack>
             </Pressable>
           )}
           ListEmptyComponent={
             <VStack className="flex-1 justify-center items-center" space="md">
-              <Icon as={SearchXIcon} size="lg" className="text-gray-400" />
-              <Text className="text-gray-500">Nenhuma oportunidade encontrada.</Text>
+              <Icon as={SearchXIcon} size="xl" className="text-gray-400" />
+              <Text className="text-gray-500 text-lg">Nenhuma oportunidade encontrada.</Text>
             </VStack>
           }
         />
         <VStack className="flex-2 justify-end">
-          <HStack className="bg-white p-4 border-t border-gray-200 justify-around w-full">
+          <HStack className="bg-white p-4 border-t border-gray-200 justify-around w-full shadow-lg">
             <Pressable onPress={() => router.push('/home')}
               className={pathname === "/home" ? "opacity-100" : "opacity-60"}
             >
               <VStack className="items-center">
                 <Icon as={HomeIcon} size="md" className="text-gray-500" />
-                <Text className="text-xs text-gray-600">Início</Text>
+                <Text className="text-xs text-gray-600 font-medium">Início</Text>
               </VStack>
             </Pressable>
 
@@ -149,7 +160,7 @@ export default function OportunityScreen() {
             >
               <VStack className="items-center">
                 <Icon as={BriefcaseIcon} size="md" className="text-primary-500" />
-                <Text className="text-xs text-primary-500">Vagas</Text>
+                <Text className="text-xs text-primary-500 font-medium">Vagas</Text>
               </VStack>
             </Pressable>
 
@@ -158,7 +169,7 @@ export default function OportunityScreen() {
             >
               <VStack className="items-center">
                 <Icon as={UserIcon} size="md" className="text-gray-500" />
-                <Text className="text-xs text-gray-600">Perfil</Text>
+                <Text className="text-xs text-gray-600 font-medium">Perfil</Text>
               </VStack>
             </Pressable>
           </HStack>

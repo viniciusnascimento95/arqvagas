@@ -48,7 +48,7 @@ export default function LoginScreen() {
         style={styles.logo}
         resizeMode="contain"
       />
-      <Heading className="my-5">Bem-vindo de volta!</Heading>
+      <Heading className="my-5">Bem-vindo!</Heading>
 
       <View style={styles.inputContainer}>
         <Ionicons name="mail-outline" size={24} color="#666" style={styles.icon} />

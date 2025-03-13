@@ -12,11 +12,10 @@ import { useAuth } from "../../../constants/AuthContext";
 import { api } from "@/services/api";
 import { router } from "expo-router";
 import { Formik } from "formik";
-import { ChevronLeftIcon } from "lucide-react-native";
+import { ChevronLeftIcon, EyeIcon, EyeOffIcon } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Pressable, SafeAreaView, View } from "react-native";
+import { ActivityIndicator, Pressable, SafeAreaView, View } from "react-native";
 import * as yup from "yup";
-
 
 type UserProfile = {
   id: number
@@ -32,14 +31,34 @@ type UserProfile = {
 export default function EditPasswordScreen() {
   const { user } = useAuth()
   const [profile, setProfile] = useState<UserProfile | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   useEffect(() => {
+    setLoading(true)
     api.get(`/user/showUserByEmail/${user?.email}`).then(response => {
       setProfile(response.data)
     }).catch(error => {
+      // toast.show({
+      //   title: "Erro",
+      //   description: "Não foi possível carregar seus dados",
+      //   type: "error"
+      // })
       console.log(JSON.stringify(error, null, 3))
+    }).finally(() => {
+      setLoading(false)
     })
   }, [user])
+
+  if (loading) {
+    return (
+      <SafeAreaView className="h-full w-full bg-background-0 items-center justify-center">
+        <ActivityIndicator size="large" />
+      </SafeAreaView>
+    )
+  }
 
   return (
     <SafeAreaView className="h-full w-full bg-background-0">
@@ -61,6 +80,10 @@ export default function EditPasswordScreen() {
             newPassword: yup
               .string()
               .min(8, 'A nova senha deve ter no mínimo 8 caracteres')
+              .matches(/[0-9]/, 'A senha deve conter pelo menos um número')
+              // .matches(/[a-z]/, 'A senha deve conter pelo menos uma letra minúscula')
+              // .matches(/[A-Z]/, 'A senha deve conter pelo menos uma letra maiúscula')
+              // .matches(/[!@#$%^&*]/, 'A senha deve conter pelo menos um caractere especial')
               .required('Nova senha é obrigatória'),
             confirmPassword: yup
               .string()
@@ -73,18 +96,32 @@ export default function EditPasswordScreen() {
             confirmPassword: '',
           }}
           onSubmit={(values, { setSubmitting, resetForm }) => {
+            setLoading(true)
             api.put(`/auth/${profile?.id}/change-password`, {
+              currentPassword: values.password,
               newPassword: values.newPassword,
             }).then(response => {
               if (response.status === 200) {
-                alert('Senha atualizado com sucesso!')
+                // toast.show({
+                //   title: "Sucesso",
+                //   description: "Senha atualizada com sucesso!",
+                //   type: "success"
+                // })
                 router.push('/home')
               }
-              setSubmitting(false);
-              resetForm();
+            }).catch(error => {
+              console.log('=>error --->', error);
+              // toast.show({
+              //   title: "Erro",
+              //   description: error.response?.data?.message || "Erro ao atualizar senha",
+              //   type: "error"
+              // })
+            }).finally(() => {
+              setLoading(false)
+              setSubmitting(false)
+              resetForm()
             })
           }}
-
         >
           {({ values, isValid, handleChange, handleBlur, handleSubmit, isSubmitting, errors }) => (
             <View className="flex-1">
@@ -105,16 +142,19 @@ export default function EditPasswordScreen() {
                 </HStack>
               </HStack>
               <Divider />
-              <VStack space="md">
+              <VStack space="md" className="mt-6">
                 <Text className="font-bold">Senha atual</Text>
                 <Input>
                   <InputField
                     value={values.password}
-                    type="password"
+                    type={showCurrentPassword ? "text" : "password"}
                     onChangeText={handleChange("password")}
                     onBlur={handleBlur("password")}
                     placeholder="Digite sua senha atual"
                   />
+                  <Pressable onPress={() => setShowCurrentPassword(!showCurrentPassword)} className="px-3">
+                    <Icon as={showCurrentPassword ? EyeOffIcon : EyeIcon} size="md" />
+                  </Pressable>
                 </Input>
                 {errors.password && (
                   <Text className="text-red-500">{errors.password}</Text>
@@ -126,11 +166,14 @@ export default function EditPasswordScreen() {
                     <Input>
                       <InputField
                         value={values.newPassword}
-                        type="password"
+                        type={showNewPassword ? "text" : "password"}
                         onChangeText={handleChange("newPassword")}
                         onBlur={handleBlur("newPassword")}
                         placeholder="Digite sua nova senha"
                       />
+                      <Pressable onPress={() => setShowNewPassword(!showNewPassword)} className="px-3">
+                        <Icon as={showNewPassword ? EyeOffIcon : EyeIcon} size="md" />
+                      </Pressable>
                     </Input>
                     {errors.newPassword && (
                       <Text className="text-red-500">{errors.newPassword}</Text>
@@ -141,11 +184,14 @@ export default function EditPasswordScreen() {
                     <Input>
                       <InputField
                         value={values.confirmPassword}
-                        type="password"
+                        type={showConfirmPassword ? "text" : "password"}
                         onChangeText={handleChange("confirmPassword")}
                         onBlur={handleBlur("confirmPassword")}
-                        placeholder="Digite sua nova senha"
+                        placeholder="Confirme sua nova senha"
                       />
+                      <Pressable onPress={() => setShowConfirmPassword(!showConfirmPassword)} className="px-3">
+                        <Icon as={showConfirmPassword ? EyeOffIcon : EyeIcon} size="md" />
+                      </Pressable>
                     </Input>
                     {errors.confirmPassword && (
                       <Text className="text-red-500">{errors.confirmPassword}</Text>
@@ -157,12 +203,15 @@ export default function EditPasswordScreen() {
               <VStack className="flex-1">
                 {isValid && values.password != '' && <VStack className="flex-1 justify-end mt-10" space="lg">
                   <Button
-                    action="secondary"
-                    variant="outline"
-                    disabled={isSubmitting}
+                    action="primary"
+                    disabled={isSubmitting || loading}
                     onPress={() => handleSubmit()}
                   >
-                    <ButtonText>Salvar Alterações</ButtonText>
+                    {loading || isSubmitting ? (
+                      <ActivityIndicator color="white" />
+                    ) : (
+                      <ButtonText>Salvar Alterações</ButtonText>
+                    )}
                   </Button>
                 </VStack>}
               </VStack>
@@ -170,6 +219,6 @@ export default function EditPasswordScreen() {
           )}
         </Formik>
       </VStack>
-    </SafeAreaView >
+    </SafeAreaView>
   );
 }

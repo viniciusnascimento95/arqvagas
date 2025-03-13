@@ -49,7 +49,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     await AsyncStorage.removeItem("@user");
     setToken(null);
     setUser(null);
-    router.navigate('/')
+    router.push('/')
   };
 
   return (
