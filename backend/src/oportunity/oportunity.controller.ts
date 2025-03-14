@@ -10,11 +10,12 @@ import {
 } from '@nestjs/common';
 import { ApplyOportunityDto } from './dto/apply-oportunity.dto';
 import { CreateOportunityDto } from './dto/create-oportunity.dto';
+import { UnApplyOportunityDto } from './dto/unapply-oportunity.dto';
 import { OportunityService } from './oportunity.service';
 
 @Controller('oportunity')
 export class OportunityController {
-  constructor(private readonly oportunityService: OportunityService) {}
+  constructor(private readonly oportunityService: OportunityService) { }
 
   @Post()
   create(@Body() createOportunityDto: CreateOportunityDto) {
@@ -58,6 +59,14 @@ export class OportunityController {
       Number(applyOportunityDto.userId),
       Number(applyOportunityDto.oportunityId),
       applyOportunityDto.comment,
+    );
+  }
+
+  @Post('unapply')
+  unapplyOportunity(@Body() unApplyOportunityDto: UnApplyOportunityDto) {
+    return this.oportunityService.unapplyOportunity(
+      Number(unApplyOportunityDto.userId),
+      Number(unApplyOportunityDto.oportunityId),
     );
   }
 }

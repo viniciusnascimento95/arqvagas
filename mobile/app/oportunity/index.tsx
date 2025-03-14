@@ -7,14 +7,20 @@ import { VStack } from "@/components/ui/vstack";
 import { api } from "@/services/api";
 import { router, usePathname } from "expo-router";
 import { BriefcaseIcon, BuildingIcon, ChevronLeftIcon, ClockIcon, HomeIcon, MapPinIcon, SearchXIcon, UserIcon } from "lucide-react-native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { FlatList, Pressable } from "react-native";
 
+import { useAuth } from "@/constants/AuthContext";
+import { Buffer } from 'buffer';
 import { SafeAreaView } from "react-native-safe-area-context";
 
 interface CompanyInfo {
   industry: string;
   name: string;
+}
+
+interface ApplicationInfo {
+  userId: number
 }
 
 interface JobListing {
@@ -37,10 +43,14 @@ interface JobListing {
   requirements: string[];
   benefits: string[];
   toolsAndSoftware: string[];
+  Application: ApplicationInfo[];
 }
 
 export default function OportunityScreen() {
-  const [oportunities, setOportunities] = useState<JobListing[]>([]);
+  const [oportunities, setOportunities] = useState<JobListing[]>([])
+  const { token } = useAuth()
+  //@ts-ignore
+  const decodeToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
 
   const pathname = usePathname();
   useEffect(() => {
@@ -49,6 +59,11 @@ export default function OportunityScreen() {
     })
   }, [])
 
+  const hasUserApplied = useCallback((oportunity: JobListing) => {
+    return oportunity.Application?.some(
+      application => application.userId === decodeToken.sub
+    );
+  }, [decodeToken.sub]);
   return (
     <SafeAreaView className="h-full w-full bg-background-0">
       <VStack className="py-4 flex-1" space="lg">
@@ -73,19 +88,27 @@ export default function OportunityScreen() {
           ItemSeparatorComponent={() => <VStack className="h-2" />}
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item }) => (
-            <Pressable 
+            <Pressable
               onPress={() => router.push(`/oportunity/detail/${item.id}`)}
               className="active:opacity-80"
             >
               <VStack className="bg-white p-5 rounded-xl shadow-md border border-gray-100">
+                {hasUserApplied(item) && (
+                  <HStack className="items-center justify-center mb-3">
+                    <Text className="text-sm text-blue-700">Você já se candidatou a esta oportunidade.</Text>
+                  </HStack>
+                )}
                 <HStack className="items-center justify-between mb-3">
+
                   <Text className="text-xl font-bold text-primary-500">{item.jobTitle}</Text>
                   {item.isAvailable && (
                     <Text className="text-sm bg-green-50 text-green-700 px-3 py-1 rounded-full font-medium">
                       {item.availablePositions} vagas
                     </Text>
                   )}
+
                 </HStack>
+
 
                 <HStack className="items-center mb-3" space="sm">
                   <Icon as={BuildingIcon} size="md" className="text-primary-500" />

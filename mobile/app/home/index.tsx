@@ -78,7 +78,7 @@ export default function DashboardScreen() {
                     </Pressable>
 
                     <Pressable
-                      onPress={() => Linking.openURL('https://mentoria-curriculo.com')}
+                      onPress={() => Linking.openURL('https://arqvagasbrasil.com/index.php/mentoria/')}
                       className="bg-red-100 p-6 rounded-xl flex-1 min-w-[150px] shadow-sm"
                     >
                       <VStack space="md" className="items-center">
@@ -88,7 +88,7 @@ export default function DashboardScreen() {
                     </Pressable>
 
                     <Pressable
-                      onPress={() => Linking.openURL('https://mentoria.com')}
+                      onPress={() => Linking.openURL('https://arqvagasbrasil.com/index.php/mentoria/')}
                       className="bg-blue-100 p-6 rounded-xl flex-1 min-w-[150px] shadow-sm"
                     >
                       <VStack space="md" className="items-center">
@@ -98,7 +98,7 @@ export default function DashboardScreen() {
                     </Pressable>
 
                     <Pressable
-                      onPress={() => Linking.openURL('https://portfolio-sucesso.com')}
+                      onPress={() => Linking.openURL('https://arqvagasbrasil.com/index.php/mentoria/')}
                       className="bg-green-100 p-6 rounded-xl flex-1 min-w-[150px] shadow-sm"
                     >
                       <VStack space="md" className="items-center">
@@ -108,7 +108,7 @@ export default function DashboardScreen() {
                     </Pressable>
 
                     <Pressable
-                      onPress={() => Linking.openURL('https://eventos-workshops.com')}
+                      onPress={() => Linking.openURL('https://arqvagasbrasil.com/index.php/canais/')}
                       className="bg-yellow-100 p-6 rounded-xl flex-1 min-w-[150px] shadow-sm"
                     >
                       <VStack space="md" className="items-center">
@@ -118,7 +118,7 @@ export default function DashboardScreen() {
                     </Pressable>
 
                     <Pressable
-                      onPress={() => Linking.openURL('https://agendar-consultoria.com')}
+                      onPress={() => Linking.openURL('https://arqvagasbrasil.com/index.php/mentoria/')}
                       className="bg-purple-100 p-6 rounded-xl flex-1 min-w-[150px] shadow-sm"
                     >
                       <VStack space="md" className="items-center">

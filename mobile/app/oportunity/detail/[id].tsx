@@ -20,6 +20,10 @@ export interface CompanyInfo {
   name: string;
 }
 
+interface ApplicationInfo {
+  userId: number
+}
+
 export interface JobListing {
   id: number;
   jobTitle: string;
@@ -40,6 +44,7 @@ export interface JobListing {
   requirements: string[];
   benefits: string[];
   toolsAndSoftware: string[];
+  Application: ApplicationInfo[];
 }
 
 import { Buffer } from 'buffer';
@@ -49,16 +54,21 @@ export default function OportunityDetailPage() {
   const { token } = useAuth()
 
   //@ts-ignore
-  const decodeToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())  
+  const decodeToken = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
   const [oportunity, setOportunity] = useState<JobListing>({} as JobListing);
-  const [modalVisible, setModalVisible] = useState(false);   
-  // const [isApplied, setIsApplied] = useState(false); 
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     api.get(`oportunity/${id}`).then(response => {
       setOportunity(response.data)
     })
   }, [id])
+
+  const hasUserApplied = () => {
+    return oportunity.Application?.some(
+      application => application.userId === decodeToken.sub
+    );
+  };
 
   return (
     <SafeAreaView className="h-full w-full bg-background-0">
@@ -174,12 +184,21 @@ export default function OportunityDetailPage() {
           </VStack>
         </ScrollView>
 
-        <Button
-          variant="outline"
-          className="mt-4 bg-green-500 text-white"
-          onPress={() => setModalVisible(true)} >
-          <ButtonText className="text-gray-900">Se inscrever</ButtonText>
-        </Button>
+        {hasUserApplied() ? (
+          <Button
+            variant="outline"
+            className="mt-4 bg-red-500 text-white"
+            onPress={() => setModalVisible(true)} >
+            <ButtonText className="text-gray-900">Desinscrever</ButtonText>
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            className="mt-4 bg-green-500 text-white"
+            onPress={() => setModalVisible(true)} >
+            <ButtonText className="text-gray-900">Se inscrever</ButtonText>
+          </Button>
+        )}
 
         <Modal
           animationType="slide"
@@ -195,12 +214,16 @@ export default function OportunityDetailPage() {
               <Pressable onPress={(e) => e.stopPropagation()}>
                 <VStack className="bg-white p-6 rounded-t-3xl shadow-lg" style={{ paddingBottom: Platform.OS === 'android' ? 70 : 36 }}>
                   <HStack className="justify-between items-center mb-4">
-                    <Heading size="lg">Inscrição para a vaga</Heading>
+                    {hasUserApplied() ? <Heading size="lg">Desiscrever para a vaga</Heading> : <Heading size="lg">Inscrição para a vaga</Heading>}
                     <Pressable onPress={() => setModalVisible(false)}>
                       <Icon as={XIcon} size="md" className="text-gray-500" />
                     </Pressable>
                   </HStack>
-                  <Text className="mb-6 text-gray-600">Tem certeza que deseja se inscrever para esta vaga? Após confirmar, sua candidatura será enviada para análise.</Text>
+                  {hasUserApplied() ? (
+                    <Text className="mb-6 text-gray-600">Tem certeza que deseja se desinscrever para esta vaga? Após confirmar, sua candidatura será cancelada.</Text>
+                  ) : (
+                    <Text className="mb-6 text-gray-600">Tem certeza que deseja se inscrever para esta vaga? Após confirmar, sua candidatura será enviada para análise.</Text>
+                  )}
 
                   <Formik
                     initialValues={{
@@ -210,25 +233,39 @@ export default function OportunityDetailPage() {
                     }}
                     enableReinitialize
                     onSubmit={async (values) => {
-                      await api.post('/oportunity/apply', {
-                        userId: String(values.userId),
-                        oportunityId: String(values.oportunityId),
-                        comment: values.comments
-                      }).then((response) => {
-                        if (response.status === 201) {
-                          setModalVisible(false);
+                      if (hasUserApplied()) {
+                        await api.post('/oportunity/unapply', {
+                          userId: String(values.userId),
+                          oportunityId: String(values.oportunityId),
+                        }).then((response) => {
+                          if (response.status === 201) {
+                            setModalVisible(false);
 
-                          alert('Inscrição realizada com sucesso!');
-                          router.push('/home');
-                        }
-                      }).catch((error) => {
-                        console.log('error', JSON.stringify(error));
-                      });
+                            alert('Sua inscrição foi cancelada com sucesso!');
+                            router.push('/home');
+                          }
+                        })
+                      } else {
+                        await api.post('/oportunity/apply', {
+                          userId: String(values.userId),
+                          oportunityId: String(values.oportunityId),
+                          comment: values.comments
+                        }).then((response) => {
+                          if (response.status === 201) {
+                            setModalVisible(false);
+
+                            alert('Inscrição realizada com sucesso!');
+                            router.push('/home');
+                          }
+                        }).catch((error) => {
+                          console.log('error', JSON.stringify(error));
+                        });
+                      }
                     }}
                   >
                     {({ values, handleChange, handleBlur, handleSubmit, }) => (
                       <View>
-                        <HStack space="md" className="justify-center my-6">
+                        {!hasUserApplied() && <HStack space="md" className="justify-center my-6">
                           <Textarea
                             size="md"
                             isReadOnly={false}
@@ -243,7 +280,8 @@ export default function OportunityDetailPage() {
                               onBlur={handleBlur("comments")}
                               placeholder="Informações complementares (opcional)" />
                           </Textarea>
-                        </HStack>
+                        </HStack>}
+
 
                         <HStack space="md" className="mb-4">
                           <Button
@@ -252,18 +290,28 @@ export default function OportunityDetailPage() {
                             onPress={() => setModalVisible(false)}>
                             <ButtonText className="text-gray-700">Cancelar</ButtonText>
                           </Button>
-                          <Button
-                            className="flex-1 bg-green-500"
-                            onPress={() => {
-                              setModalVisible(false)
-                              handleSubmit()
-                            }}>
-                            <ButtonText className="text-white">Confirmar Inscrição</ButtonText>
-                          </Button>
+                          {hasUserApplied() ? (
+                            <Button
+                              className="flex-1 bg-red-500 text-white"
+                              onPress={() => {
+                                setModalVisible(false)
+                                handleSubmit()
+                              }}>
+                              <ButtonText className="text-white">Desinscrever</ButtonText>
+                            </Button>
+                          ) : (
+                            <Button
+                              className="flex-1 bg-green-500"
+                              onPress={() => {
+                                setModalVisible(false)
+                                handleSubmit()
+                              }}>
+                              <ButtonText className="text-white">Confirmar Inscrição</ButtonText>
+                            </Button>
+                          )}
                         </HStack>
                       </View>
                     )}
-
                   </Formik>
                 </VStack>
               </Pressable>
