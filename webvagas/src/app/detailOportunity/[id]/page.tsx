@@ -5,6 +5,7 @@ import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import { api } from '@/services/api'
 import { AcademicCapIcon, CalendarDaysIcon, DocumentArrowDownIcon, EnvelopeIcon, TableCellsIcon } from '@heroicons/react/24/outline'
+import * as ExcelJS from 'exceljs'
 import { PhoneIcon, UserCircleIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
@@ -189,12 +190,42 @@ export default function DetailOportunity() {
                   PDF
                 </Button>
                 <Button
-                  onClick={featureDevelop}
+                  onClick={async () => {
+                    const workbook = new ExcelJS.Workbook()
+                    const worksheet = workbook.addWorksheet('Candidatos')
+
+                    worksheet.columns = [
+                      { header: 'Nome', key: 'name', width: 30 },
+                      { header: 'Email', key: 'email', width: 30 },
+                      { header: 'Telefone', key: 'phone', width: 20 },
+                      { header: 'Escola', key: 'school', width: 30 },
+                      { header: 'Data Conclusão', key: 'endDate', width: 20 }
+                    ]
+
+                    users.forEach(candidato => {
+                      worksheet.addRow({
+                        name: candidato.user.name,
+                        email: candidato.user.email,
+                        phone: candidato.user.phone,
+                        school: candidato.user.school || '-',
+                        endDate: candidato.user.end_date_school ?
+                          new Date(candidato.user.end_date_school).toLocaleDateString('pt-BR') : '-'
+                      })
+                    })
+
+                    const buffer = await workbook.xlsx.writeBuffer()
+                    const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+                    const url = window.URL.createObjectURL(blob)
+                    const link = document.createElement('a')
+                    link.href = url
+                    link.download = `candidatos-${job?.jobTitle}.xlsx`
+                    link.click()
+                    window.URL.revokeObjectURL(url)
+                  }}
                   className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-green-300 hover:bg-gray-200">
                   <TableCellsIcon className="h-5 w-5 mr-1" />
                   Excel
-                </Button>
-              </div>}
+                </Button>              </div>}
             </div>
             <div className='flex justify-between items-center'>
               <p className="mt-1 max-w-2xl text-sm text-gray-500">

@@ -1,0 +1,19 @@
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
+
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+api:
+  dashboard: true
+  insecure: true  # Habilita acesso sem autenticação (não recomendado em produção)
+
+providers:
+  docker:
+    exposedByDefault: false
+
+

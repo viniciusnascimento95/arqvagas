@@ -1,0 +1,52 @@
+# version: "3.8"
+
+services:
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    restart: always
+    ports:
+      - "80:80"
+      # - "443:443"
+      - "8080:8080"  # Porta para acessar a Dashboard
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "./traefik/traefik.yml:/traefik.yml"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+  
+  postgres:
+    image: postgres:15
+    container_name: "postgres"
+    restart: always
+    environment:
+      POSTGRES_USER: meuusuario
+      POSTGRES_PASSWORD: minhasenha
+      POSTGRES_DB: meubanco
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: './backend'
+    container_name: "backend"
+    restart: always
+    environment:
+      DATABASE_URL: "postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.localhost`)"
+      - "traefik.http.routers.backend.entrypoints=web"
+
+  webvagas:
+    build: ./webvagas
+    container_name: "webvagas"
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.webvagas.rule=Host(`admin.localhost`)"
+      - "traefik.http.routers.webvagas.entrypoints=web"
+
+volumes:
+  postgres_data:
