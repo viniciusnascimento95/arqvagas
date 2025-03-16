@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils'
 import { api } from '@/services/api'
 import { AcademicCapIcon, CalendarDaysIcon, DocumentArrowDownIcon, EnvelopeIcon, TableCellsIcon } from '@heroicons/react/24/outline'
 import * as ExcelJS from 'exceljs'
-import { PhoneIcon, UserCircleIcon } from 'lucide-react'
+import { ChevronLeftIcon, ChevronRightIcon, PhoneIcon, UserCircleIcon } from 'lucide-react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -56,6 +56,7 @@ interface User {
 }
 export default function DetailOportunity() {
   const [users, setUsers] = useState<User[]>([])
+  const [currentPage, setCurrentPage] = useState(1)
   const [job, setJob] = useState<OportunityProps | null>(null)
   const router = useRouter();
   const { id } = useParams();
@@ -218,7 +219,7 @@ export default function DetailOportunity() {
                     const url = window.URL.createObjectURL(blob)
                     const link = document.createElement('a')
                     link.href = url
-                    link.download = `candidatos-${job?.jobTitle}.xlsx`
+                    link.download = `candidatos-${job?.jobTitle}_${new Date().toISOString().split('T')[0].split('-').reverse().join('-')}.xlsx`
                     link.click()
                     window.URL.revokeObjectURL(url)
                   }}
@@ -237,7 +238,7 @@ export default function DetailOportunity() {
           <div className="border-t border-gray-200">
             <ul className="divide-y divide-gray-200">
 
-              {users?.map((candidato) => (
+              {users?.slice((currentPage - 1) * 10, currentPage * 10).map((candidato) => (
                 <li key={candidato?.user.id} className="px-4 py-4 sm:px-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
@@ -290,6 +291,70 @@ export default function DetailOportunity() {
                 </div>
               )}
             </ul>
+
+
+            {/* Paginação */}
+            <div className="px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+              <div className="flex-1 flex justify-between sm:hidden">
+                <button
+                  onClick={() => setCurrentPage(currentPage > 1 ? currentPage - 1 : 1)}
+                  disabled={currentPage === 1}
+                  className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Anterior
+                </button>
+                <button
+                  onClick={() => setCurrentPage(currentPage < Math.ceil(users.length / 10) ? currentPage + 1 : currentPage)}
+                  disabled={currentPage >= Math.ceil(users.length / 10)}
+                  className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                >
+                  Próximo
+                </button>
+              </div>
+              <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-sm text-gray-700">
+                    Mostrando <span className="font-medium">{((currentPage - 1) * 10) + 1}</span> até{' '}
+                    <span className="font-medium">
+                      {Math.min(currentPage * 10, users.length)}
+                    </span> de{' '}
+                    <span className="font-medium">{users.length}</span> resultados
+                  </p>
+                </div>
+                <div>
+                  <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                    <button
+                      onClick={() => setCurrentPage(currentPage > 1 ? currentPage - 1 : 1)}
+                      disabled={currentPage === 1}
+                      className="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span className="sr-only">Anterior</span>
+                      <ChevronLeftIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                    {[...Array(Math.ceil(users.length / 10))].map((_, index) => (
+                      <button
+                        key={index + 1}
+                        onClick={() => setCurrentPage(index + 1)}
+                        className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${currentPage === index + 1
+                            ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
+                            : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                          }`}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => setCurrentPage(currentPage < Math.ceil(users.length / 10) ? currentPage + 1 : currentPage)}
+                      disabled={currentPage >= Math.ceil(users.length / 10)}
+                      className="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                    >
+                      <span className="sr-only">Próximo</span>
+                      <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                    </button>
+                  </nav>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
