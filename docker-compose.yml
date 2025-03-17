@@ -3,35 +3,47 @@ services:
   traefik:
     image: "traefik:v2.10"
     container_name: "traefik"
-    restart: always
+    # restart: always
     ports:
       - "80:80"
-      # - "443:443"
-      - "8080:8080"  # Porta para acessar a Dashboard
+      - "8080:8080"  # Porta da dashboard
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "./traefik.yml:/traefik.yml"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"  # Mantém até 3 arquivos de 10MB cada
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.viniciusfernandes.site`)"
       - "traefik.http.routers.traefik.service=api@internal"
-      
-  # backend:
-  #   build: './backend'
-  #   container_name: "backend"
-  #   restart: always
-  #   # environment:
-  #   #   DATABASE_URL: "postgresql://johndoe:randompassword@localhost:5432/mydb?schema=public"
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.backend.rule=Host(`api.localhost`)"
-  #     - "traefik.http.routers.backend.entrypoints=web"
+
+  backend:
+    build: './backend'
+    container_name: "backend"
+    # restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"  # Mantém até 3 arquivos de 10MB cada
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`api.viniciusfernandes.site`)"
+      - "traefik.http.routers.backend.entrypoints=web"
 
   webvagas:
     build: ./webvagas
     container_name: "webvagas"
-    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"  # Mantém até 3 arquivos de 10MB cada
+    # restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.webvagas.rule=Host(`admin.localhost`)"
+      - "traefik.http.routers.webvagas.rule=Host(`admin.viniciusfernandes.site`)"
       - "traefik.http.routers.webvagas.entrypoints=web"

@@ -17,3 +17,10 @@ providers:
     exposedByDefault: false
 
 
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: "nascimento.vinicius32@gmail.com"
+      storage: "/acme.json"
+      httpChallenge:
+        entryPoint: web
