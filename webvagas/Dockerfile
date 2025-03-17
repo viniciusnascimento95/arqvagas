@@ -15,7 +15,7 @@ RUN yarn install
 COPY . .
 
 # Construir a aplicação
-RUN npm run build
+RUN yarn build
 
 # Expor a porta do Next.js
 EXPOSE 3000

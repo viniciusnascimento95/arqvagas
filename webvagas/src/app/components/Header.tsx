@@ -1,6 +1,7 @@
 'use client'
 import { useAuth } from '@/lib/authContext';
 import { BellIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 const Header = () => {
@@ -21,10 +22,18 @@ const Header = () => {
             <BellIcon className="h-6 w-6" />
           </button>
           <p>Usuário: {user?.email}</p>
-          <img
+          {/* <img
             className="h-8 w-8 rounded-full ml-4"
             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
             alt="User avatar"
+          /> */}
+          <Image
+            className="h-8 w-8 rounded-full ml-4"
+            src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+            alt="User avatar"
+            width={32} // 8 * 4px
+            height={32} // 8 * 4px
+            unoptimized // Remove a otimização automática do Next.js para imagens remotas
           />
         </div>
       </div>
