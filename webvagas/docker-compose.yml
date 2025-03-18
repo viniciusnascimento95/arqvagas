@@ -9,4 +9,5 @@ services:
       - NODE_ENV=development  # Definir o ambiente para desenvolvimento
     volumes:
       - .:/app  # Mapeamento do diretório local para o contêiner, para desenvolvimento
+      - /app/node_modules
     # command: ["yarn", "start"]  # Comando para rodar o Next.js em modo de desenvolvimento

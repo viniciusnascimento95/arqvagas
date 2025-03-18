@@ -11,6 +11,8 @@ COPY package.json package-lock.json yarn.lock ./
 # RUN npm install --legacy-peer-deps
 RUN yarn install 
 
+RUN npm install next -g
+
 # Copiar o restante do código
 COPY . .
 
