@@ -26,12 +26,16 @@ services:
       - "3333:3333"
     volumes:
       - .:/app
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`api.localhost`)"
-      - "traefik.http.routers.backend.entrypoints=web"
+    # labels:
+    #   - "traefik.enable=true"
+    #   - "traefik.http.routers.backend.rule=Host(`api.localhost`)"
+    #   - "traefik.http.routers.backend.entrypoints=web"
     command: ["yarn", "start:dev"]
 
 volumes:
   postgres_arqvagas_data:
-    driver: local # Driver do Docker para volumes persistentes
+    driver: bridge # Driver do Docker para volumes persistentes
+ 
+networks:
+  arqvagasNET:
+    driver: bridge

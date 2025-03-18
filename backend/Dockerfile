@@ -5,7 +5,7 @@ FROM node:20
 WORKDIR /app
 
 # Instalar dependências nativas necessárias para compilar bcrypt
-RUN apt-get update && apt-get install -y python3 g++ make
+# RUN apt-get update && apt-get install -y python3 g++ make
 
 # Copiar os arquivos do backend para o container
 COPY package.json package-lock.json yarn.lock ./
@@ -17,7 +17,7 @@ COPY package.json package-lock.json yarn.lock ./
 RUN yarn install 
 
 # Remover bcrypt e reinstalar corretamente dentro do container
-RUN yarn remove bcrypt && yarn add bcrypt
+# RUN yarn remove bcrypt && yarn add bcrypt
 
 # Copiar o arquivo .env, caso você esteja usando variáveis de ambiente do Prisma
 COPY .env .env
@@ -33,4 +33,4 @@ RUN yarn build
 EXPOSE 3333
 
 # Comando para iniciar a aplicação
-CMD ["yarn", "start:dev"]
+CMD ["yarn", "start:prod"]

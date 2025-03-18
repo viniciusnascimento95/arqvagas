@@ -1,59 +1,61 @@
 
-services:
-  traefik:
-    image: "traefik:v2.10"
-    container_name: "traefik"
-    # restart: always
-    ports:
-      - "80:80"
-      - "8080:8080"  # Porta da dashboard
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "./traefik.yml:/traefik.yml"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "5"  # Mantém até 3 arquivos de 10MB cada
-    networks:
-      - arqvagasNET
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.viniciusfernandes.site`)"
-      - "traefik.http.routers.traefik.service=api@internal"
+# services:
+#   traefik:
+#     image: "traefik:v2.10"
+#     container_name: "traefik"
+#     # restart: always
+#     ports:
+#       - "80:80"
+#       - "8080:8080"  # Porta da dashboard
+#     volumes:
+#       - "/var/run/docker.sock:/var/run/docker.sock"
+#       - "./traefik.yml:/traefik.yml"
+#     logging:
+#       driver: "json-file"
+#       options:
+#         max-size: "10m"
+#         max-file: "5"  # Mantém até 3 arquivos de 10MB cada
+#     networks:
+#       - arqvagasNET
+#     labels:
+#       - "traefik.enable=true"
+#       - "traefik.http.routers.traefik.rule=Host(`traefik.viniciusfernandes.site`)"
+#       - "traefik.http.routers.traefik.service=api@internal"
 
-  backend:
-    build: './backend'
-    container_name: "backend"
-    # restart: always
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "5"  # Mantém até 3 arquivos de 10MB cada
-    networks:
-      - arqvagasNET
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`api.viniciusfernandes.site`)"
-      - "traefik.http.routers.backend.entrypoints=web"
+#   backend:
+#     build: './backend'
+#     container_name: "backend"
+#     # restart: always
+#     logging:
+#       driver: "json-file"
+#       options:
+#         max-size: "10m"
+#         max-file: "5"  # Mantém até 3 arquivos de 10MB cada
+#     networks:
+#       - arqvagasNET
+#     labels:
+#       - "traefik.enable=true"
+#       - "traefik.http.routers.backend.rule=Host(`api.viniciusfernandes.site`)"
+#       - "traefik.http.routers.backend.entrypoints=web"
 
-  webvagas:
-    build: ./webvagas
-    container_name: "webvagas"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "5"  # Mantém até 3 arquivos de 10MB cada
-    # restart: always
-    networks:
-      - arqvagasNET
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.webvagas.rule=Host(`admin.viniciusfernandes.site`)"
-      - "traefik.http.routers.webvagas.entrypoints=web"
+#   webvagas:
+#     build: ./webvagas
+#     container_name: "webvagas"
+#     logging:
+#       driver: "json-file"
+#       options:
+#         max-size: "10m"
+#         max-file: "5"  # Mantém até 3 arquivos de 10MB cada
+#     # restart: always
+#     networks:
+#       - arqvagasNET
+#     labels:
+#       - "traefik.enable=true"
+#       - "traefik.http.routers.webvagas.rule=Host(`admin.viniciusfernandes.site`)"
+#       - "traefik.http.routers.webvagas.entrypoints=web"
 
-networks:
-  arqvagasNET:
-    driver: bridge
+# networks:
+#   arqvagasNET:
+#     driver: bridge
+
+# to-do: fazer o deploy do traefik e do backend
