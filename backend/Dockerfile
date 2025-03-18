@@ -26,13 +26,13 @@ COPY .env .env
 COPY . .
 
 # Baixar o wait-for-it
-RUN curl -o /usr/local/bin/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-RUN chmod +x /usr/local/bin/wait-for-it
+#RUN curl -o /usr/local/bin/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+#RUN chmod +x /usr/local/bin/wait-for-it
 
 # Gera os tipos do Prisma
-RUN yarn prisma:generate
+#RUN yarn prisma:generate
 
-RUN yarn prisma:deploy
+#RUN yarn prisma:deploy
 
 RUN yarn build
 # Expor a porta do NestJS
