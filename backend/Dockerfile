@@ -14,8 +14,8 @@ RUN yarn install
 COPY . .
 
 # Baixar e instalar o script wait-for-it
-RUN curl -o /usr/local/bin/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-RUN chmod +x /usr/local/bin/wait-for-it
+# RUN curl -o /usr/local/bin/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+# RUN chmod +x /usr/local/bin/wait-for-it
 
 # Gere os arquivos de migração do Prisma
 # RUN yarn prisma:generate
@@ -27,4 +27,4 @@ EXPOSE 3333
 
 # Defina o comando padrão para rodar o aplicativo, usando o wait-for-it
 # CMD ["./wait-for-it", "db:5432", "--", "yarn", "start:prod"]
-CMD ["-wait", "tcp://db:5432", "-timeout", "60s", "yarn", "start:dev"]
+CMD ["yarn", "start:dev"]
