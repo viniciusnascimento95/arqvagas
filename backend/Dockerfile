@@ -28,6 +28,9 @@ COPY . .
 # Gera os tipos do Prisma
 RUN yarn prisma:generate
 
+
+RUN yarn prisma:deploy
+
 RUN yarn build
 # Expor a porta do NestJS
 EXPOSE 3333
