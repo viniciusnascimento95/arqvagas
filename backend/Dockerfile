@@ -1,42 +1,27 @@
-# Usar uma imagem Node.js oficial
-FROM node:20
+# Use a imagem oficial do Node.js como base
+FROM node:18
 
-# Definir o diretório de trabalho dentro do container
+# Defina o diretório de trabalho para o contêiner
 WORKDIR /app
 
-# Instalar dependências nativas necessárias para compilar bcrypt
-# RUN apt-get update && apt-get install -y python3 g++ make
+# Copie o arquivo package.json e yarn.lock para o contêiner
+COPY package.json yarn.lock ./
 
-# Copiar os arquivos do backend para o container
-COPY package.json package-lock.json yarn.lock ./
+# Instale as dependências com yarn
+RUN yarn install
 
-# Instalar as dependências do projeto
-# RUN yarn install
-# Instala as dependências dentro do container
-# Instalar as dependências sem bcrypt
-RUN yarn install 
-
-# Remover bcrypt e reinstalar corretamente dentro do container
-# RUN yarn remove bcrypt && yarn add bcrypt
-
-# Copiar o arquivo .env, caso você esteja usando variáveis de ambiente do Prisma
-COPY .env .env
-
-# RUN npm run prisma:generate
+# Copie o restante dos arquivos para o contêiner
 COPY . .
 
-# Baixar o wait-for-it
-#RUN curl -o /usr/local/bin/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-#RUN chmod +x /usr/local/bin/wait-for-it
+# Baixar e instalar o script wait-for-it
+RUN curl -o /usr/local/bin/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
+RUN chmod +x /usr/local/bin/wait-for-it
 
-# Gera os tipos do Prisma
-#RUN yarn prisma:generate
+# Gere os arquivos de migração do Prisma
+RUN yarn prisma:generate
 
-#RUN yarn prisma:deploy
-
-RUN yarn build
-# Expor a porta do NestJS
+# Exponha a porta que o aplicativo irá rodar
 EXPOSE 3333
 
-# Comando para iniciar a aplicação
-CMD ["yarn", "start:prod"]
+# Defina o comando padrão para rodar o aplicativo, usando o wait-for-it
+CMD ["./wait-for-it", "db:5432", "--", "yarn", "start:prod"]
