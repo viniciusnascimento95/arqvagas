@@ -30,7 +30,7 @@ services:
     #   - .:/app
     volumes:
       - .:/app
-    command: ["./wait-for-it", "db:5432", "--", "yarn", "start:prod"]
+    command: ["dockerize", "-wait", "tcp://db:5432", "-timeout", "60s", "yarn", "start:prod"]
     # labels:
     #   - "traefik.enable=true"
     #   - "traefik.http.routers.backend.rule=Host(`api.localhost`)"
