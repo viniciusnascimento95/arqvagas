@@ -9,11 +9,4 @@ services:
       - NODE_ENV=development  # Definir o ambiente para desenvolvimento
     volumes:
       - .:/app  # Mapeamento do diretório local para o contêiner, para desenvolvimento
-    networks:
-      - network  # Rede personalizada
     command: ["yarn", "start"]  # Comando para rodar o Next.js em modo de desenvolvimento
-
-# Definindo redes
-networks:
-  network:
-    driver: bridge
