@@ -1,5 +1,5 @@
 # Usar uma imagem Node.js oficial
-FROM node:20
+FROM node:18
 
 # Definir o diretório de trabalho dentro do container
 WORKDIR /app
@@ -15,7 +15,7 @@ RUN yarn install
 COPY . .
 
 # Construir a aplicação
-RUN yarn build
+# RUN yarn build
 
 # Expor a porta do Next.js
 EXPOSE 3000
