@@ -30,11 +30,11 @@ services:
     #   - "traefik.enable=true"
     #   - "traefik.http.routers.backend.rule=Host(`api.localhost`)"
     #   - "traefik.http.routers.backend.entrypoints=web"
-    command: ["yarn", "start:dev"]
+    command: ["yarn", "start:start"]
 
 volumes:
   postgres_arqvagas_data:
-    driver: bridge # Driver do Docker para volumes persistentes
+    driver: local # Driver do Docker para volumes persistentes
  
 networks:
   arqvagasNET:
