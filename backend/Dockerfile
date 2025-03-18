@@ -20,6 +20,8 @@ RUN chmod +x /usr/local/bin/wait-for-it
 # Gere os arquivos de migração do Prisma
 RUN yarn prisma:generate
 
+RUN yarn prisma:deploy
+
 # Exponha a porta que o aplicativo irá rodar
 EXPOSE 3333
 
