@@ -26,13 +26,16 @@ services:
       - "3333:3333"
     # networks:
     #   - network
+    # volumes:
+    #   - .:/app
     volumes:
       - .:/app
+    command: ["./wait-for-it", "db:5432", "--", "yarn", "start:prod"]
     # labels:
     #   - "traefik.enable=true"
     #   - "traefik.http.routers.backend.rule=Host(`api.localhost`)"
     #   - "traefik.http.routers.backend.entrypoints=web"
-    command: ["yarn", "start:prod"]
+    # command: ["yarn", "start:prod"]
 
 volumes:
   postgres_arqvagas_data:
