@@ -28,7 +28,6 @@ COPY . .
 # Gera os tipos do Prisma
 RUN yarn prisma:generate
 
-
 RUN yarn prisma:deploy
 
 RUN yarn build
