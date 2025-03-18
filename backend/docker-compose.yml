@@ -1,5 +1,3 @@
-# version: '3.8' # Define a versão do Docker Compose
-
 services:
   db:
     image: postgres:13 # Define a versão do PostgreSQL

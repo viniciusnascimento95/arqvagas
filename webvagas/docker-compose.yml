@@ -1,0 +1,19 @@
+services:
+  # Serviço Next.js
+  nextjs:
+    build: .  # Vai usar o Dockerfile presente na raiz
+    container_name: arquivagas_web  # Nome do contêiner do Next.js
+    ports:
+      - "3000:3000"  # Mapeamento da porta local para o contêiner
+    environment:
+      - NODE_ENV=development  # Definir o ambiente para desenvolvimento
+    volumes:
+      - .:/app  # Mapeamento do diretório local para o contêiner, para desenvolvimento
+    networks:
+      - network  # Rede personalizada
+    command: ["yarn", "dev"]  # Comando para rodar o Next.js em modo de desenvolvimento
+
+# Definindo redes
+networks:
+  network:
+    driver: bridge
