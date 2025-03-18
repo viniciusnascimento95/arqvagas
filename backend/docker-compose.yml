@@ -30,7 +30,7 @@ services:
     #   - "traefik.enable=true"
     #   - "traefik.http.routers.backend.rule=Host(`api.localhost`)"
     #   - "traefik.http.routers.backend.entrypoints=web"
-    command: ["yarn", "start:start"]
+    command: ["yarn", "start:prod"]
 
 volumes:
   postgres_arqvagas_data:
