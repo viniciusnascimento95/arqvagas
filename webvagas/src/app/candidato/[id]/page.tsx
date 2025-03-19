@@ -42,10 +42,7 @@ export default function DetailOportunity() {
 
   useEffect(() => {
     if (id) {
-      api.get(`user/${id}/showUser`).then((res) => {
-        console.log('=>res --->', typeof res.data);
-        setUser(res.data)
-      })
+      api.get(`user/${id}/showUser`).then((res) => setUser(res.data))
     }
   }, [id])
 

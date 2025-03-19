@@ -48,9 +48,7 @@ export default function Edit() {
 
   useEffect(() => {
     if (id) {
-      api.get(`oportunity/${id}`).then((res) => {    
-        setJob(res.data)
-      })
+      api.get(`oportunity/${id}`).then((res) => setJob(res.data))
     }
   }, [id])
 
@@ -581,7 +579,7 @@ export default function Edit() {
               >
                 Enviar
               </Button>
-            </div>            
+            </div>
           </Form>
         )}
       </Formik>

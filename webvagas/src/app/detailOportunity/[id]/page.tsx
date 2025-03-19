@@ -66,19 +66,15 @@ export default function DetailOportunity() {
 
   useEffect(() => {
     if (id) {
-      api.get(`oportunity/${id}`).then((res) => {
-        setJob(res.data)
+      Promise.all([
+        api.get(`oportunity/${id}`),
+        api.get(`/oportunity/${id}/applications`)
+      ]).then(([jobRes, usersRes]) => {
+        setJob(jobRes.data)
+        setUsers(usersRes.data)
       })
     }
   }, [id])
-
-  useEffect(() => {
-    api.get(`/oportunity/${id}/applications`).then((res) => {
-      console.log('=>res --->', res);
-      setUsers(res.data)
-    })
-  }, [id])
-
 
   function featureDevelop() {
     toast({
@@ -336,8 +332,8 @@ export default function DetailOportunity() {
                         key={index + 1}
                         onClick={() => setCurrentPage(index + 1)}
                         className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${currentPage === index + 1
-                            ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
-                            : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                          ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
+                          : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                           }`}
                       >
                         {index + 1}

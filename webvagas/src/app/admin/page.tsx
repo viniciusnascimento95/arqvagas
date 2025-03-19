@@ -57,7 +57,7 @@ export default function Home() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-semibold text-gray-800">Dashboard</h1>
+      <h1 className="text-3xl font-semibold text-gray-800">Arq Vagas Brasil</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <DashboardCard title="Total de Vagas" value={totJob} icon={BriefcaseIcon} />
         <DashboardCard title="Usuários" value={totUser} icon={UserGroupIcon} />

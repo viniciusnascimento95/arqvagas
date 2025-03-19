@@ -17,10 +17,10 @@ RUN npm install next -g
 COPY . .
 
 # Construir a aplicação
-# RUN yarn build
+RUN yarn build
 
 # Expor a porta do Next.js
 EXPOSE 3000
 
 # Comando para iniciar a aplicação
-CMD ["yarn", "dev"]
+CMD ["yarn", "prod"]

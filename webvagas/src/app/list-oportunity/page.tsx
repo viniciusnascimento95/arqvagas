@@ -50,10 +50,9 @@ export default function AdministrarOportunidades() {
 
   useEffect(() => {
     api.get('/oportunity').then((res) => {
-      console.log(res.data)
       setOportunidades(res.data)
     })
-  }, [])
+  }, [ ])
 
   const itemsPerPage = 10
   const filteredOportunidades = oportunidades

@@ -20,19 +20,9 @@ async function loginWithEmail(email: string, password: string) {
     return userCredential.user;
   } catch (error) {
     console.log('=>error --->', error);
-    // throw new Error(error.message);
   }
 }
 
-// async function loginWithGoogle() {
-//   try {
-//     const result = await signInWithPopup(auth, googleProvider);
-//     return result.user;
-//   } catch (error) {
-//     console.log('=>error --->', error);
-//     // throw new Error(error.message);
-//   }
-// }
 
 function featureDevelop() {
   toast({

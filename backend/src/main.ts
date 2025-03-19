@@ -24,10 +24,7 @@ async function bootstrap() {
 
   // Ativar o CORS
   app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'https://admin.viniciusfernandes.site',
-    ], // Permite somente requisições desta origem
+    origin: ['http://localhost:3000', 'https://admin.viniciusfernandes.site'], // Permite somente requisições desta origem
     methods: 'GET,POST,PUT,DELETE,OPTIONS,PATCH', // Métodos HTTP permitidos
     credentials: true, // Se precisar de cookies
   });
