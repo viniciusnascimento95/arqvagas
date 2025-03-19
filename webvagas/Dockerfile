@@ -23,4 +23,4 @@ RUN yarn build
 EXPOSE 3000
 
 # Comando para iniciar a aplicação
-CMD ["yarn", "prod"]
+CMD ["yarn", "start"]
