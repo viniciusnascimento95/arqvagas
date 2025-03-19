@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:3000"  # Mapeamento da porta local para o contêiner
     environment:
-      - NODE_ENV=development  # Definir o ambiente para desenvolvimento
+      - NODE_ENV=production  # Definir o ambiente para desenvolvimento
     volumes:
       - .:/app  # Mapeamento do diretório local para o contêiner, para desenvolvimento
       - /app/node_modules

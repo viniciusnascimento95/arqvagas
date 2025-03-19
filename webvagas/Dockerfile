@@ -1,19 +1,16 @@
 # Usar uma imagem Node.js oficial
-FROM node:18
+FROM node:18-alpine
 
 # Definir o diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copiar os arquivos do backend para o container
+# Copiar os arquivos de dependências
 COPY package.json package-lock.json yarn.lock ./
-# RUN npm install
-# RUN npm run generate
-# RUN npm install --legacy-peer-deps
-RUN yarn install 
 
-RUN npm install next -g
+# Instalar dependências
+RUN yarn install --frozen-lockfile
 
-# Copiar o restante do código
+# Copiar o restante do código para o container
 COPY . .
 
 # Construir a aplicação
@@ -22,5 +19,5 @@ RUN yarn build
 # Expor a porta do Next.js
 EXPOSE 3000
 
-# Comando para iniciar a aplicação
-CMD ["yarn", "dev"]
+# Comando para iniciar a aplicação em produção
+CMD ["yarn", "start"]
