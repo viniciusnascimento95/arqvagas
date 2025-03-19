@@ -10,4 +10,5 @@ services:
     volumes:
       - .:/app  # Mapeamento do diretório local para o contêiner, para desenvolvimento
       - /app/node_modules
+      - /app/.next
     # command: ["yarn", "start"]  # Comando para rodar o Next.js em modo de desenvolvimento
