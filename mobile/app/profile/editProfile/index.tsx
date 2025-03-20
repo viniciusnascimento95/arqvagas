@@ -56,9 +56,7 @@ export default function EditProfileScreen() {
         Yup.ref("init_date_school"),
         "Data de término deve ser depois da data de início"
       ),
-    portfolio_url: Yup.string()
-      .nullable()
-      .url("URL inválida"),
+    portfolio_url: Yup.string().nullable()
   });
 
   useEffect(() => {

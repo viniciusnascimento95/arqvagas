@@ -1,6 +1,5 @@
 import { router } from "expo-router";
 import { ChevronRight, KeyIcon, Settings, User } from "lucide-react-native";
-import { useEffect, useState } from "react";
 import { Pressable, SafeAreaView } from "react-native";
 import { Avatar, AvatarFallbackText, AvatarImage } from "../../components/ui/avatar";
 import { Button, ButtonText } from "../../components/ui/button";
@@ -12,34 +11,31 @@ import { Text } from "../../components/ui/text";
 import { VStack } from "../../components/ui/vstack";
 import { useAuth } from "../../constants/AuthContext";
 
-import { api } from "../../services/api";
 
-type UserProfile = {
-  id: number
-  email: string
-  name: string
-  phone: string | null
-  school: string | null
-  init_date_school: string | null
-  end_date_school: string | null
-  portfolio_url: string | null
-  password: string
-  createdAt: string
-}
+// type UserProfile = {
+//   id: number
+//   email: string
+//   name: string
+//   phone: string | null
+//   school: string | null
+//   init_date_school: string | null
+//   end_date_school: string | null
+//   portfolio_url: string | null
+//   password: string
+//   createdAt: string
+// }
 export default function MobileProfileScreen() {
   const { signOut, user } = useAuth()
 
-  const [profile, setProfile] = useState<UserProfile | null>(null)
+  // const [profile, setProfile] = useState<UserProfile | null>(null)
 
-  useEffect(() => {
-    api.get(`/user/showUserByEmail/${user?.email}`).then(response => {
-      setProfile(response.data)
-    }).catch(error => {
-      console.log(JSON.stringify(error, null, 3))
-    })
-  }, [])
-
-
+  // useEffect(() => {
+  //   api.get(`/user/showUserByEmail/${user?.email}`).then(response => {
+  //     setProfile(response.data)
+  //   }).catch(error => {
+  //     console.log(JSON.stringify(error, null, 3))
+  //   })
+  // }, [])
 
   return (
     <SafeAreaView className="h-full w-full">
@@ -110,11 +106,7 @@ export default function MobileProfileScreen() {
             action="negative"
             variant="outline"
             style={{ backgroundColor: '#f41717', }}
-            onPress={() => {
-              signOut().then(() => {
-                router.navigate('/')
-              })
-            }}
+            onPress={() => signOut()}
           >
             <ButtonText style={{ color: 'white' }}>Sair</ButtonText>
           </Button>

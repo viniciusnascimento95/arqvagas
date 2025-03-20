@@ -159,6 +159,16 @@ export default function OportunityDetailPage() {
               </HStack>
             </VStack>
 
+            <VStack space="sm">
+              <HStack space="sm" className="items-center">
+                <Icon as={PenToolIcon} size="md" className="text-primary-500" />
+                <Heading size="sm">Descrição</Heading>
+              </HStack>
+              <HStack space="sm" className="flex-wrap">
+                <Text className="text-sm flex-1">{oportunity.jobDescription}</Text>
+              </HStack>
+            </VStack>
+
             <VStack space="sm" className="bg-gray-50 p-4 rounded-xl">
               <HStack space="sm" className="items-center">
                 <Icon as={InfoIcon} size="md" className="text-primary-500" />

@@ -5,8 +5,7 @@ import {
   IsEmail,
   IsNotEmpty,
   IsOptional,
-  IsString,
-  IsUrl,
+  IsString
 } from 'class-validator';
 
 export class UpdateUserDto {
@@ -83,7 +82,7 @@ export class UpdateUserDto {
     description: 'URL do portfólio do usuário',
     example: 'https://meuportfolio.com',
   })
-  @IsUrl()
+  @IsString()
   @IsOptional()
   portfolio_url?: string;
 }

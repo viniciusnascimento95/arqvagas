@@ -45,11 +45,14 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const signOut = async () => {
-    await AsyncStorage.removeItem("@token");
-    await AsyncStorage.removeItem("@user");
-    setToken(null);
-    setUser(null);
-    router.push('/')
+    try {
+      await AsyncStorage.multiRemove(["@token", "@user"]);
+      setToken(null);
+      setUser(null);
+      router.replace('/');
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+    }
   };
 
   return (
