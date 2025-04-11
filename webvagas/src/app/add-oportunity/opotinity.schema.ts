@@ -1,14 +1,15 @@
 import * as Yup from 'yup';
 
-interface Requirement {
-  skill: string;
+
+interface Tools {
+  tool: string;
   level: 'Não tenho' | 'Básico' | 'Intermediário' | 'Avançado';
 }
 
 export const initialValuesOportunity = {
   jobTitle: '',
   contractType: '',
-  requirements: [] as Requirement[],
+  requirements: [],
   jobDescription: '',
   experienceLevel: '',
   benefits: [],
@@ -21,14 +22,14 @@ export const initialValuesOportunity = {
     industry: ''
   },
   mainResponsibilities: [],
-  toolsAndSoftware: [],
+  toolsAndSoftware: [] as Tools[],
   publicationDate: new Date().toISOString().split('T')[0],
   applicationDeadline: '',
   isAvailable: true,
 };
 
-const requirementSchema = Yup.object().shape({
-  skill: Yup.string().required('O nome da habilidade é obrigatório.'),
+const ToolsSchema = Yup.object().shape({
+  tool: Yup.string().required('O nome da habilidade é obrigatório.'),
   level: Yup.string()
     .oneOf(['Não tenho', 'Básico', 'Intermediário', 'Avançado'], 'Nível inválido')
     .required('O nível da habilidade é obrigatório.')
@@ -40,8 +41,8 @@ const JobSchema = Yup.object().shape({
   contractType: Yup.string()
     .required('O tipo de contrato é obrigatório.'),
   requirements: Yup.array()
-    .of(requirementSchema)
-    .required('Os requisitos são obrigatórios.'),
+    .of(Yup.string().required('Cada ferramenta ou software deve ser uma string válida.'))
+    .required('As ferramentas e softwares são obrigatórios.'),
   jobDescription: Yup.string()
     .required('A descrição do trabalho é obrigatória.'),
   experienceLevel: Yup.string()
@@ -68,8 +69,8 @@ const JobSchema = Yup.object().shape({
     .of(Yup.string().required('Cada responsabilidade deve ser uma string válida.'))
     .required('As responsabilidades principais são obrigatórias.'),
   toolsAndSoftware: Yup.array()
-    .of(Yup.string().required('Cada ferramenta ou software deve ser uma string válida.'))
-    .required('As ferramentas e softwares são obrigatórios.'),
+    .of(ToolsSchema)
+    .required('Informe a ferramenta ou sofware, são obrigatórios.'),
   publicationDate: Yup.date()
     .required('A data de publicação é obrigatória.'),
   applicationDeadline: Yup.date()

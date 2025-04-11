@@ -37,7 +37,7 @@ model Oportunity {
   expectedStartDate    DateTime
   companyInfo          Json
   mainResponsibilities String[]
-  toolsAndSoftware     String[]
+  toolsAndSoftware     Json[]
   publicationDate      DateTime
   applicationDeadline  DateTime
   isAvailable          Boolean       @default(true)

@@ -8,8 +8,17 @@ import {
   IsNumber,
   IsObject,
   IsOptional,
-  IsString,
+  IsString
 } from 'class-validator';
+
+
+class ToolLevel {
+  @IsString()
+  tool: string;
+
+  @IsString()
+  level: string;
+}
 
 export class CreateOportunityDto {
   @ApiProperty({
@@ -107,12 +116,15 @@ export class CreateOportunityDto {
 
   @ApiProperty({
     description: 'Ferramentas e softwares necessários',
-    example: ['VSCode', 'Git'],
-    type: [String],
+    example: [
+      { tool: '123teste', level: 'Não tenho' },
+      { tool: 'abc 123', level: 'Básico' }
+    ],
+    type: 'array',
   })
   @IsArray()
-  @IsString({ each: true })
-  toolsAndSoftware: string[];
+  @IsObject({ each: true })
+  toolsAndSoftware: { tool: string; level: string }[];
 
   @ApiProperty({
     description: 'Data de publicação da vaga',

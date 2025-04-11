@@ -4,7 +4,7 @@ import { CreateOportunityDto } from './dto/create-oportunity.dto';
 
 @Injectable()
 export class OportunityService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createOportunityDto: CreateOportunityDto) {
     return this.prisma.oportunity.create({
@@ -16,7 +16,7 @@ export class OportunityService {
     return this.prisma.oportunity.findMany({
       include: {
         Application: true,
-      }
+      },
     });
   }
 
@@ -25,7 +25,7 @@ export class OportunityService {
       where: { id },
       include: {
         Application: true,
-      }
+      },
     });
   }
 
@@ -84,10 +84,7 @@ export class OportunityService {
     });
   }
 
-  async unapplyOportunity(
-    userId: number,
-    oportunityId: number
-  ) {
+  async unapplyOportunity(userId: number, oportunityId: number) {
     return this.prisma.application.delete({
       where: {
         userId_oportunityId: {
@@ -97,6 +94,4 @@ export class OportunityService {
       },
     });
   }
-
-  
 }

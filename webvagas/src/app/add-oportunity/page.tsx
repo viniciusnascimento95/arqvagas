@@ -35,7 +35,11 @@ export default function AdicionarOportunidade() {
             companyInfo: {
               name: values.companyInfo.name,
               industry: values.companyInfo.industry,
-            }
+            },
+            toolsAndSoftware : values.toolsAndSoftware.map((tool) => ({
+              tool: tool.tool,
+              level: tool.level,
+            }))
           })
           if (response.status === 201) {
             toast({
@@ -299,8 +303,6 @@ export default function AdicionarOportunidade() {
               )}
             </div>
 
-            {/* {JSON.stringify(values, null, 3)} */}
-
             {/* Campo: Descrição do Trabalho */}
             <div className='my-4'>
               <label htmlFor="jobDescription" className="block text-sm font-medium">
@@ -321,8 +323,6 @@ export default function AdicionarOportunidade() {
                 </p>
               )}
             </div>
-            <p>{JSON.stringify(values.requirements, null, 3)}</p>
-
             <Separator className="my-4" />
 
             {/* Campo: Requisitos */}
@@ -344,23 +344,12 @@ export default function AdicionarOportunidade() {
                           <div key={index} className="flex items-center gap-4 mb-2">
                             <Input
                               type="text"
-                              name={`requirements[${index}].skill`}
-                              value={requirement.skill}
-                              placeholder={`Habilidade ${index + 1}`}
+                              name={`requirements[${index}]`}
+                              value={requirement}
+                              placeholder={`Requisito ${index + 1}`}
                               onChange={handleChange}
                               className="flex-1"
                             />
-                            <select
-                              value={requirement.level}
-                              onChange={(e) => setFieldValue(`requirements[${index}].level`, e.target.value)}
-                              className="flex h-10 w-[180px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                            >
-                              <option value="" disabled>Selecione o nível</option>
-                              <option value="Não tenho">Não tenho</option>
-                              <option value="Básico">Básico</option>
-                              <option value="Intermediário">Intermediário</option>
-                              <option value="Avançado">Avançado</option>
-                            </select>
                             <Button variant="destructive"
                               type="button"
                               onClick={() => arrayHelpers.remove(index)}
@@ -373,7 +362,7 @@ export default function AdicionarOportunidade() {
                         {/* Botão para adicionar novo requisito */}
                         <Button variant="ghost"
                           type="button"
-                          onClick={() => arrayHelpers.push({ skill: '', level: '' })} // Adiciona um campo vazio
+                          onClick={() => arrayHelpers.push('')} // Adiciona um campo vazio
                           className="w-full text-blue-500 hover:text-blue-700 mt-2"
                         >
                           Adicionar Requisito
@@ -382,17 +371,7 @@ export default function AdicionarOportunidade() {
                     )}
                   />
                   {touched.requirements && errors.requirements && (
-                    <p className="text-red-500 text-sm mt-1">
-                      {Array.isArray(errors.requirements)
-                        ? errors.requirements.map((error, index) => (
-                          <span key={index}>
-                            {typeof error === 'object' && 'skill' in error
-                              ? error.skill || error.level
-                              : String(error)}
-                          </span>
-                        ))
-                        : errors.requirements}
-                    </p>
+                    <p className="text-red-500 text-sm mt-1">{errors.requirements}</p>
                   )}
                 </div>
               </Card>
@@ -461,12 +440,25 @@ export default function AdicionarOportunidade() {
                           <div key={index} className="flex items-center gap-4 mb-2">
                             <Input
                               type="text"
-                              name={`toolsAndSoftware[${index}]`}
-                              value={tool}
+                              // name={`toolsAndSoftware[${index}]`}
+                              name={`toolsAndSoftware[${index}].tool`}
+                              value={tool.tool}
                               placeholder={`Ferramenta ${index + 1}`}
                               onChange={handleChange}
                               className="flex-1"
                             />
+
+                            <select
+                              value={tool.level}
+                              onChange={(e) => setFieldValue(`toolsAndSoftware[${index}].level`, e.target.value)}
+                              className="flex h-10 w-[180px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                            >
+                              <option value="" disabled>Selecione o nível</option>
+                              <option value="Não tenho">Não tenho</option>
+                              <option value="Básico">Básico</option>
+                              <option value="Intermediário">Intermediário</option>
+                              <option value="Avançado">Avançado</option>
+                            </select>
                             <Button variant="destructive"
                               type="button"
                               onClick={() => arrayHelpers.remove(index)}
@@ -479,7 +471,7 @@ export default function AdicionarOportunidade() {
                         {/* Botão para adicionar novo requisito */}
                         <Button variant="ghost"
                           type="button"
-                          onClick={() => arrayHelpers.push('')} // Adiciona um campo vazio
+                          onClick={() => arrayHelpers.push({ tool: '', level: '' })} // Adiciona um campo vazio
                           className="w-full text-blue-500 hover:text-blue-700 mt-2"
                         >
                           Adicionar Ferramenta
@@ -488,12 +480,21 @@ export default function AdicionarOportunidade() {
                     )}
                   />
                   {touched.toolsAndSoftware && errors.toolsAndSoftware && (
-                    <p className="text-red-500 text-sm mt-1">{errors.toolsAndSoftware}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {Array.isArray(errors.toolsAndSoftware)
+                        ? errors.toolsAndSoftware.map((error, index) => (
+                          <span key={index}>
+                            {typeof error === 'object' && 'skill' in error
+                              ? error.tool || error.level
+                              : String(error)}
+                          </span>
+                        ))
+                        : errors.toolsAndSoftware}
+                    </p>
                   )}
                 </div>
               </Card>
             </div>
-
 
             <Card className='p-4'>
               {/* Campo: mainResponsibilities */}

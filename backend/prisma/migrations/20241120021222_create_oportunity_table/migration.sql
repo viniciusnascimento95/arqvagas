@@ -13,7 +13,7 @@ CREATE TABLE "Oportunity" (
     "expectedStartDate" TIMESTAMP(3) NOT NULL,
     "companyInfo" JSONB NOT NULL,
     "mainResponsibilities" TEXT[],
-    "toolsAndSoftware" TEXT[],
+    "toolsAndSoftware" JSONB[],
     "publicationDate" TIMESTAMP(3) NOT NULL,
     "applicationDeadline" TIMESTAMP(3) NOT NULL,
     "isAvailable" BOOLEAN NOT NULL DEFAULT true,
