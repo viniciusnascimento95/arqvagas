@@ -321,6 +321,7 @@ export default function AdicionarOportunidade() {
                 </p>
               )}
             </div>
+            <p>{JSON.stringify(values.requirements, null, 3)}</p>
 
             <Separator className="my-4" />
 
@@ -343,12 +344,23 @@ export default function AdicionarOportunidade() {
                           <div key={index} className="flex items-center gap-4 mb-2">
                             <Input
                               type="text"
-                              name={`requirements[${index}]`}
-                              value={requirement}
-                              placeholder={`Requisito ${index + 1}`}
+                              name={`requirements[${index}].skill`}
+                              value={requirement.skill}
+                              placeholder={`Habilidade ${index + 1}`}
                               onChange={handleChange}
                               className="flex-1"
                             />
+                            <select
+                              value={requirement.level}
+                              onChange={(e) => setFieldValue(`requirements[${index}].level`, e.target.value)}
+                              className="flex h-10 w-[180px] rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                            >
+                              <option value="" disabled>Selecione o nível</option>
+                              <option value="Não tenho">Não tenho</option>
+                              <option value="Básico">Básico</option>
+                              <option value="Intermediário">Intermediário</option>
+                              <option value="Avançado">Avançado</option>
+                            </select>
                             <Button variant="destructive"
                               type="button"
                               onClick={() => arrayHelpers.remove(index)}
@@ -356,13 +368,12 @@ export default function AdicionarOportunidade() {
                             >
                               Remover
                             </Button>
-
                           </div>
                         ))}
                         {/* Botão para adicionar novo requisito */}
                         <Button variant="ghost"
                           type="button"
-                          onClick={() => arrayHelpers.push('')} // Adiciona um campo vazio
+                          onClick={() => arrayHelpers.push({ skill: '', level: '' })} // Adiciona um campo vazio
                           className="w-full text-blue-500 hover:text-blue-700 mt-2"
                         >
                           Adicionar Requisito
@@ -371,7 +382,17 @@ export default function AdicionarOportunidade() {
                     )}
                   />
                   {touched.requirements && errors.requirements && (
-                    <p className="text-red-500 text-sm mt-1">{errors.requirements}</p>
+                    <p className="text-red-500 text-sm mt-1">
+                      {Array.isArray(errors.requirements)
+                        ? errors.requirements.map((error, index) => (
+                          <span key={index}>
+                            {typeof error === 'object' && 'skill' in error
+                              ? error.skill || error.level
+                              : String(error)}
+                          </span>
+                        ))
+                        : errors.requirements}
+                    </p>
                   )}
                 </div>
               </Card>

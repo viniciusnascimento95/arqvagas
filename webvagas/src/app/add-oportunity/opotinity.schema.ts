@@ -1,10 +1,14 @@
 import * as Yup from 'yup';
 
+interface Requirement {
+  skill: string;
+  level: 'Não tenho' | 'Básico' | 'Intermediário' | 'Avançado';
+}
 
 export const initialValuesOportunity = {
   jobTitle: '',
   contractType: '',
-  requirements: [],
+  requirements: [] as Requirement[],
   jobDescription: '',
   experienceLevel: '',
   benefits: [],
@@ -23,13 +27,20 @@ export const initialValuesOportunity = {
   isAvailable: true,
 };
 
+const requirementSchema = Yup.object().shape({
+  skill: Yup.string().required('O nome da habilidade é obrigatório.'),
+  level: Yup.string()
+    .oneOf(['Não tenho', 'Básico', 'Intermediário', 'Avançado'], 'Nível inválido')
+    .required('O nível da habilidade é obrigatório.')
+});
+
 const JobSchema = Yup.object().shape({
   jobTitle: Yup.string()
     .required('O título do trabalho é obrigatório.'),
   contractType: Yup.string()
     .required('O tipo de contrato é obrigatório.'),
   requirements: Yup.array()
-    .of(Yup.string().required('Cada requisito deve ser uma string válida.'))
+    .of(requirementSchema)
     .required('Os requisitos são obrigatórios.'),
   jobDescription: Yup.string()
     .required('A descrição do trabalho é obrigatória.'),
