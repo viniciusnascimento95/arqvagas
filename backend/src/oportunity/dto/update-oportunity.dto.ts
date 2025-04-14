@@ -121,15 +121,17 @@ export class UpdateOportunityDto {
   @IsOptional()
   mainResponsibilities?: string[];
 
-  @ApiPropertyOptional({
-    description: 'Ferramentas e softwares necessários',
-    example: ['VSCode', 'Git'],
-    type: [String],
-  })
-  @IsArray()
-  @IsString({ each: true })
-  @IsOptional()
-  toolsAndSoftware?: string[];
+   @ApiPropertyOptional({
+      description: 'Ferramentas e softwares necessários',
+      example: [
+        { tool: '123teste', level: 'Não tenho' },
+        { tool: 'abc 123', level: 'Básico' }
+      ],
+      type: 'array',
+    })
+    @IsArray()
+    @IsObject({ each: true })
+    toolsAndSoftware: { tool: string; level: string }[];
 
   @ApiPropertyOptional({
     description: 'Data de publicação da vaga',

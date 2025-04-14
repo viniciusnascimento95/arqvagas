@@ -11,15 +11,6 @@ import {
   IsString
 } from 'class-validator';
 
-
-class ToolLevel {
-  @IsString()
-  tool: string;
-
-  @IsString()
-  level: string;
-}
-
 export class CreateOportunityDto {
   @ApiProperty({
     description: 'Título do trabalho',

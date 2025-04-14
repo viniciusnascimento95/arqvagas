@@ -1,4 +1,12 @@
 import * as Yup from 'yup';
+
+const ToolsSchema = Yup.object().shape({
+  tool: Yup.string().required('O nome da habilidade é obrigatório.'),
+  level: Yup.string()
+    .oneOf(['Não tenho', 'Básico', 'Intermediário', 'Avançado'], 'Nível inválido')
+    .required('O nível da habilidade é obrigatório.')
+});
+
 const JobSchema = Yup.object().shape({
   jobTitle: Yup.string()
     .required('O título do trabalho é obrigatório.'),
@@ -33,8 +41,7 @@ const JobSchema = Yup.object().shape({
     .of(Yup.string().required('Cada responsabilidade deve ser uma string válida.'))
     .required('As responsabilidades principais são obrigatórias.'),
   toolsAndSoftware: Yup.array()
-    .of(Yup.string().required('Cada ferramenta ou software deve ser uma string válida.'))
-    .required('As ferramentas e softwares são obrigatórios.'),
+    .of(ToolsSchema).required('Cada ferramenta ou software deve ser uma string válida.'),
   publicationDate: Yup.date()
     .required('A data de publicação é obrigatória.'),
   applicationDeadline: Yup.date()
