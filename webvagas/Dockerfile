@@ -1,23 +1,26 @@
-# Usar uma imagem Node.js oficial
-FROM node:18-alpine
+# Etapa 1: build
+FROM node:18 AS builder
 
-# Definir o diretório de trabalho dentro do container
 WORKDIR /app
 
-# Copiar os arquivos de dependências
-COPY package.json package-lock.json yarn.lock ./
-
-# Instalar dependências
+COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
-# Copiar o restante do código para o container
 COPY . .
-
-# Construir a aplicação
 RUN yarn build
 
-# Expor a porta do Next.js
+# Etapa 2: produção
+FROM node:18 AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+
 EXPOSE 3000
 
-# Comando para iniciar a aplicação em produção
 CMD ["yarn", "start"]
