@@ -9,6 +9,7 @@ interface Tools {
 export const initialValuesOportunity = {
   jobTitle: '',
   contractType: '',
+  managedJob: '' as 'Sim' | 'Não',
   requirements: [],
   jobDescription: '',
   experienceLevel: '',

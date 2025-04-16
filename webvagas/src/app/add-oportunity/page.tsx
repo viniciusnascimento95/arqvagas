@@ -92,7 +92,7 @@ export default function AdicionarOportunidade() {
                 )}
               </div>
 
-              <div className="col-span-1">
+                <div className="col-span-1">
                 <label htmlFor="availablePositions" className="block text-sm font-medium">
                   Vagas disponiveis
                 </label>
@@ -109,7 +109,28 @@ export default function AdicionarOportunidade() {
                 {touched.availablePositions && errors.availablePositions && (
                   <p className="text-red-500 text-sm mt-1">{errors.availablePositions}</p>
                 )}
-              </div>
+                </div>
+
+                <div className="col-span-1">
+                <label htmlFor="managedJob" className="block text-sm font-medium">
+                  Vaga Gerenciada
+                </label>
+                <select
+                  id="managedJob"
+                  name="managedJob"
+                  value={values.managedJob}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="mt-2 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                >
+                  <option value="" disabled>Selecione</option>
+                  <option value="Sim">Sim</option>
+                  <option value="Não">Não</option>
+                </select>
+                {touched.managedJob && errors.managedJob && (
+                  <p className="text-red-500 text-sm mt-1">{errors.managedJob}</p>
+                )}
+                </div>
               {/* Campo: Título da vaga */}
               <div className="col-span-1">
                 <label htmlFor="contractType" className="block text-sm font-medium">

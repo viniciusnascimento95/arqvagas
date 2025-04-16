@@ -11,7 +11,10 @@ import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-
+interface Tools {
+  tool: string;
+  level: 'Não tenho' | 'Básico' | 'Intermediário' | 'Avançado';
+}
 interface OportunityProps {
   id: string,
   jobTitle: string,
@@ -29,7 +32,7 @@ interface OportunityProps {
     industry: string,
   },
   mainResponsibilities: [],
-  toolsAndSoftware: [],
+  toolsAndSoftware: Tools[],
   publicationDate: Date | null | undefined,
   applicationDeadline: '',
   isAvailable: true,
@@ -153,7 +156,7 @@ export default function DetailOportunity() {
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   <ul className="list-disc pl-5 space-y-1">
                     {job?.toolsAndSoftware.map((req, index) => (
-                      <li key={index}>{req}</li>
+                      <li key={index}>{req.tool} - {req.level}</li>
                     ))}
                   </ul>
                 </dd>
