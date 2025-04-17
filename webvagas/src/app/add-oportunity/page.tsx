@@ -36,7 +36,7 @@ export default function AdicionarOportunidade() {
               name: values.companyInfo.name,
               industry: values.companyInfo.industry,
             },
-            toolsAndSoftware : values.toolsAndSoftware.map((tool) => ({
+            toolsAndSoftware: values.toolsAndSoftware.map((tool) => ({
               tool: tool.tool,
               level: tool.level,
             }))
@@ -68,6 +68,7 @@ export default function AdicionarOportunidade() {
           <Form>
 
             {/* Título do Formulário */}
+            {JSON.stringify(values, null, 3)}
 
             <p className="text-gray-600">Preencha os campos abaixo para criar uma nova vaga.</p>
 
@@ -92,7 +93,7 @@ export default function AdicionarOportunidade() {
                 )}
               </div>
 
-                <div className="col-span-1">
+              <div className="col-span-1">
                 <label htmlFor="availablePositions" className="block text-sm font-medium">
                   Vagas disponiveis
                 </label>
@@ -109,9 +110,9 @@ export default function AdicionarOportunidade() {
                 {touched.availablePositions && errors.availablePositions && (
                   <p className="text-red-500 text-sm mt-1">{errors.availablePositions}</p>
                 )}
-                </div>
+              </div>
 
-                <div className="col-span-1">
+              <div className="col-span-1">
                 <label htmlFor="managedJob" className="block text-sm font-medium">
                   Vaga Gerenciada
                 </label>
@@ -130,7 +131,29 @@ export default function AdicionarOportunidade() {
                 {touched.managedJob && errors.managedJob && (
                   <p className="text-red-500 text-sm mt-1">{errors.managedJob}</p>
                 )}
+              </div>
+
+              {values.managedJob === 'Não' && (
+                <div className="col-span-2">
+                  <label htmlFor="externalUrl" className="block text-sm font-medium">
+                    Informe a url de inscrição da vaga externa
+                  </label>
+                  <Input
+                    id="externalUrl"
+                    name="externalUrl"
+                    type="text"
+                    placeholder="https://www.example.com"
+                    value={values.externalUrl}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className="mt-2"
+                  />
+                  {touched.externalUrl && errors.externalUrl && (
+                    <p className="text-red-500 text-sm mt-1">{errors.externalUrl}</p>
+                  )}
                 </div>
+              )}
+
               {/* Campo: Título da vaga */}
               <div className="col-span-1">
                 <label htmlFor="contractType" className="block text-sm font-medium">
@@ -150,6 +173,8 @@ export default function AdicionarOportunidade() {
                   <p className="text-red-500 text-sm mt-1">{errors.contractType}</p>
                 )}
               </div>
+
+
             </div>
             <Separator className="my-4" />
             <div className="grid grid-cols-3 gap-1 my-5">

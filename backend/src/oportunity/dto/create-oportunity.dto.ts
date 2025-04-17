@@ -20,6 +20,15 @@ export class CreateOportunityDto {
   @IsNotEmpty()
   jobTitle: string;
 
+  @ApiProperty({ description: 'Vaga gerênciada ?', example: 'Sim | Não' })
+  @IsString()
+  @IsNotEmpty()
+  managedJob: string;
+
+  @ApiProperty({ description: 'Url da vaga externa', example: 'url' })
+  @IsString()
+  externalUrl: string;
+
   @ApiProperty({ description: 'Tipo de contrato', example: 'CLT' })
   @IsString()
   @IsNotEmpty()

@@ -15,7 +15,8 @@ import { FieldArray, Form, Formik } from "formik";
 import { CalendarIcon } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import JobSchema from './opotinity.schema';
+import JobEditSchema from './opotinity.schema';
+
 
 
 interface Tools {
@@ -26,6 +27,8 @@ interface Tools {
 interface jobOportunity {
   id: string,
   jobTitle: string,
+  managedJob: 'Sim' | 'Não',
+  externalUrl: '',
   contractType: string,
   requirements: [],
   jobDescription: string,
@@ -69,6 +72,8 @@ export default function Edit() {
           {
             id: job?.id || '',
             jobTitle: job?.jobTitle || '',
+            managedJob: job?.managedJob || '',
+            externalUrl: job?.externalUrl || '',
             contractType: job?.contractType || '',
             requirements: job?.requirements || [],
             jobDescription: job?.jobDescription || '',
@@ -90,7 +95,7 @@ export default function Edit() {
             isAvailable: job?.isAvailable || false,
           }
         }
-        validationSchema={JobSchema}
+        validationSchema={JobEditSchema}
         onSubmit={async (values, { resetForm }) => {
           const response = await api.patch('/oportunity/' + values.id, {
             ...values,
@@ -98,7 +103,7 @@ export default function Edit() {
               name: values.companyInfo.name,
               industry: values.companyInfo.industry,
             },
-            toolsAndSoftware : values.toolsAndSoftware.map((tool) => ({
+            toolsAndSoftware: values.toolsAndSoftware.map((tool) => ({
               tool: tool.tool,
               level: tool.level,
             }))
@@ -161,6 +166,48 @@ export default function Edit() {
                   <p className="text-red-500 text-sm mt-1">{errors.availablePositions}</p>
                 )}
               </div>
+
+              <div className="col-span-1">
+                <label htmlFor="managedJob" className="block text-sm font-medium">
+                  Vaga Gerenciada
+                </label>
+                <select
+                  id="managedJob"
+                  name="managedJob"
+                  value={values.managedJob}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  className="mt-2 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                >
+                  <option value="" disabled>Selecione</option>
+                  <option value="Sim">Sim</option>
+                  <option value="Não">Não</option>
+                </select>
+                {touched.managedJob && errors.managedJob && (
+                  <p className="text-red-500 text-sm mt-1">{errors.managedJob}</p>
+                )}
+              </div>
+
+              {values.managedJob === 'Não' && (
+                <div className="col-span-2">
+                  <label htmlFor="externalUrl" className="block text-sm font-medium">
+                    Informe a url de inscrição da vaga externa
+                  </label>
+                  <Input
+                    id="externalUrl"
+                    name="externalUrl"
+                    type="text"
+                    placeholder="https://www.example.com"
+                    value={values.externalUrl}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    className="mt-2"
+                  />
+                  {touched.externalUrl && errors.externalUrl && (
+                    <p className="text-red-500 text-sm mt-1">{errors.externalUrl}</p>
+                  )}
+                </div>
+              )}
 
               {/* Campo: Título da vaga */}
               <div className="col-span-1">

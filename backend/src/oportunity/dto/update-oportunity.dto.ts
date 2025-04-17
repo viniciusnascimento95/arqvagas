@@ -1,9 +1,10 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
   IsDate,
+  IsNotEmpty,
   IsNumber,
   IsObject,
   IsOptional,
@@ -18,6 +19,15 @@ export class UpdateOportunityDto {
   @IsString()
   @IsOptional()
   jobTitle?: string;
+
+  @ApiProperty({ description: 'Vaga gerênciada ?', example: 'Sim | Não' })
+  @IsString()
+  @IsNotEmpty()
+  managedJob: string;
+
+  @ApiProperty({ description: 'Url da vaga externa', example: 'url' })
+  @IsString()
+  externalUrl: string;
 
   @ApiPropertyOptional({
     description: 'Tipo de contrato',
@@ -121,17 +131,17 @@ export class UpdateOportunityDto {
   @IsOptional()
   mainResponsibilities?: string[];
 
-   @ApiPropertyOptional({
-      description: 'Ferramentas e softwares necessários',
-      example: [
-        { tool: '123teste', level: 'Não tenho' },
-        { tool: 'abc 123', level: 'Básico' }
-      ],
-      type: 'array',
-    })
-    @IsArray()
-    @IsObject({ each: true })
-    toolsAndSoftware: { tool: string; level: string }[];
+  @ApiPropertyOptional({
+    description: 'Ferramentas e softwares necessários',
+    example: [
+      { tool: '123teste', level: 'Não tenho' },
+      { tool: 'abc 123', level: 'Básico' }
+    ],
+    type: 'array',
+  })
+  @IsArray()
+  @IsObject({ each: true })
+  toolsAndSoftware: { tool: string; level: string }[];
 
   @ApiPropertyOptional({
     description: 'Data de publicação da vaga',

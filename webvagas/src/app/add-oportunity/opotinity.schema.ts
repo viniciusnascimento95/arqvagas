@@ -10,6 +10,7 @@ export const initialValuesOportunity = {
   jobTitle: '',
   contractType: '',
   managedJob: '' as 'Sim' | 'Não',
+  externalUrl: '',
   requirements: [],
   jobDescription: '',
   experienceLevel: '',
@@ -44,6 +45,8 @@ const JobSchema = Yup.object().shape({
   requirements: Yup.array()
     .of(Yup.string().required('Cada ferramenta ou software deve ser uma string válida.'))
     .required('As ferramentas e softwares são obrigatórios.'),
+  managedJob: Yup.string().required('O gerenciamento de vaga é obrigatório.'),
+  externalUrl: Yup.string().nullable(),
   jobDescription: Yup.string()
     .required('A descrição do trabalho é obrigatória.'),
   experienceLevel: Yup.string()

@@ -6,6 +6,8 @@ CREATE TABLE "Oportunity" (
     "requirements" TEXT[],
     "jobDescription" TEXT NOT NULL,
     "experienceLevel" TEXT NOT NULL,
+    "managedJob" TEXT,
+    "externalUrl" TEXT,
     "benefits" TEXT[],
     "location" TEXT NOT NULL,
     "workSchedule" TEXT NOT NULL,

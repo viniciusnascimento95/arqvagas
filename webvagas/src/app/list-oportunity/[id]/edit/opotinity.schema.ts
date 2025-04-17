@@ -7,11 +7,13 @@ const ToolsSchema = Yup.object().shape({
     .required('O nível da habilidade é obrigatório.')
 });
 
-const JobSchema = Yup.object().shape({
+const JobEditSchema = Yup.object().shape({
   jobTitle: Yup.string()
     .required('O título do trabalho é obrigatório.'),
   contractType: Yup.string()
     .required('O tipo de contrato é obrigatório.'),
+  managedJob: Yup.string().required('O gerenciamento de vaga é obrigatório.'),
+  externalUrl: Yup.string().nullable(),
   requirements: Yup.array()
     .of(Yup.string().required('Cada requisito deve ser uma string válida.'))
     .required('Os requisitos são obrigatórios.'),
@@ -50,4 +52,4 @@ const JobSchema = Yup.object().shape({
   isAvailable: Yup.boolean(),
 });
 
-export default JobSchema;
+export default JobEditSchema;
