@@ -23,6 +23,11 @@ interface ApplicationInfo {
   userId: number
 }
 
+interface ToolsAndSoftware {
+  tool: string;
+  level: string;
+}
+
 interface JobListing {
   id: number;
   jobTitle: string;
@@ -42,7 +47,7 @@ interface JobListing {
   mainResponsibilities: string[];
   requirements: string[];
   benefits: string[];
-  toolsAndSoftware: string[];
+  toolsAndSoftware: ToolsAndSoftware[];
   Application: ApplicationInfo[];
 }
 
@@ -137,16 +142,17 @@ export default function OportunityScreen() {
                 </VStack>
 
                 <VStack space="sm">
-                  <Text className="text-sm font-semibold text-gray-700 mb-1">Ferramentas:</Text>
+                  <Text className="text-sm font-semibold text-gray-700 mb-1">Ferramentas e Experiência:</Text>
                   <HStack className="flex-wrap" space="sm">
                     {item.toolsAndSoftware.slice(0, 3).map((tool, index) => (
-                      <Text key={index} className="text-sm bg-primary-50 text-primary-700 px-3 py-1 rounded-full">
-                        {tool}
-                      </Text>
+                      <HStack key={index} className="bg-primary-50 px-3 py-1 rounded-full items-center" space="xs">
+                        <Text className="text-sm text-primary-700 font-medium">{tool.tool}</Text>
+                        <Text className="text-xs text-primary-600">•</Text>
+                        <Text className="text-sm text-primary-700">{tool.level}</Text>
+                      </HStack>
                     ))}
                   </HStack>
                 </VStack>
-
                 <VStack className="mt-3" space="sm">
                   <Text className="text-sm font-semibold text-gray-700 mb-1">Benefícios:</Text>
                   <HStack className="flex-wrap" space="sm">

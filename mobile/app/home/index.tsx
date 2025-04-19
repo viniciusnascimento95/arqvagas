@@ -22,13 +22,16 @@ import {
   TrophyIcon,
   UserIcon
 } from "lucide-react-native";
-import { Linking } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 
 export default function DashboardScreen() {
   const { signOut, user } = useAuth()
   const pathname = usePathname();
+
+  const handleOpenURL = async (url: string) => {
+    await WebBrowser.openBrowserAsync(url);
+  };
 
   return (
     <SafeAreaView className="h-full w-full">
@@ -79,7 +82,7 @@ export default function DashboardScreen() {
                     </Pressable>
 
                     <Pressable
-                      onPress={() => Linking.openURL('https://arqvagasbrasil.com/index.php/mentoria/')}
+                      onPress={() => handleOpenURL('https://arqvagasbrasil.com/index.php/mentoria/')}
                       className="bg-red-100 p-6 rounded-xl flex-1 min-w-[150px] shadow-sm"
                     >
                       <VStack space="md" className="items-center">
@@ -89,7 +92,7 @@ export default function DashboardScreen() {
                     </Pressable>
 
                     <Pressable
-                      onPress={() => Linking.openURL('https://arqvagasbrasil.com/index.php/mentoria/')}
+                      onPress={() => handleOpenURL('https://arqvagasbrasil.com/index.php/mentoria/')}
                       className="bg-blue-100 p-6 rounded-xl flex-1 min-w-[150px] shadow-sm"
                     >
                       <VStack space="md" className="items-center">
@@ -99,7 +102,7 @@ export default function DashboardScreen() {
                     </Pressable>
 
                     <Pressable
-                      onPress={() => Linking.openURL('https://arqvagasbrasil.com/index.php/mentoria/')}
+                      onPress={() => handleOpenURL('https://arqvagasbrasil.com/index.php/mentoria/')}
                       className="bg-green-100 p-6 rounded-xl flex-1 min-w-[150px] shadow-sm"
                     >
                       <VStack space="md" className="items-center">
@@ -109,7 +112,7 @@ export default function DashboardScreen() {
                     </Pressable>
 
                     <Pressable
-                      onPress={() => Linking.openURL('https://arqvagasbrasil.com/index.php/canais/')}
+                      onPress={() => handleOpenURL('https://arqvagasbrasil.com/index.php/canais/')}
                       className="bg-yellow-100 p-6 rounded-xl flex-1 min-w-[150px] shadow-sm"
                     >
                       <VStack space="md" className="items-center">
@@ -119,7 +122,7 @@ export default function DashboardScreen() {
                     </Pressable>
 
                     <Pressable
-                      onPress={ () => WebBrowser.openBrowserAsync('https://calendly.com/arqvagasbrasil/mentoria')}
+                      onPress={() => handleOpenURL('https://calendly.com/arqvagasbrasil/mentoria')}
                       className="bg-purple-100 p-6 rounded-xl flex-1 min-w-[150px] shadow-sm"
                     >
                       <VStack space="md" className="items-center">

@@ -24,6 +24,11 @@ interface ApplicationInfo {
   userId: number
 }
 
+interface ToolsAndSoftware {
+  tool: string;
+  level: string;
+}
+
 export interface JobListing {
   id: number;
   jobTitle: string;
@@ -43,7 +48,7 @@ export interface JobListing {
   mainResponsibilities: string[];
   requirements: string[];
   benefits: string[];
-  toolsAndSoftware: string[];
+  toolsAndSoftware: ToolsAndSoftware[];
   Application: ApplicationInfo[];
 }
 
@@ -108,7 +113,7 @@ export default function OportunityDetailPage() {
               </HStack>
             </VStack>
 
-            <VStack space="sm">
+            {oportunity.mainResponsibilities && <VStack space="sm">
               <HStack space="sm" className="items-center">
                 <Icon as={StarIcon} size="md" className="text-primary-500" />
                 <Heading size="sm">Principais Responsabilidades</Heading>
@@ -120,21 +125,24 @@ export default function OportunityDetailPage() {
                 </HStack>
               ))}
             </VStack>
+            }
 
-            <VStack space="sm">
-              <HStack space="sm" className="items-center">
-                <Icon as={CheckCircleIcon} size="md" className="text-primary-500" />
-                <Heading size="sm">Requisitos</Heading>
-              </HStack>
-              {oportunity.requirements?.map((requirement, index) => (
-                <HStack key={index} space="sm" className="items-start">
-                  <Icon as={CheckCircleIcon} size="md" className="text-primary-500 mt-1" />
-                  <Text className="text-sm flex-1">{requirement}</Text>
+            {oportunity.requirements &&
+              <VStack space="sm">
+                <HStack space="sm" className="items-center">
+                  <Icon as={CheckCircleIcon} size="md" className="text-primary-500" />
+                  <Heading size="sm">Requisitos</Heading>
                 </HStack>
-              ))}
-            </VStack>
+                {oportunity.requirements?.map((requirement, index) => (
+                  <HStack key={index} space="sm" className="items-start">
+                    <Icon as={CheckCircleIcon} size="md" className="text-primary-500 mt-1" />
+                    <Text className="text-sm flex-1">{requirement}</Text>
+                  </HStack>
+                ))}
+              </VStack>
+            }
 
-            <VStack space="sm">
+            {oportunity.benefits && <VStack space="sm">
               <HStack space="sm" className="items-center">
                 <Icon as={StarIcon} size="md" className="text-primary-500" />
                 <Heading size="sm">Benefícios</Heading>
@@ -145,19 +153,23 @@ export default function OportunityDetailPage() {
                   <Text className="text-sm flex-1">{benefit}</Text>
                 </HStack>
               ))}
-            </VStack>
+            </VStack>}
 
-            <VStack space="sm">
+            {oportunity.toolsAndSoftware && <VStack space="sm">
               <HStack space="sm" className="items-center">
                 <Icon as={PenToolIcon} size="md" className="text-primary-500" />
-                <Heading size="sm">Ferramentas e Softwares</Heading>
+                <Heading size="sm">Ferramentas e Experiência:</Heading>
               </HStack>
-              <HStack space="sm" className="flex-wrap">
+              <HStack className="flex-wrap" space="sm">
                 {oportunity.toolsAndSoftware?.map((tool, index) => (
-                  <Text key={index} className="bg-primary-50 px-4 py-2 rounded-full text-sm text-primary-700">{tool}</Text>
+                  <HStack key={index} className="bg-primary-50 px-3 py-1 rounded-full items-center" space="xs">
+                    <Text className="text-sm text-primary-700 font-medium">{tool.tool}</Text>
+                    <Text className="text-xs text-primary-600">•</Text>
+                    <Text className="text-sm text-primary-700">{tool.level}</Text>
+                  </HStack>
                 ))}
               </HStack>
-            </VStack>
+            </VStack>}
 
             <VStack space="sm">
               <HStack space="sm" className="items-center">

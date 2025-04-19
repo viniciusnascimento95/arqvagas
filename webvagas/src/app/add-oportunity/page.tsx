@@ -68,7 +68,7 @@ export default function AdicionarOportunidade() {
           <Form>
 
             {/* Título do Formulário */}
-            {JSON.stringify(values, null, 3)}
+            {/* {JSON.stringify(values, null, 3)} */}
 
             <p className="text-gray-600">Preencha os campos abaixo para criar uma nova vaga.</p>
 
