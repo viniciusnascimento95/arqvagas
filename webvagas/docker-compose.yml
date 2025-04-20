@@ -7,7 +7,7 @@ services:
       - "3000:3000"  # Mapeamento da porta local para o contêiner
     environment:
       - NODE_ENV=production  # Definir o ambiente para desenvolvimento
-    volumes:
-      - .:/app  # Mapeamento do diretório local para o contêiner, para desenvolvimento
-      - /app/node_modules
+    # volumes:
+    #   - .:/app  # Mapeamento do diretório local para o contêiner, para desenvolvimento
+      # - /app/node_modules
     # command: ["yarn", "start"]  # Comando para rodar o Next.js em modo de desenvolvimento
