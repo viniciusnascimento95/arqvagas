@@ -29,7 +29,7 @@ model Oportunity {
   contractType         String
   requirements         String[]
   jobDescription       String
-  managedJob           String
+  managedJob           String        @default("Sim")
   externalUrl          String
   experienceLevel      String
   benefits             String[]
