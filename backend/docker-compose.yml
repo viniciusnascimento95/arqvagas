@@ -24,12 +24,14 @@ services:
       DATABASE_URL: ${DATABASE_URL}
     ports:
       - "3333:3333"
+    env_file:
+      - .env  # Load environment variables from the .env file in the current directory
     # networks:
     #   - network
     # volumes:
     #   - .:/app
-    volumes:
-      - .:/app
+    # volumes:
+    #   - .:/app
     # command: ["-wait", "tcp://db:5432", "-timeout", "60s", "yarn", "start:dev"]
     # labels:
     #   - "traefik.enable=true"
@@ -41,6 +43,6 @@ volumes:
   postgres_arqvagas_data:
     driver: local # Driver do Docker para volumes persistentes
  
-# networks:
-#   network:
-#     driver: bridge
+networks:
+  network:
+    driver: bridge

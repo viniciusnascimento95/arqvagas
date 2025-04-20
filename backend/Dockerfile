@@ -1,30 +1,28 @@
-# Use a imagem oficial do Node.js como base
-FROM node:18
+# Use Node.js 20.11.1 base image
+FROM node:20.11.1-alpine
 
-# Defina o diretório de trabalho para o contêiner
-WORKDIR /app
+# Set working directory
+# Set the working directory inside the container
+WORKDIR /usr/src/app
 
-# Copie o arquivo package.json e yarn.lock para o contêiner
-COPY package.json yarn.lock ./
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-# Instale as dependências com yarn
-RUN yarn install
+# Install dependencies
+RUN npm cache clean --force
+RUN npm install --legacy-peer-deps
 
-# Copie o restante dos arquivos para o contêiner
+# Copy the rest of the application code
 COPY . .
 
-# Baixar e instalar o script wait-for-it
-# RUN curl -o /usr/local/bin/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh
-# RUN chmod +x /usr/local/bin/wait-for-it
+# Generate Prisma Client code
+RUN npx prisma generate
 
-# Gere os arquivos de migração do Prisma
-# RUN yarn prisma:generate
+# Build the NestJS application
+RUN npm run build
 
-# RUN yarn prisma:deploy
-
-# Exponha a porta que o aplicativo irá rodar
+# Expose the port the app runs on, here, I was using port 3333
 EXPOSE 3333
 
-# Defina o comando padrão para rodar o aplicativo, usando o wait-for-it
-# CMD ["./wait-for-it", "db:5432", "--", "yarn", "start:prod"]
-CMD ["yarn", "start:dev"]
+# Command to run the app
+CMD [  "npm", "run", "start:migrate:prod" ]
