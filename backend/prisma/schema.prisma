@@ -30,7 +30,7 @@ model Oportunity {
   requirements         String[]
   jobDescription       String
   managedJob           String        @default("Sim")
-  externalUrl          String
+  externalUrl          String?
   experienceLevel      String
   benefits             String[]
   location             String

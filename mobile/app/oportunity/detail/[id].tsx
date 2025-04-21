@@ -9,12 +9,12 @@ import { useAuth } from "@/constants/AuthContext";
 import { api } from "@/services/api";
 import { router } from "expo-router";
 import { useLocalSearchParams } from "expo-router/build/hooks";
+import * as WebBrowser from 'expo-web-browser';
 import { Formik } from "formik";
 import { BriefcaseIcon, CalendarIcon, CheckCircleIcon, ChevronLeftIcon, ClockIcon, InfoIcon, MapPinIcon, PenToolIcon, StarIcon, XIcon } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { Modal, Platform, Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 export interface CompanyInfo {
   industry: string;
   name: string;
@@ -33,6 +33,8 @@ export interface JobListing {
   id: number;
   jobTitle: string;
   jobDescription: string;
+  managedJob: string;
+  externalUrl: string;
   location: string;
   experienceLevel: string;
   contractType: string;
@@ -75,6 +77,10 @@ export default function OportunityDetailPage() {
     );
   };
 
+  const handleOpenURL = async (url: string) => {
+    await WebBrowser.openBrowserAsync(url);
+  };
+
   return (
     <SafeAreaView className="h-full w-full bg-background-0">
       <VStack className="px-5 py-4 flex-1" space="lg">
@@ -88,7 +94,6 @@ export default function OportunityDetailPage() {
           <Text className="text-xl">Voltar</Text>
         </HStack>
         <Heading className="mb-1">{oportunity.jobTitle}</Heading>
-
         <ScrollView showsVerticalScrollIndicator={false} className="flex-1 px-5 py-4">
           <VStack space="xl">
             <HStack space="md" className="justify-center items-center bg-gray-50 p-4 rounded-xl">
@@ -206,20 +211,29 @@ export default function OportunityDetailPage() {
           </VStack>
         </ScrollView>
 
-        {hasUserApplied() ? (
+        {oportunity.managedJob == "Não" ? (
           <Button
             variant="outline"
-            className="mt-4 bg-red-500 text-white"
-            onPress={() => setModalVisible(true)} >
-            <ButtonText className="text-gray-900">Desinscrever</ButtonText>
+            className="mt-4 bg-blue-500 text-white"
+            onPress={() => handleOpenURL(oportunity.externalUrl)} >
+            <ButtonText className="text-white">Ir para vaga externa</ButtonText>
           </Button>
         ) : (
-          <Button
-            variant="outline"
-            className="mt-4 bg-green-500 text-white"
-            onPress={() => setModalVisible(true)} >
-            <ButtonText className="text-gray-900">Se inscrever</ButtonText>
-          </Button>
+          hasUserApplied() ? (
+            <Button
+              variant="outline"
+              className="mt-4 bg-red-500 text-white"
+              onPress={() => setModalVisible(true)} >
+              <ButtonText className="text-gray-900">Desinscrever</ButtonText>
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              className="mt-4 bg-green-500 text-white"
+              onPress={() => setModalVisible(true)} >
+              <ButtonText className="text-gray-900">Se inscrever</ButtonText>
+            </Button>
+          )
         )}
 
         <Modal
