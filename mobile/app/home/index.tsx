@@ -1,7 +1,6 @@
 import { useAuth } from "@/constants/AuthContext";
 import * as WebBrowser from 'expo-web-browser';
 import { Box } from "../../components/ui/box";
-import { Button } from "../../components/ui/button";
 import { Heading } from "../../components/ui/heading";
 import { HStack } from "../../components/ui/hstack";
 import { Icon } from "../../components/ui/icon";
@@ -18,7 +17,6 @@ import {
   ClockIcon,
   GraduationCapIcon,
   HomeIcon,
-  StarIcon,
   TrophyIcon,
   UserIcon
 } from "lucide-react-native";
@@ -132,7 +130,7 @@ export default function DashboardScreen() {
                     </Pressable>
                   </HStack>
 
-                  <VStack space="md" className="my-4">
+                  {/* <VStack space="md" className="my-4">
                     <Box className="bg-background-50 p-6 rounded-xl shadow-sm">
                       <VStack space="lg">
                         <HStack space="sm" className="items-center">
@@ -157,7 +155,7 @@ export default function DashboardScreen() {
                         </Button>
                       </VStack>
                     </Box>
-                  </VStack>
+                  </VStack> */}
                 </VStack>
               </Box>
             </VStack>
