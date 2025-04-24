@@ -1,6 +1,6 @@
-- [ ] Create screen layout base 
-- [ ] Create screen dashboard with info base of user and resume
-- [ ] Create screen filter oportunity on mobile
+- [x] Create screen layout base 
+- [x] Create screen dashboard with info base of user and resume
+- [x] Create screen filter oportunity on mobile
 - [x] Application to oportunity
 - [x] Create screen detail opportunity
 - [x] Create screen detail company
