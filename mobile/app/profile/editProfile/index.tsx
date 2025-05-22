@@ -2,7 +2,7 @@ import { Input, InputField } from "@/components/ui/input";
 import { api } from "@/services/api";
 import { router } from "expo-router";
 import { Formik } from 'formik';
-import { BriefcaseIcon, ChevronLeftIcon, GraduationCapIcon, MailIcon, PhoneIcon, UserIcon } from "lucide-react-native";
+import { ChevronLeftIcon, HomeIcon, MailIcon, MapPinIcon, PhoneIcon, UserIcon } from "lucide-react-native";
 import { Avatar, AvatarFallbackText, AvatarImage } from "../../../components/ui/avatar";
 import { Button, ButtonText } from "../../../components/ui/button";
 import { Divider } from "../../../components/ui/divider";
@@ -13,7 +13,6 @@ import { Text } from "../../../components/ui/text";
 import { VStack } from "../../../components/ui/vstack";
 import { useAuth } from "../../../constants/AuthContext";
 
-import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useRef, useState } from "react";
 import { Pressable, SafeAreaView, ScrollView, View } from "react-native";
@@ -23,11 +22,11 @@ interface UserProfile {
   email: string
   name: string
   phone: string | null
-  school: string | null
-  experience: string | null
-  // init_date_school: string | null
-  // end_date_school: string | null
   portfolio_url: string | null
+  street: string | null
+  city: string | null
+  state: string | null
+  zipcode: string | null
 }
 
 export default function EditProfileScreen() {
@@ -45,21 +44,11 @@ export default function EditProfileScreen() {
     phone: Yup.string()
       .nullable()
       .matches(/^\(\d{2}\)\d{5}-\d{4}$/, "Número de telefone inválido"),
-    school: Yup.string().nullable(),
-    experience: Yup.string().nullable(),
-
-    // init_date_school: Yup.date()
-    //   .nullable()
-    //   .typeError("Data inválida"),
-    // end_date_school: Yup.date()
-    //   .nullable()
-    //   .typeError("Data inválida")
-    //   .min(
-    //     Yup.ref("init_date_school"),
-    //     "Data de término deve ser depois da data de início"
-    //   ),
     portfolio_url: Yup.string().nullable(),
-   
+    street: Yup.string().nullable(),
+    city: Yup.string().nullable(),
+    state: Yup.string().nullable(),
+    zipcode: Yup.string().nullable(),
   });
 
   useEffect(() => {
@@ -69,8 +58,6 @@ export default function EditProfileScreen() {
       console.log(JSON.stringify(error, null, 3))
     })
   }, [user])
-
-  
 
   return (
     <SafeAreaView className="h-full w-full bg-background-0">
@@ -88,7 +75,6 @@ export default function EditProfileScreen() {
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}
           ref={scrollRef}
           keyboardShouldPersistTaps="handled"
-          // KeyboardAvoidingView
           automaticallyAdjustKeyboardInsets
         >
           <Formik
@@ -96,9 +82,11 @@ export default function EditProfileScreen() {
               name: profile?.name || '',
               email: profile?.email || '',
               phone: profile?.phone || '',
-              school: profile?.school || '',
-              experience: profile?.experience || '',
               portfolio_url: profile?.portfolio_url || '',
+              street: profile?.street || '',
+              city: profile?.city || '',
+              state: profile?.state || '',
+              zipcode: profile?.zipcode || '',
             }}
             validationSchema={userProfileSchema}
             enableReinitialize
@@ -194,42 +182,73 @@ export default function EditProfileScreen() {
                   </Input>
                   {errors.phone && <Text className="text-red-500">{errors.phone}</Text>}
 
+                  <Divider className="my-4" />
+
+                  <Text className="font-bold text-lg mb-2">Informações de Endereço</Text>
+
                   <HStack space="sm" className="items-center mt-2">
-                    <Icon as={GraduationCapIcon} size="sm" className="text-primary-500" />
-                    <Text className="font-bold">Formação Acadêmica</Text>
+                    <Icon as={MapPinIcon} size="sm" className="text-primary-500" />
+                    <Text className="font-bold">CEP</Text>
                   </HStack>
                   <Input>
                     <InputField
                       type="text"
-                      variant="rounded"
-                      placeholder="Graduação"
-                      value={values.school}
-                      onChangeText={handleChange("school")}
-                      onBlur={handleBlur('school')}
+                      placeholder="CEP"
+                      value={values.zipcode}
+                      onChangeText={handleChange("zipcode")}
+                      onBlur={handleBlur('zipcode')}
                     />
                   </Input>
-                  {errors.school && <Text className="text-red-500">{errors.school}</Text>}
+                  {errors.zipcode && <Text className="text-red-500">{errors.zipcode}</Text>}
 
                   <HStack space="sm" className="items-center mt-2">
-                    <Icon as={BriefcaseIcon} size="sm" className="text-primary-500" />
-                    <Text className="font-bold">Experiência Profissional</Text>
+                    <Icon as={HomeIcon} size="sm" className="text-primary-500" />
+                    <Text className="font-bold">Rua</Text>
                   </HStack>
-                  <Textarea>
-                    <TextareaInput
-                    placeholder="Descreva sua experiência"
-                    value={values.experience}
-                    onChangeText={handleChange("experience")}
-                    onBlur={handleBlur('experience')}
-                    onFocus={() => {
-                      setTimeout(() => {
-                        scrollRef.current?.scrollToEnd({ animated: true });
-                      }, 300); // Pequeno delay para garantir que o teclado seja aberto antes do scroll
-                    }}
+                  <Input>
+                    <InputField
+                      type="text"
+                      placeholder="Rua"
+                      value={values.street}
+                      onChangeText={handleChange("street")}
+                      onBlur={handleBlur('street')}
                     />
-                  </Textarea>
-                  {errors.experience && <Text className="text-red-500">{errors.experience}</Text>}
+                  </Input>
+                  {errors.street && <Text className="text-red-500">{errors.street}</Text>}
 
-                  <HStack space="sm" className="items-center">
+                  <HStack space="sm" className="items-center mt-2">
+                    <Icon as={MapPinIcon} size="sm" className="text-primary-500" />
+                    <Text className="font-bold">Cidade</Text>
+                  </HStack>
+                  <Input>
+                    <InputField
+                      type="text"
+                      placeholder="Cidade"
+                      value={values.city}
+                      onChangeText={handleChange("city")}
+                      onBlur={handleBlur('city')}
+                    />
+                  </Input>
+                  {errors.city && <Text className="text-red-500">{errors.city}</Text>}
+
+                  <HStack space="sm" className="items-center mt-2">
+                    <Icon as={MapPinIcon} size="sm" className="text-primary-500" />
+                    <Text className="font-bold">Estado</Text>
+                  </HStack>
+                  <Input>
+                    <InputField
+                      type="text"
+                      placeholder="Estado"
+                      value={values.state}
+                      onChangeText={handleChange("state")}
+                      onBlur={handleBlur('state')}
+                    />
+                  </Input>
+                  {errors.state && <Text className="text-red-500">{errors.state}</Text>}
+
+
+
+                  <HStack space="sm" className="items-center mt-2">
                     <Icon as={UserIcon} size="sm" className="text-primary-500" />
                     <Text className="font-bold">URL do curriculo e/ou portfólio </Text>
                   </HStack>

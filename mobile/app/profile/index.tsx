@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { ChevronRight, KeyIcon, Settings, User } from "lucide-react-native";
+import { ChevronRight, FileClock, KeyIcon, Settings, User } from "lucide-react-native";
 import { Pressable, SafeAreaView } from "react-native";
 import { Avatar, AvatarFallbackText, AvatarImage } from "../../components/ui/avatar";
 import { Button, ButtonText } from "../../components/ui/button";
@@ -69,6 +69,16 @@ export default function MobileProfileScreen() {
               <Icon as={ChevronRight} />
             </Pressable>
           </HStack>
+          <HStack className="justify-between" >
+            <HStack space="md">
+              <Icon as={FileClock} />
+              <Text>Experiencias acadêmicas e profissional.</Text>
+            </HStack>
+            <Pressable onPress={() => { router.navigate('/profile/editExperience') }}>
+              <Icon as={ChevronRight} />
+            </Pressable>
+          </HStack>
+
           <HStack className="justify-between">
             <HStack space="md">
               <Icon as={KeyIcon} />

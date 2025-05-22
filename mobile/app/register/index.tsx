@@ -92,17 +92,21 @@ const RegisterScreen: React.FC = () => {
         <Button title={loading ? "Criando..." : "Criar Conta"} onPress={handleRegister} disabled={loading} />
       </View>
 
-      {/* <Text style={styles.loginText}>
-        Já tem uma conta?{' '}
-        <Link href="/" style={styles.loginLink}>Fazer login</Link>
-      </Text> */}
-
-      <Text style={styles.loginText}>
-        Já tem uma conta?
-        <Text onPress={() => router.push('/')} style={styles.loginLink}>
-          {' '}Fazer login
+      <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 20, padding: 10 }}>
+        <Text style={{ fontSize: 16, color: '#666' }}>Já tem uma conta? </Text>
+        <Text 
+          onPress={() => router.push('/')} 
+          style={{ 
+            fontSize: 16, 
+            color: '#0066CC', 
+            fontWeight: '600',
+            padding: 8,
+            marginLeft: 4
+          }}
+        >
+          Fazer login
         </Text>
-      </Text>
+      </View>
     </View>
   );
 };
@@ -141,7 +145,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 45,
-    fontSize: 16,    
+    fontSize: 16,
   },
   buttonContainer: {
     width: '100%',
