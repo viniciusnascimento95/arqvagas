@@ -310,8 +310,8 @@ export default function ExperienceScreen() {
                         />
                       </Input>
 
-                      <Select
-                        value={tool.experienceLevel}
+                      {tool.experienceLevel && <Select
+                        selectedValue={tool.experienceLevel}
                         onValueChange={(value: string) => {
                           const newTools = [...values.tools];
                           newTools[index].experienceLevel = value;
@@ -335,7 +335,8 @@ export default function ExperienceScreen() {
                             <SelectItem label="Avançado" value="avancado" />
                           </SelectContent>
                         </SelectPortal>
-                      </Select>
+                      </Select>}
+
                     </VStack>
                   ))}
                 </VStack>
