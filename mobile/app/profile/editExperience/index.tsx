@@ -62,7 +62,7 @@ export default function ExperienceScreen() {
       Yup.object().shape({
         name: Yup.string().required("Nome da ferramenta é obrigatório"),
         experienceLevel: Yup.string().required("Nível de experiência é obrigatório"),
-        description: Yup.string().required("Descrição é obrigatória"),
+        description: Yup.string().nullable(),
       })
     ),
   });
@@ -339,6 +339,10 @@ export default function ExperienceScreen() {
                     </VStack>
                   ))}
                 </VStack>
+
+                <Text>
+                  {JSON.stringify(values, null, 2)}
+                </Text>
 
                 <Button
                   variant="solid"

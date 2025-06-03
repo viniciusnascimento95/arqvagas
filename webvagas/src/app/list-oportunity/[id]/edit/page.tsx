@@ -117,6 +117,7 @@ export default function Edit() {
               variant: 'default',
               title: "Oportunidade atualizada com sucesso!",
               description: "Você pode visualizar a oportunidade atualizada na lista de oportunidades.",
+              duration: 4000,
             })
             resetForm();
             router.push('/list-oportunity');
@@ -659,7 +660,7 @@ export default function Edit() {
               <Button type="submit" className="mt-5 w-40 bg-blue-600 hover:bg-blue-700"
                 disabled={!isValid}
               >
-                Enviar
+                Atualizar vaga
               </Button>
             </div>
           </Form>

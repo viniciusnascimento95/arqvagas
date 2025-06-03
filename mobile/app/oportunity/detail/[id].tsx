@@ -118,7 +118,7 @@ export default function OportunityDetailPage() {
               </HStack>
             </VStack>
 
-            {oportunity.mainResponsibilities && <VStack space="sm">
+            {oportunity.mainResponsibilities?.length != 0 && <VStack space="sm">
               <HStack space="sm" className="items-center">
                 <Icon as={StarIcon} size="md" className="text-primary-500" />
                 <Heading size="sm">Principais Responsabilidades</Heading>
@@ -132,7 +132,7 @@ export default function OportunityDetailPage() {
             </VStack>
             }
 
-            {oportunity.requirements &&
+            {oportunity.requirements?.length != 0 &&
               <VStack space="sm">
                 <HStack space="sm" className="items-center">
                   <Icon as={CheckCircleIcon} size="md" className="text-primary-500" />
@@ -147,7 +147,7 @@ export default function OportunityDetailPage() {
               </VStack>
             }
 
-            {oportunity.benefits && <VStack space="sm">
+            {oportunity.benefits?.length != 0 && <VStack space="sm">
               <HStack space="sm" className="items-center">
                 <Icon as={StarIcon} size="md" className="text-primary-500" />
                 <Heading size="sm">Benefícios</Heading>
@@ -160,7 +160,7 @@ export default function OportunityDetailPage() {
               ))}
             </VStack>}
 
-            {oportunity.toolsAndSoftware && <VStack space="sm">
+            {oportunity.toolsAndSoftware?.length != 0 && <VStack space="sm">
               <HStack space="sm" className="items-center">
                 <Icon as={PenToolIcon} size="md" className="text-primary-500" />
                 <Heading size="sm">Ferramentas e Experiência:</Heading>
@@ -197,15 +197,15 @@ export default function OportunityDetailPage() {
               </HStack>
               <HStack space="sm" className="items-center">
                 <Icon as={CalendarIcon} size="md" className="text-gray-500" />
-                <Text className="text-sm">Data limite: {new Date(oportunity.applicationDeadline).toLocaleDateString()}</Text>
+                <Text className="text-sm">Data limite: {new Date(oportunity.applicationDeadline).toLocaleDateString('pt-BR')}</Text>
               </HStack>
               <HStack space="sm" className="items-center">
                 <Icon as={ClockIcon} size="md" className="text-gray-500" />
-                <Text className="text-sm">Início previsto: {new Date(oportunity.expectedStartDate).toLocaleDateString()}</Text>
+                <Text className="text-sm">Início previsto: {new Date(oportunity.expectedStartDate).toLocaleDateString('pt-BR')}</Text>
               </HStack>
               <HStack space="sm" className="items-center">
                 <Icon as={CalendarIcon} size="md" className="text-gray-500" />
-                <Text className="text-sm">Publicado em: {new Date(oportunity.publicationDate).toLocaleDateString()}</Text>
+                <Text className="text-sm">Publicado em: {new Date(oportunity.publicationDate).toLocaleDateString('pt-BR')}</Text>
               </HStack>
             </VStack>
           </VStack>

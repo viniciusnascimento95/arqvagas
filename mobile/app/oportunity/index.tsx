@@ -12,7 +12,7 @@ import { FlatList, Pressable, RefreshControl, TextInput } from "react-native";
 
 import { useAuth } from "@/constants/AuthContext";
 import { Buffer } from 'buffer';
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 interface CompanyInfo {
   industry: string;
@@ -75,6 +75,8 @@ export default function OportunityScreen() {
     }
   }
 
+  const insets = useSafeAreaInsets();
+
   useEffect(() => {
     fetchOportunities()
   }, [])
@@ -109,7 +111,7 @@ export default function OportunityScreen() {
               value={searchQuery}
               onChangeText={setSearchQuery}
             />
-            <Pressable onPress={() => {}}>
+            <Pressable onPress={() => { }}>
               <Icon as={FilterIcon} size="sm" className="text-primary-500" />
             </Pressable>
           </HStack>
@@ -121,7 +123,16 @@ export default function OportunityScreen() {
           className="px-4 pt-4"
           showsVerticalScrollIndicator={false}
           ItemSeparatorComponent={() => <VStack className="h-3" />}
-          contentContainerStyle={{ flexGrow: 1 }}
+          // contentContainerStyle={{ flexGrow: 1 }}
+          removeClippedSubviews={true}
+          initialNumToRender={5}
+          contentContainerStyle={{
+            gap: 10,
+            paddingBottom: insets.bottom + 100,
+            paddingTop: 15,
+          }}
+          maxToRenderPerBatch={3}
+          windowSize={5}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
@@ -138,13 +149,13 @@ export default function OportunityScreen() {
                   </HStack>
                 )}
 
-                {item.managedJob === 'Sim' && (
+                {item.managedJob === 'Não' && (
                   <HStack className="items-center justify-center mb-3 bg-orange-50 py-2 rounded-xl">
                     <Icon as={ExternalLinkIcon} size="sm" className="text-orange-700 mr-2" />
                     <Text className="text-sm text-orange-700 font-medium">Vaga Externa</Text>
                   </HStack>
                 )}
-                
+
                 <HStack className="items-center justify-between mb-4">
                   <VStack>
                     <Text className="text-xl font-bold text-primary-500">{item.jobTitle}</Text>
