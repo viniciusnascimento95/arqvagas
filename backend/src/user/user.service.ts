@@ -4,6 +4,13 @@ import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'prisma/prisma.service';
 import { UpdateUserDto } from './dto/update-user.dts';
 
+interface UpdateUserProfessionalDto {
+  id: number;
+  experiences: string[];
+  education: string[];
+  tools: string[];
+}
+
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
@@ -33,6 +40,27 @@ export class UserService {
     return this.prisma.user.update({
       where: { id },
       data: updateUserDto,
+    });
+  }
+
+  async updateUserProfessional(
+    id: number,
+    updateUserProfessional: UpdateUserProfessionalDto,
+  ) {
+    return this.prisma.user.update({
+      where: { id },
+      data: updateUserProfessional,
+    });
+  }
+
+  async getUserProfessional(id: number) {
+    return this.prisma.user.findUniqueOrThrow({
+      where: { id },
+      select: {
+        //experiences: true,
+        //education: true,
+        //tools: true,
+      },
     });
   }
 
