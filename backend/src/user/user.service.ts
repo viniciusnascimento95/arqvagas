@@ -36,6 +36,13 @@ export class UserService {
     });
   }
 
+  async updateProfileProfessional(id: number, updateUserDto: UpdateUserDto) {
+    return this.prisma.user.update({
+      where: { id },
+      data: updateUserDto,
+    });
+  }
+
   async findUserByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { email },
@@ -47,8 +54,9 @@ export class UserService {
         school: true,
         init_date_school: true,
         end_date_school: true,
-        // software_skills: true,
-        // personal_skills: true,
+        experiences: true,
+        education: true,
+        tools: true,
         portfolio_url: true,
         createdAt: true,
         password: true,

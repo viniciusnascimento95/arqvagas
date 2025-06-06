@@ -8,7 +8,7 @@ import {
   IsNumber,
   IsObject,
   IsOptional,
-  IsString
+  IsString,
 } from 'class-validator';
 
 export class CreateOportunityDto {
@@ -118,7 +118,7 @@ export class CreateOportunityDto {
     description: 'Ferramentas e softwares necessários',
     example: [
       { tool: '123teste', level: 'Não tenho' },
-      { tool: 'abc 123', level: 'Básico' }
+      { tool: 'abc 123', level: 'Básico' },
     ],
     type: 'array',
   })

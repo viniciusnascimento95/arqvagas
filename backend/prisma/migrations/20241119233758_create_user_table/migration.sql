@@ -10,6 +10,9 @@ CREATE TABLE "User" (
     -- "software_skills" TEXT[], Descontinuado pois o usuário vai subir um curriculo com as skills
     -- "personal_skills" TEXT[], Descontinuado pois o usuário vai subir um curriculo com as skills
     "portfolio_url" TEXT,
+    "experiences" JSONB[],
+    "education" JSONB[],
+    "tools" JSONB[],
     "password" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
