@@ -15,7 +15,7 @@ import { OportunityService } from './oportunity.service';
 
 @Controller('oportunity')
 export class OportunityController {
-  constructor(private readonly oportunityService: OportunityService) { }
+  constructor(private readonly oportunityService: OportunityService) {}
 
   @Post()
   create(@Body() createOportunityDto: CreateOportunityDto) {
