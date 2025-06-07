@@ -156,7 +156,7 @@ export default function ExperienceScreen() {
           }}
         >
           {({ values, handleSubmit, setFieldValue, isSubmitting }) => (
-            <VStack space="xl" className="py-4">
+            <VStack space="xl" className="py-4 flex-1">
               <ScrollView
                 ref={scrollRef}
                 contentContainerStyle={{ flexGrow: 1, paddingBottom: 150, gap: 6 }}
@@ -489,21 +489,20 @@ export default function ExperienceScreen() {
                     </VStack>
                   ))}
                 </VStack>
-
-                {/* Fixed Save Button */}
-                <VStack className="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
-                  <Button
-                    variant="solid"
-                    className="bg-primary-500"
-                    onPress={() => handleSubmit()}
-                    disabled={isSubmitting}
-                  >
-                    <ButtonText className="text-white font-semibold">
-                      {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
-                    </ButtonText>
-                  </Button>
-                </VStack>
               </ScrollView>
+              {/* Fixed Save Button */}
+              <VStack className="bottom-0 left-0 right-0 bg-white p-4 flex-1 justify-end">
+                <Button
+                  variant="solid"
+                  className="bg-primary-500"
+                  onPress={() => handleSubmit()}
+                  disabled={isSubmitting}
+                >
+                  <ButtonText className="text-white font-semibold">
+                    {isSubmitting ? 'Salvando...' : 'Salvar Alterações'}
+                  </ButtonText>
+                </Button>
+              </VStack>
             </VStack>
           )}
         </Formik>
