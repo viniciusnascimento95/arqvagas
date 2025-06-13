@@ -142,7 +142,8 @@ export default function ExperienceScreen() {
               const response = await api.put(`/user/${profile?.id}/updateProfessional`, {
                 experiences: values.experiences,
                 education: values.education,
-                tools: values.tools
+                tools: values.tools,
+                portfolio_url: values.portfolio_url,
               });
 
               if (response.status === 200) {

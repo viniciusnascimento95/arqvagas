@@ -1,7 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsObject } from 'class-validator';
+import { IsArray, IsObject, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserProfessionalDto {
+  @ApiProperty({
+    description: 'URL do portfólio do usuário',
+    example: 'https://meuportfolio.com',
+  })
+  @IsString()
+  @IsOptional()
+  portfolio_url?: string;
+
   @ApiProperty({
     description: 'Experiências profissionais',
     example: [
