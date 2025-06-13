@@ -4,7 +4,7 @@ import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { api } from "@/services/api";
 import { router } from "expo-router";
 import { Formik } from 'formik';
-import { BriefcaseIcon, Building2Icon, CalendarIcon, ChevronDownIcon, ChevronLeftIcon, GraduationCapIcon, PenTool, PlusCircleIcon, SchoolIcon, TrashIcon, UserIcon } from "lucide-react-native";
+import { BriefcaseIcon, Building2Icon, CalendarIcon, ChevronDownIcon, ChevronLeftIcon, GlobeIcon, GraduationCapIcon, LinkIcon, PenTool, PlusCircleIcon, SchoolIcon, TrashIcon, UserIcon } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, Pressable, SafeAreaView, ScrollView } from "react-native";
 import * as Yup from "yup";
@@ -99,6 +99,7 @@ export default function ExperienceScreen() {
         description: Yup.string().nullable(),
       })
     ),
+    portfolio_url: Yup.string().nullable(),
   });
 
   if (loading) {
@@ -131,7 +132,8 @@ export default function ExperienceScreen() {
           initialValues={{
             experiences: experiences,
             education: education,
-            tools: tools
+            tools: tools,
+            portfolio_url: profile?.portfolio_url || '',
           }}
           validationSchema={experienceSchema}
           enableReinitialize
@@ -155,7 +157,7 @@ export default function ExperienceScreen() {
             }
           }}
         >
-          {({ values, handleSubmit, setFieldValue, isSubmitting }) => (
+          {({ values, handleSubmit, setFieldValue, isSubmitting, errors, handleChange, handleBlur }) => (
             <VStack space="xl" className="py-4 flex-1">
               <ScrollView
                 ref={scrollRef}
@@ -164,6 +166,35 @@ export default function ExperienceScreen() {
                 automaticallyAdjustKeyboardInsets
                 className="px-4"
               >
+
+                <VStack space="sm" className="bg-white p-4 rounded-xl shadow-sm">
+                  <HStack space="sm" className="items-center">
+                    <Icon as={LinkIcon} size="sm" className="text-primary-500" />
+                    <Text className="font-bold text-gray-700">Links Profissionais</Text>
+                  </HStack>
+
+                  <Divider className="my-2" />
+
+                  <VStack space="sm">
+                    <HStack space="sm" className="items-center">
+                      <Icon as={GlobeIcon} size="sm" className="text-gray-500" />
+                      <Text className="text-sm text-gray-600">URL do Currículo/Portfólio</Text>
+                    </HStack>
+                    <Input>
+                      <InputField
+                        type="text"
+                        placeholder="Ex: https://linkedin.com/in/seu-perfil"
+                        value={values.portfolio_url}
+                        onChangeText={handleChange("portfolio_url")}
+                        onBlur={handleBlur('portfolio_url')}
+                      />
+                    </Input>
+                    {errors.portfolio_url && (
+                      <Text className="text-red-500 text-sm">{errors.portfolio_url}</Text>
+                    )}
+                  </VStack>
+                </VStack>
+
                 {/* Experiences Section */}
                 <VStack space="md" className="bg-white p-4 rounded-xl shadow-sm">
                   <HStack className="justify-between items-center">
@@ -279,8 +310,12 @@ export default function ExperienceScreen() {
                   ))}
                 </VStack>
 
+
+
                 {/* Education Section */}
                 <VStack space="md" className="bg-white p-4 rounded-xl shadow-sm">
+
+
                   <HStack className="justify-between items-center">
                     <HStack space="sm" className="items-center">
                       <Icon as={GraduationCapIcon} size="md" className="text-primary-500" />
@@ -488,6 +523,7 @@ export default function ExperienceScreen() {
                       )}
                     </VStack>
                   ))}
+
                 </VStack>
               </ScrollView>
               {/* Fixed Save Button */}

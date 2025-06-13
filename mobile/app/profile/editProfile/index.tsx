@@ -22,7 +22,7 @@ interface UserProfile {
   email: string
   name: string
   phone: string | null
-  portfolio_url: string | null
+  // portfolio_url: string | null
   street: string | null
   city: string | null
   state: string | null
@@ -44,7 +44,7 @@ export default function EditProfileScreen() {
     phone: Yup.string()
       .nullable()
       .matches(/^\(\d{2}\)\d{5}-\d{4}$/, "Número de telefone inválido"),
-    portfolio_url: Yup.string().nullable(),
+    // portfolio_url: Yup.string().nullable(),
     street: Yup.string().nullable(),
     city: Yup.string().nullable(),
     state: Yup.string().nullable(),
@@ -82,7 +82,7 @@ export default function EditProfileScreen() {
               name: profile?.name || '',
               email: profile?.email || '',
               phone: profile?.phone || '',
-              portfolio_url: profile?.portfolio_url || '',
+              // portfolio_url: profile?.portfolio_url || '',
               street: profile?.street || '',
               city: profile?.city || '',
               state: profile?.state || '',
@@ -245,23 +245,6 @@ export default function EditProfileScreen() {
                     />
                   </Input>
                   {errors.state && <Text className="text-red-500">{errors.state}</Text>}
-
-
-
-                  <HStack space="sm" className="items-center mt-2">
-                    <Icon as={UserIcon} size="sm" className="text-primary-500" />
-                    <Text className="font-bold">URL do curriculo e/ou portfólio </Text>
-                  </HStack>
-                  <Input>
-                    <InputField
-                      type="text"
-                      placeholder="URL do curriculo e/ou portfólio"
-                      value={values.portfolio_url}
-                      onChangeText={handleChange("portfolio_url")}
-                      onBlur={handleBlur('portfolio_url')}
-                    />
-                  </Input>
-                  {errors.portfolio_url && <Text className="text-red-500">{errors.portfolio_url}</Text>}
 
                 </VStack>
 
